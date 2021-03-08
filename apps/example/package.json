@@ -1,0 +1,27 @@
+{
+	"name": "example",
+	"version": "1.0.0-dev.0",
+	"description": "libs usage examples and tests",
+	"type": "module",
+	"engines": {
+		"node": ">=22"
+	},
+	"main": "./dist/main.js",
+	"scripts": {
+		"build": "tsup --publicDir",
+		"start": "cross-env pnpm run build && electron ./dist/main.js",
+		"test": "cross-env pnpm run build && playwright test"
+	},
+	"keywords": [],
+	"author": "<author>",
+	"license": "MIT",
+	"dependencies": {
+		"electron": "35.1.4"
+	},
+	"devDependencies": {
+		"@playwright/test": "1.51.1",
+		"@tsconfig/node20": "20.1.5",
+		"eslint-plugin-playwright": "2.2.0",
+		"tsup": "8.4.0"
+	}
+}

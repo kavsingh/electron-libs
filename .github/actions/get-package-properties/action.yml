@@ -1,0 +1,59 @@
+name: Get package properties
+description: Read package properties
+
+inputs:
+  package_path:
+    description: Path to package
+    required: true
+
+outputs:
+  name:
+    description: Package name including scope
+    value: ${{ steps.read.outputs.name }}
+  scope:
+    description: Package scope
+    value: ${{ steps.read.outputs.scope }}
+  unscoped_name:
+    description: Package name without scope
+    value: ${{ steps.read.outputs.unscoped_name }}
+  version:
+    description: Full version including prerelease tag
+    value: ${{ steps.read.outputs.version }}
+  base_version:
+    description: Base version without prerelease
+    value: ${{ steps.read.outputs.base_version }}
+  prerelease_tag:
+    description: Prerelease tag
+    value: ${{ steps.read.outputs.prerelease_tag }}
+  prerelease_build:
+    description: Prerelease build
+    value: ${{ steps.read.outputs.prerelease_build }}
+
+runs:
+  using: composite
+  steps:
+    - id: read
+      shell: bash
+      run: |
+        product_name=$(awk -F'"' '/productName: ".+"/{ print $2; exit; }' ${{ inputs.app_path }}/electron-builder.config.ts)
+        version=$(awk -F'"' '/"version": ".+"/{ print $4; exit; }' ${{ inputs.app_path }}/package.json)
+
+        {
+          echo "product_name=$product_name"
+          echo "version=$version"
+        } >> $GITHUB_OUTPUT
+
+    - shell: bash
+      run: |
+        {
+          echo "### Package properties: ${{ inputs.package_path }}"
+          echo "| Prop | Value |"
+          echo "| ---- | ----- |"
+          echo "| name | ${{ steps.read.outputs.name }} |"
+          echo "| scope | ${{ steps.read.outputs.scope }} |"
+          echo "| unscoped_name | ${{ steps.read.outputs.unscoped_name }} |"
+          echo "| version | ${{ steps.read.outputs.version }} |"
+          echo "| base_version | ${{ steps.read.outputs.base_version }} |"
+          echo "| prerelease_tag | ${{ steps.read.outputs.prerelease_tag }} |"
+          echo "| prerelease_build | ${{ steps.read.outputs.prerelease_build }} |"
+        } >> $GITHUB_STEP_SUMMARY

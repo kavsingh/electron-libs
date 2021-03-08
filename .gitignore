@@ -1,0 +1,14 @@
+.DS_Store
+**/node_modules
+**/dist
+**/reports
+**/.env
+**/*.log.*
+**/*.log*
+**/*.tsbuildinfo
+
+.turbo/
+
+.vscode/**/*
+!.vscode/extensions.json
+!.vscode/settings.json
