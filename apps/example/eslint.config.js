@@ -15,6 +15,11 @@ export default defineConfig(
 	},
 
 	{
+		files: ["./common.ts"],
+		languageOptions: { globals: {} },
+	},
+
+	{
 		files: ["./main.ts"],
 		languageOptions: { globals: { ...globals.node } },
 	},

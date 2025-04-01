@@ -20,6 +20,7 @@
 		"electron": "38.3.0"
 	},
 	"devDependencies": {
+		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"@playwright/test": "1.56.1",
 		"@tsconfig/node22": "22.0.2",
 		"@types/node": "22.18.12",
