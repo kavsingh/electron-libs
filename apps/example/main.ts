@@ -18,11 +18,20 @@ void app.whenReady().then(() => {
 		webPreferences: { preload: path.resolve(dirname, "preload.cjs") },
 	});
 
-	tipc.ping.handleQuery(() => "pong");
+	const pongDisposer = tipc.ping.handleQuery(() => "pong");
 
 	if (!process.env["IS_E2E"]) appWindow.webContents.openDevTools();
 
 	void appWindow.loadURL("app://bundle");
+
+	const helloInterval = setInterval(() => {
+		tipc.helloNow.send(`hello now: ${Date.now()}`);
+	}, 500);
+
+	app.on("quit", () => {
+		clearInterval(helloInterval);
+		pongDisposer();
+	});
 });
 
 async function appProtocolHandler(request: Request): Promise<Response> {
