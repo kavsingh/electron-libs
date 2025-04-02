@@ -8,22 +8,23 @@ export function mount() {
 	if (!(appMount instanceof HTMLElement)) throw new Error("no valid #app");
 
 	const tipc = createElectronTypedIpcRenderer<AppIpcSchema>();
+	const pingButton = document.createElement("button");
+	const pongDisplay = document.createElement("div");
+	const helloDisplay = document.createElement("div");
 
-	appMount.innerHTML = `
-		<button data-click="ping">ping</button>
-		<div data-display="pong"></div>
-	`;
-
-	const display = document.querySelector("[data-display=pong]");
-
-	if (!(display instanceof HTMLElement)) {
-		throw new Error("display not available");
+	for (const el of [pingButton, pongDisplay, helloDisplay]) {
+		appMount.appendChild(el);
 	}
 
-	document.querySelector("[data-click=ping]")?.addEventListener("click", () => {
+	pingButton.innerText = "ping";
+	pingButton.addEventListener("click", () => {
 		void tipc.ping
 			.query()
-			.then((result) => (display.innerHTML += `<br/>${result}`));
+			.then((result) => (pongDisplay.innerHTML += `<br/>${result}`));
+	});
+
+	tipc.helloNow.subscribe((_, message) => {
+		helloDisplay.innerHTML = message;
 	});
 }
 
