@@ -1,8 +1,10 @@
-import type {
-	DefineElectronTypedIpcSchema,
-	Query,
+import {
+	defineElectronTypedIpcSchema,
+	query,
 } from "@kavsingh/electron-typed-ipc";
 
-export type AppIpcSchema = DefineElectronTypedIpcSchema<{
-	ping: Query<string>;
-}>;
+export const appIpcSchema = defineElectronTypedIpcSchema({
+	ping: query<string, undefined>(),
+} as const);
+
+export type AppIpcSchema = typeof appIpcSchema;
