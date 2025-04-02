@@ -30,6 +30,10 @@ export function mount() {
 	document.querySelector("[data-click=post]")?.addEventListener("click", () => {
 		window.postMessage("message", "*");
 	});
+
+	tipc.helloNow.subscribe((_, message) => {
+		updateDisplay("hello", () => message);
+	});
 }
 
 document.addEventListener("DOMContentLoaded", mount);
