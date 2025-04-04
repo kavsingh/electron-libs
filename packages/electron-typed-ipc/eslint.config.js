@@ -47,4 +47,11 @@ export default tsEslint.config(
 			"@typescript-eslint/unbound-method": "off",
 		},
 	},
+
+	{
+		files: ["**/*.test-d.ts"],
+		rules: {
+			"@typescript-eslint/no-unused-expressions": "off",
+		},
+	},
 );
