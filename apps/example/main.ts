@@ -2,12 +2,12 @@ import path from "node:path";
 import url from "node:url";
 
 import { createElectronTypedIpcMain } from "@kavsingh/electron-typed-ipc/main";
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 
 import { appIpcSchema } from "./common.ts";
 
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const tipc = createElectronTypedIpcMain(appIpcSchema, ipcMain);
+const tipc = createElectronTypedIpcMain(appIpcSchema);
 
 void app.whenReady().then(() => {
 	const appWindow = new BrowserWindow({
@@ -17,7 +17,7 @@ void app.whenReady().then(() => {
 	const disposeIpc = tipc.ipcHandleAndSend({
 		ping: () => "pong",
 
-		helloNow: (send) => {
+		helloNow: ({ send }) => {
 			const helloInterval = setInterval(() => {
 				send({ payload: `hello now: ${Date.now()}` });
 			}, 500);
