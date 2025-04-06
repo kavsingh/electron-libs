@@ -1,8 +1,3 @@
-- `apps/app`: Electron, SolidJS
-- `apps/web`: SolidStart
+# libs
 
-```
-corepack enable pnpm
-pnpm i
-pnpm dev
-```
+hi
