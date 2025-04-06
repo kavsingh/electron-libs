@@ -7,7 +7,7 @@
 	"license": "MIT",
 	"type": "module",
 	"engines": {
-		"node": ">=22"
+		"node": ">=20"
 	},
 	"files": [
 		"./dist"
@@ -23,6 +23,10 @@
 				"default": "./dist/common.cjs"
 			}
 		},
+		"./preload": {
+			"types": "./dist/preload.d.cts",
+			"default": "./dist/preload.cjs"
+		},
 		"./main": {
 			"import": {
 				"types": "./dist/main.d.ts",
@@ -31,16 +35,6 @@
 			"require": {
 				"types": "./dist/main.d.cts",
 				"default": "./dist/main.cjs"
-			}
-		},
-		"./preload": {
-			"import": {
-				"types": "./dist/preload.d.ts",
-				"default": "./dist/preload.js"
-			},
-			"require": {
-				"types": "./dist/preload.d.cts",
-				"default": "./dist/preload.cjs"
 			}
 		},
 		"./renderer": {
@@ -71,6 +65,8 @@
 		"build": "tsdown"
 	},
 	"devDependencies": {
+		"@tsconfig/node20": "20.1.6",
+		"@types/node": "20.19.2",
 		"@vitest/coverage-v8": "3.2.4",
 		"electron": "37.1.0",
 		"eslint-plugin-vitest": "0.5.4",
@@ -80,7 +76,6 @@
 		"zod": "3.25.67"
 	},
 	"peerDependencies": {
-		"electron": ">=35",
-		"superjson": ">=2"
+		"electron": ">=33"
 	}
 }
