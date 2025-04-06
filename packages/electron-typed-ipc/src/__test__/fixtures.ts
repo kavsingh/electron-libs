@@ -4,7 +4,7 @@ import {
 	query,
 	sendFromMain,
 	sendFromRenderer,
-} from "../src/schema";
+} from "../schema.ts";
 
 export const typedIpcApi = defineElectronTypedIpcSchema({
 	queryVoidArgVoidReturn: query<undefined, undefined>(),
@@ -25,5 +25,11 @@ export const typedIpcApi = defineElectronTypedIpcSchema({
 } as const);
 
 export type TypedIpcApi = typeof typedIpcApi;
-export type SendFromMainPayload = { type: "sendFromMain" };
-export type SendFromRendererPayload = { type: "sendFromRenderer" };
+
+export interface SendFromMainPayload {
+	type: "sendFromMain";
+}
+
+export interface SendFromRendererPayload {
+	type: "sendFromRenderer";
+}
