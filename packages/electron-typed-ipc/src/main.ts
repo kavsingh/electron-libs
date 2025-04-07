@@ -8,7 +8,6 @@ import type {
 	IpcResult,
 	Mutation,
 	Operation,
-	OperationWithChannel,
 	Query,
 	Schema,
 	SendFromMain,
@@ -228,8 +227,16 @@ export type SendFromMainOptions = {
 type HandleOrSendFn<
 	TSchema extends HandleOrSendOps<Schema<Definition>>,
 	TChannel extends keyof TSchema,
-> =
-	TSchema[TChannel] extends OperationWithChannel<Query>
+> = TSchema[TChannel] extends Query
+	? (
+			event: IpcMainInvokeEvent,
+			...args: TSchema[TChannel]["input"] extends undefined
+				? []
+				: [input: TSchema[TChannel]["input"]]
+		) =>
+			| Voidable<TSchema[TChannel]["response"]>
+			| Promise<Voidable<TSchema[TChannel]["response"]>>
+	: TSchema[TChannel] extends Mutation
 		? (
 				event: IpcMainInvokeEvent,
 				...args: TSchema[TChannel]["input"] extends undefined
@@ -237,45 +244,35 @@ type HandleOrSendFn<
 					: [input: TSchema[TChannel]["input"]]
 			) =>
 				| Voidable<TSchema[TChannel]["response"]>
-				| Promise<Voidable<TSchema[TChannel]["response"]>>
-		: TSchema[TChannel] extends OperationWithChannel<Mutation>
-			? (
-					event: IpcMainInvokeEvent,
-					...args: TSchema[TChannel]["input"] extends undefined
-						? []
-						: [input: TSchema[TChannel]["input"]]
-				) =>
-					| Voidable<TSchema[TChannel]["response"]>
-					| Voidable<Promise<TSchema[TChannel]["response"]>>
-			: TSchema[TChannel] extends OperationWithChannel<SendFromMain>
-				? (senderApi: {
-						send: (
-							...args: TSchema[TChannel]["payload"] extends undefined
-								? [input?: SendFromMainOptions | undefined]
-								: [
-										input: {
-											payload: TSchema[TChannel]["payload"];
-										} & SendFromMainOptions,
-									]
-						) => void;
-					}) => DisposeFn
-				: never;
+				| Voidable<Promise<TSchema[TChannel]["response"]>>
+		: TSchema[TChannel] extends SendFromMain
+			? (senderApi: {
+					send: (
+						...args: TSchema[TChannel]["payload"] extends undefined
+							? [input?: SendFromMainOptions | undefined]
+							: [
+									input: {
+										payload: TSchema[TChannel]["payload"];
+									} & SendFromMainOptions,
+								]
+					) => void;
+				}) => DisposeFn
+			: never;
 
 type Subscribable<
 	TSchema extends SubscribeOps<Schema<Definition>>,
 	TChannel extends keyof TSchema,
-> =
-	TSchema[TChannel] extends OperationWithChannel<SendFromRenderer>
-		? {
-				subscribe: (
-					listener: (
-						...args: TSchema[TChannel]["payload"] extends undefined
-							? [event: IpcMainEvent]
-							: [event: IpcMainEvent, payload: TSchema[TChannel]["payload"]]
-					) => void | Promise<void>,
-				) => DisposeFn;
-			}
-		: never;
+> = TSchema[TChannel] extends SendFromRenderer
+	? {
+			subscribe: (
+				listener: (
+					...args: TSchema[TChannel]["payload"] extends undefined
+						? [event: IpcMainEvent]
+						: [event: IpcMainEvent, payload: TSchema[TChannel]["payload"]]
+				) => void | Promise<void>,
+			) => DisposeFn;
+		}
+	: never;
 
 type DisposeFn = () => void;
 
@@ -284,26 +281,18 @@ type Voidable<TVal> = TVal extends undefined ? void : TVal;
 
 type HandleOrSendOps<TSchema extends Schema<Definition>> = Pick<
 	TSchema,
-	KeysForOp<
-		TSchema,
-		| OperationWithChannel<Query>
-		| OperationWithChannel<Mutation>
-		| OperationWithChannel<SendFromMain>
-	>
+	KeysForOp<TSchema, Query | Mutation | SendFromMain>
 >;
 
 type SubscribeOps<TSchema extends Schema<Definition>> = Pick<
 	TSchema,
-	KeysForOp<TSchema, OperationWithChannel<SendFromRenderer>>
+	KeysForOp<TSchema, SendFromRenderer>
 >;
 
 type SendPayloadToChannel = (
 	input?: { payload?: unknown } & SendFromMainOptions,
 ) => void;
 
-type KeysForOp<
-	TSchema extends Schema<Definition>,
-	TOp extends OperationWithChannel<Operation>,
-> = {
+type KeysForOp<TSchema extends Schema<Definition>, TOp extends Operation> = {
 	[K in keyof TSchema]: TSchema[K] extends TOp ? K : never;
 }[keyof TSchema];

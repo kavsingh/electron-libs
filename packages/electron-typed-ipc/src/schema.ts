@@ -40,10 +40,5 @@ export function sendFromRenderer<TPayload>(): SendFromRenderer<TPayload> {
 export function defineElectronTypedIpcSchema<TDefinition extends Definition>(
 	definition: TDefinition,
 ) {
-	return Object.fromEntries(
-		Object.entries(definition).map(([key, def]) => [
-			key,
-			{ ...def, channel: key },
-		]),
-	) as unknown as Schema<TDefinition>;
+	return definition as Schema<TDefinition>;
 }
