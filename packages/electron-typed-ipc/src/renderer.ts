@@ -2,7 +2,7 @@ import { ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE, exhaustive } from "./internal.ts";
 import { defaultSerializer } from "./serializer.ts";
 
 import type {
-	AnySchema,
+	AllOpsSchema,
 	IpcResult,
 	KeysOfUnion,
 	UnsubscribeFn,
@@ -12,7 +12,6 @@ import type {
 	SendFromRenderer,
 	SendFromMain,
 	Definition,
-	OperationWithChannel,
 } from "./internal.ts";
 import type { Logger } from "./logger.ts";
 import type { IpcPreloadApi } from "./preload.ts";
@@ -167,7 +166,7 @@ export function createElectronTypedIpcRenderer<
 
 type ElectronTypedIpcRenderer<TDefinitions extends Schema<Definition>> =
 	Readonly<{
-		[TName in keyof TDefinitions]: TDefinitions[TName] extends OperationWithChannel<Query>
+		[TName in keyof TDefinitions]: TDefinitions[TName] extends Query
 			? {
 					query: (
 						...args: TDefinitions[TName]["input"] extends undefined
@@ -175,7 +174,7 @@ type ElectronTypedIpcRenderer<TDefinitions extends Schema<Definition>> =
 							: [input: TDefinitions[TName]["input"]]
 					) => Promise<TDefinitions[TName]["response"]>;
 				}
-			: TDefinitions[TName] extends OperationWithChannel<Mutation>
+			: TDefinitions[TName] extends Mutation
 				? {
 						mutate: (
 							...args: TDefinitions[TName]["input"] extends undefined
@@ -183,7 +182,7 @@ type ElectronTypedIpcRenderer<TDefinitions extends Schema<Definition>> =
 								: [input: TDefinitions[TName]["input"]]
 						) => Promise<TDefinitions[TName]["response"]>;
 					}
-				: TDefinitions[TName] extends OperationWithChannel<SendFromRenderer>
+				: TDefinitions[TName] extends SendFromRenderer
 					? {
 							send: (
 								...args: TDefinitions[TName]["payload"] extends undefined
@@ -194,7 +193,7 @@ type ElectronTypedIpcRenderer<TDefinitions extends Schema<Definition>> =
 										]
 							) => void;
 						}
-					: TDefinitions[TName] extends OperationWithChannel<SendFromMain>
+					: TDefinitions[TName] extends SendFromMain
 						? {
 								subscribe: (
 									listener: (
@@ -215,5 +214,5 @@ export type SendFromRendererOptions = {
 };
 
 type RendererProxyMethod = KeysOfUnion<
-	ElectronTypedIpcRenderer<AnySchema>[keyof ElectronTypedIpcRenderer<AnySchema>]
+	ElectronTypedIpcRenderer<AllOpsSchema>[keyof ElectronTypedIpcRenderer<AllOpsSchema>]
 >;
