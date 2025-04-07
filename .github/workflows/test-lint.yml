@@ -12,5 +12,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
+        with:
+          install_flags: --ignore-scripts
       - run: pnpm lint
       - run: pnpm test
+
+  test-e2e:
+    needs: test-lint
+    name: E2E tests
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: pnpm test:e2e
