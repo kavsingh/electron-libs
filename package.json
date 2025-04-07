@@ -16,15 +16,8 @@
 		"node": ">=23"
 	},
 	"scripts": {
-		"dev": "turbo dev",
-		"build": "turbo build",
-		"build:mac": "turbo build:mac",
-		"build:linux": "turbo build:linux",
-		"build:win:x64": "turbo build:win:x64",
-		"build:win:arm64": "turbo build:win:arm64",
+		"start": "turbo start",
 		"test": "turbo test",
-		"test:ci": "turbo test:ci",
-		"test:e2e": "turbo test:e2e",
 		"lint": "turbo lint"
 	},
 	"devDependencies": {

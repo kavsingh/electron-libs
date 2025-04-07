@@ -12,7 +12,5 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup
-        with:
-          install_flags: --ignore-scripts
       - run: pnpm lint
       - run: pnpm test

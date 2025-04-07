@@ -5,15 +5,11 @@
 			"cache": false,
 			"dependsOn": ["^build"]
 		},
-		"test:e2e": {
-			"cache": false,
-			"dependsOn": ["^build"]
-		},
 		"lint": {
 			"cache": false,
 			"dependsOn": ["^build"]
 		},
-		"build": {
+		"start": {
 			"outputs": ["dist/**"],
 			"dependsOn": ["^build"]
 		}
