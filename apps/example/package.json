@@ -10,7 +10,8 @@
 	"scripts": {
 		"build": "tsup --publicDir",
 		"start": "cross-env pnpm run build && electron ./dist/main.js",
-		"test": "cross-env pnpm run build && playwright test"
+		"test": "echo 'soon'",
+		"test:e2e": "cross-env pnpm run build && playwright test"
 	},
 	"keywords": [],
 	"author": "<author>",

@@ -16,9 +16,10 @@
 		"node": ">=23"
 	},
 	"scripts": {
-		"start": "turbo start",
 		"test": "turbo test",
-		"lint": "turbo lint"
+		"test:e2e": "turbo test:e2e",
+		"lint": "turbo lint",
+		"start": "turbo start"
 	},
 	"devDependencies": {
 		"@eslint/js": "9.24.0",
