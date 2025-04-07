@@ -2,8 +2,14 @@ export const ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE = "__ELECTRON_TYPED_IPC__";
 
 import type { Logger } from "./logger.ts";
 
+const channelPrefix = "__tipc__/";
+
 export function scopeChannel(channel: `${string}/${Operation["operation"]}`) {
-	return `__tipc__/${channel}` as const;
+	return `${channelPrefix}${channel}` as const;
+}
+
+export function isValidChannel(channel: string) {
+	return channel.startsWith(channelPrefix);
 }
 
 export function exhaustive(param: never, logger?: Logger) {
@@ -13,9 +19,7 @@ export function exhaustive(param: never, logger?: Logger) {
 
 export type Definition = Readonly<Record<string, Operation>>;
 
-export type Schema<TDefinition extends Definition> = Readonly<{
-	[K in keyof TDefinition]: OperationWithChannel<TDefinition[K]>;
-}>;
+export type Schema<TDefinition extends Definition> = Readonly<TDefinition>;
 
 export type Operation = Query | Mutation | SendFromMain | SendFromRenderer;
 
@@ -41,10 +45,6 @@ export type SendFromRenderer<TPayload = unknown> = {
 	payload: TPayload;
 };
 
-export type OperationWithChannel<TOperation extends Operation> = TOperation & {
-	channel: string;
-};
-
 export type RemoveHandlerFn = () => void;
 
 export type UnsubscribeFn = () => void;
@@ -53,13 +53,13 @@ export type IpcResult<TValue = unknown> =
 	| { __r: "ok"; data: TValue }
 	| { __r: "error"; error: unknown };
 
-export type AnyDefinition = {
+export type AllOpsDefinition = {
 	query: Query;
 	mutation: Mutation;
 	sendMain: SendFromMain;
 	sendRenderer: SendFromRenderer;
 };
 
-export type AnySchema = Schema<AnyDefinition>;
+export type AllOpsSchema = Schema<AllOpsDefinition>;
 
 export type KeysOfUnion<T> = T extends T ? keyof T : never;
