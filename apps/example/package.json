@@ -20,6 +20,7 @@
 		"electron": "35.1.4"
 	},
 	"devDependencies": {
+		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"@playwright/test": "1.51.1",
 		"@tsconfig/node20": "20.1.5",
 		"eslint-plugin-playwright": "2.2.0",

@@ -1,16 +1,3 @@
-import { contextBridge } from "electron";
+import { exposeTypedIpc } from "@kavsingh/electron-typed-ipc/preload";
 
-const api = {
-	ping: () => "pong",
-};
-
-process.on("loaded", () => {
-	contextBridge.exposeInMainWorld("api", api);
-});
-
-declare global {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-	interface Window {
-		api: typeof api;
-	}
-}
+process.on("loaded", exposeTypedIpc);

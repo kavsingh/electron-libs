@@ -1,19 +1,30 @@
+import { createElectronTypedIpcRenderer } from "@kavsingh/electron-typed-ipc/renderer";
+
+import type { AppIpcSchema } from "./common.ts";
+
 export function mount() {
 	const appMount = document.querySelector("#app");
 
 	if (!(appMount instanceof HTMLElement)) throw new Error("no valid #app");
 
-	appMount.innerHTML = `
-	<button data-click="ping">ping</button>
-	<div data-display="pong"></div>
-	`;
+	const tipc = createElectronTypedIpcRenderer<AppIpcSchema>();
+	const pingButton = document.createElement("button");
+	const pongDisplay = document.createElement("div");
+	const helloDisplay = document.createElement("div");
 
-	document.querySelector("[data-click=ping]")?.addEventListener("click", () => {
-		const display = document.querySelector("[data-display=pong]");
+	for (const el of [pingButton, pongDisplay, helloDisplay]) {
+		appMount.appendChild(el);
+	}
 
-		if (display instanceof HTMLElement) {
-			display.innerHTML += `<br/>${window.api.ping()}`;
-		}
+	pingButton.innerText = "ping";
+	pingButton.addEventListener("click", () => {
+		void tipc.ping
+			.query()
+			.then((result) => (pongDisplay.innerHTML += `<br/>${result}`));
+	});
+
+	tipc.helloNow.subscribe((_, message) => {
+		helloDisplay.innerHTML = message;
 	});
 }
 
