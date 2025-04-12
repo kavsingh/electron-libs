@@ -62,7 +62,8 @@
 		"lint": "tsc && eslint .",
 		"tdd": "vitest --typecheck --reporter=verbose",
 		"test": "vitest run --typecheck --coverage",
-		"build": "tsdown"
+		"build": "tsdown",
+		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "22.0.2",
