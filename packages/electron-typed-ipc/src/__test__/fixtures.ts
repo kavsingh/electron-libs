@@ -25,5 +25,11 @@ export const typedIpcApi = defineElectronTypedIpcSchema({
 } as const);
 
 export type TypedIpcApi = typeof typedIpcApi;
-export type SendFromMainPayload = { type: "sendFromMain" };
-export type SendFromRendererPayload = { type: "sendFromRenderer" };
+
+export interface SendFromMainPayload {
+	type: "sendFromMain";
+}
+
+export interface SendFromRendererPayload {
+	type: "sendFromRenderer";
+}

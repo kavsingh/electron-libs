@@ -66,14 +66,14 @@ export function createSerializer(
 	return { serialize, deserialize };
 }
 
-export type Serializer = {
+export interface Serializer {
 	serialize: (val: unknown) => unknown;
 	deserialize: (val: unknown) => unknown;
-};
+}
 
-export type ValueSerializer<TValue, TSerialized> = {
+export interface ValueSerializer<TValue, TSerialized> {
 	isDeserialized: (value: unknown) => value is TValue;
 	isSerialized: (value: unknown) => value is TSerialized;
 	serialize: (value: TValue) => TSerialized;
 	deserialize: (value: TSerialized) => TValue;
-};
+}
