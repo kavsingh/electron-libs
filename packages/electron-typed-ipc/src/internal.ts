@@ -23,27 +23,27 @@ export type Schema<TDefinition extends Definition> = Readonly<TDefinition>;
 
 export type Operation = Query | Mutation | SendFromMain | SendFromRenderer;
 
-export type Query<TResponse = unknown, TInput = unknown> = {
+export interface Query<TResponse = unknown, TInput = unknown> {
 	operation: "query";
 	input: TInput;
 	response: TResponse;
-};
+}
 
-export type Mutation<TResponse = unknown, TInput = unknown> = {
+export interface Mutation<TResponse = unknown, TInput = unknown> {
 	operation: "mutation";
 	input: TInput;
 	response: TResponse;
-};
+}
 
-export type SendFromMain<TPayload = unknown> = {
+export interface SendFromMain<TPayload = unknown> {
 	operation: "sendFromMain";
 	payload: TPayload;
-};
+}
 
-export type SendFromRenderer<TPayload = unknown> = {
+export interface SendFromRenderer<TPayload = unknown> {
 	operation: "sendFromRenderer";
 	payload: TPayload;
-};
+}
 
 export type RemoveHandlerFn = () => void;
 
@@ -53,13 +53,11 @@ export type IpcResult<TValue = unknown> =
 	| { __r: "ok"; data: TValue }
 	| { __r: "error"; error: unknown };
 
-export type AllOpsDefinition = {
+export type AllOpsSchema = Schema<{
 	query: Query;
 	mutation: Mutation;
 	sendMain: SendFromMain;
 	sendRenderer: SendFromRenderer;
-};
-
-export type AllOpsSchema = Schema<AllOpsDefinition>;
+}>;
 
 export type KeysOfUnion<T> = T extends T ? keyof T : never;
