@@ -214,15 +214,15 @@ export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
 	return { ipcHandleAndSend, ipcSubscriptions };
 }
 
-export type CreateTypedIpcMainOptions = {
+export interface CreateTypedIpcMainOptions {
 	serializer?: Serializer | undefined;
 	logger?: Logger | undefined;
-};
+}
 
-export type SendFromMainOptions = {
+export interface SendFromMainOptions {
 	frames?: Parameters<WebContents["sendToFrame"]>[0] | undefined;
 	targetWindows?: BrowserWindow[] | undefined;
-};
+}
 
 type HandleOrSendFn<
 	TSchema extends HandleOrSendOps<Schema<Definition>>,
@@ -249,12 +249,8 @@ type HandleOrSendFn<
 			? (senderApi: {
 					send: (
 						...args: TSchema[TChannel]["payload"] extends undefined
-							? [input?: SendFromMainOptions | undefined]
-							: [
-									input: {
-										payload: TSchema[TChannel]["payload"];
-									} & SendFromMainOptions,
-								]
+							? [input?: SendFromMainOptions]
+							: [input: SendFromMainWithPayload<TSchema[TChannel]["payload"]>]
 					) => void;
 				}) => DisposeFn
 			: never;
@@ -289,10 +285,13 @@ type SubscribeOps<TSchema extends Schema<Definition>> = Pick<
 	KeysForOp<TSchema, SendFromRenderer>
 >;
 
-type SendPayloadToChannel = (
-	input?: { payload?: unknown } & SendFromMainOptions,
-) => void;
+type SendPayloadToChannel = (input?: SendFromMainWithPayload) => void;
 
 type KeysForOp<TSchema extends Schema<Definition>, TOp extends Operation> = {
 	[K in keyof TSchema]: TSchema[K] extends TOp ? K : never;
 }[keyof TSchema];
+
+interface SendFromMainWithPayload<TPayload = unknown>
+	extends SendFromMainOptions {
+	payload: TPayload;
+}
