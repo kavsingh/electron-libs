@@ -12,7 +12,8 @@
 		"start": "cross-env pnpm run build && electron ./dist/main.js",
 		"test": "echo 'soon'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"keywords": [],
 	"author": "<author>",
@@ -21,6 +22,7 @@
 		"electron": "35.1.5"
 	},
 	"devDependencies": {
+		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"@playwright/test": "1.52.0",
 		"@tsconfig/node20": "20.1.5",
 		"eslint-plugin-playwright": "2.2.0",

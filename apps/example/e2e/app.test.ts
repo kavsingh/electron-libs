@@ -7,19 +7,25 @@ import type { ElectronApplication } from "@playwright/test";
 test.describe("app tests", () => {
 	let app: ElectronApplication;
 
-	test.beforeAll(async () => {
+	test.beforeEach(async () => {
 		app = await setupApplication();
 	});
 
-	test.afterAll(async () => {
+	test.afterEach(async () => {
 		await teardownApplication(app);
 	});
 
-	test("should be able to ping", async () => {
+	test("it should be able to ping", async () => {
 		const page = await app.firstWindow();
 
 		await page.getByRole("button", { name: "ping" }).click();
 
 		await expect(page.getByText("pong")).toBeVisible();
+	});
+
+	test("it should receive hello message", async () => {
+		const page = await app.firstWindow();
+
+		await expect(page.getByText(/^hello now:/)).toBeVisible();
 	});
 });
