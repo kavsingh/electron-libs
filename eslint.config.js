@@ -1,12 +1,12 @@
 import js from "@eslint/js";
 import filenames from "@kavsingh/eslint-plugin-filenames";
-import importX from "eslint-plugin-import-x";
+import { flatConfigs as importX } from "eslint-plugin-import-x";
 import prettierRecommended from "eslint-plugin-prettier/recommended";
 import globals from "globals";
 import * as tsEslint from "typescript-eslint";
 
 export default tsEslint.config(
-	{ ignores: [".vscode/*", ".turbo/*", ".temp/*"], },
+	{ ignores: [".vscode/*", ".turbo/*", ".temp/*"] },
 
 	{
 		linterOptions: { reportUnusedDisableDirectives: true },
@@ -19,8 +19,8 @@ export default tsEslint.config(
 	js.configs.recommended,
 	...tsEslint.configs.strictTypeChecked,
 	...tsEslint.configs.stylisticTypeChecked,
-	importX.flatConfigs.recommended,
-	importX.flatConfigs.typescript,
+	importX.recommended,
+	importX.typescript,
 	filenames.configs.kebab,
 
 	{

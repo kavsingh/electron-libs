@@ -11,16 +11,17 @@
 		"build": "tsup --publicDir",
 		"start": "cross-env pnpm run build && electron ./dist/main.js",
 		"test": "echo 'soon'",
-		"test:e2e": "cross-env pnpm run build && playwright test"
+		"test:e2e": "cross-env pnpm run build && playwright test",
+		"lint": "eslint ."
 	},
 	"keywords": [],
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
-		"electron": "35.1.4"
+		"electron": "35.1.5"
 	},
 	"devDependencies": {
-		"@playwright/test": "1.51.1",
+		"@playwright/test": "1.52.0",
 		"@tsconfig/node20": "20.1.5",
 		"eslint-plugin-playwright": "2.2.0",
 		"tsup": "8.4.0"
