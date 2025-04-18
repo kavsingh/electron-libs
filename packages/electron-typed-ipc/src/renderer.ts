@@ -209,9 +209,9 @@ type ElectronTypedIpcRenderer<TDefinitions extends Schema<Definition>> =
 						: never;
 	}>;
 
-export type SendFromRendererOptions = {
+export interface SendFromRendererOptions {
 	toHost?: boolean | undefined;
-};
+}
 
 type RendererProxyMethod = KeysOfUnion<
 	ElectronTypedIpcRenderer<AllOpsSchema>[keyof ElectronTypedIpcRenderer<AllOpsSchema>]
