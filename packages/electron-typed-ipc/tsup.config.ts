@@ -19,6 +19,7 @@ export default defineConfig([
 		clean: false,
 		dts: true,
 		target: ["node20", "chrome130"],
+		splitting: false,
 		entry: ["./src/preload.ts"],
 		format: ["cjs"],
 	},

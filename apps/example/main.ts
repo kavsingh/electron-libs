@@ -1,32 +1,45 @@
+import EventEmitter from "node:events";
 import path from "node:path";
 import url from "node:url";
 
-import { createElectronTypedIpcMain } from "@kavsingh/electron-typed-ipc/main";
+import {
+	defineOperations,
+	createIpcMain,
+	query,
+	sendFromMain,
+	sendFromRenderer,
+} from "@kavsingh/electron-typed-ipc/main";
 import { app, BrowserWindow } from "electron";
 
-import { appIpcSchema } from "./common.ts";
-
 const dirname = path.dirname(url.fileURLToPath(import.meta.url));
-const tipc = createElectronTypedIpcMain(appIpcSchema);
+const emitter = new EventEmitter<{ ping: [string] }>();
+
+const ipcDefinition = defineOperations({
+	req: query<string, undefined>(() => "res"),
+
+	pong: sendFromMain<string>(({ send }) => {
+		emitter.on("ping", (message) => {
+			send({ payload: `pong (${message})` });
+		});
+
+		return () => {
+			emitter.removeAllListeners("ping");
+		};
+	}),
+
+	ping: sendFromRenderer<string>((_, message) => {
+		emitter.emit("ping", message);
+	}),
+});
+
+export type AppIpcDefinitions = typeof ipcDefinition;
 
 void app.whenReady().then(() => {
 	const appWindow = new BrowserWindow({
 		webPreferences: { preload: path.resolve(dirname, "preload.cjs") },
 	});
 
-	const disposeIpc = tipc.ipcHandleAndSend({
-		ping: () => "pong",
-
-		helloNow: ({ send }) => {
-			const helloInterval = setInterval(() => {
-				send({ payload: `hello now: ${Date.now()}` });
-			}, 500);
-
-			return () => {
-				clearInterval(helloInterval);
-			};
-		},
-	});
+	const disposeIpc = createIpcMain(ipcDefinition);
 
 	if (!process.env["IS_E2E"]) appWindow.webContents.openDevTools();
 	void appWindow.loadFile(path.resolve(dirname, "app.html"));

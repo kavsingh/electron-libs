@@ -19,10 +19,10 @@
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
-		"electron": "35.2.0"
+		"electron": "35.2.0",
+		"@kavsingh/electron-typed-ipc": "workspace:*"
 	},
 	"devDependencies": {
-		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"@playwright/test": "1.52.0",
 		"@tsconfig/node20": "20.1.5",
 		"eslint-plugin-playwright": "2.2.0",

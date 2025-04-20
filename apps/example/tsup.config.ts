@@ -3,14 +3,20 @@ import { defineConfig } from "tsup";
 export default defineConfig([
 	{
 		clean: true,
-		entry: ["./main.ts", "./renderer.ts"],
-		target: ["node20", "chrome130"],
-		splitting: true,
+		entry: ["./main.ts"],
+		target: ["node22"],
+		format: ["esm"],
+	},
+	{
+		entry: ["./renderer.ts"],
+		target: ["chrome134"],
+		noExternal: [/@kavsingh/],
 		format: ["esm"],
 	},
 	{
 		entry: ["./preload.ts"],
-		target: ["node20", "chrome130"],
+		target: ["node22", "chrome134"],
+		noExternal: [/@kavsingh/],
 		format: ["cjs"],
 	},
 ]);
