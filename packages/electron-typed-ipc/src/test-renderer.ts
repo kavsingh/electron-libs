@@ -1,6 +1,6 @@
 import { ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE } from "./internal.ts";
 
-import type { IpcResult, Definition, Schema, Operation } from "./internal.ts";
+import type { IpcResult, Definition, Operation } from "./internal.ts";
 import type { IpcPreloadApi } from "./preload.ts";
 import type { IpcRenderer, IpcRendererEvent } from "electron";
 
@@ -21,9 +21,9 @@ async function mockInvoke(
 	}
 
 	try {
-		return { __r: "ok", data: await mock(payload) };
+		return { result: "ok", data: await mock(payload) };
 	} catch (reason) {
-		return { __r: "error", error: reason };
+		return { result: "error", error: reason };
 	}
 }
 
@@ -41,8 +41,8 @@ export function getTypedIpcRendererMocks() {
 	return { fnMocks, eventHandlers } as const;
 }
 
-export function mockTypedIpcRenderer<TSchema extends Schema<Definition>>(
-	mocks: TypedIpcMockRenderer<TSchema>,
+export function mockTypedIpcRenderer<TDefinitions extends Definition>(
+	mocks: TypedIpcMockRenderer<TDefinitions>,
 ) {
 	const api: IpcPreloadApi = {
 		query: mockInvoke,
@@ -67,8 +67,8 @@ export function mockTypedIpcRenderer<TSchema extends Schema<Definition>>(
 	return { api, namespace: ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE };
 }
 
-export function applyTypedIpcMocks<TSchema extends Schema<Definition>>(
-	mocks: Partial<TypedIpcMockRenderer<TSchema>>,
+export function applyTypedIpcMocks<TDefinitions extends Definition>(
+	mocks: Partial<TypedIpcMockRenderer<TDefinitions>>,
 ) {
 	for (const [channel, fn] of Object.entries(mocks)) {
 		if (typeof fn !== "function") {
@@ -83,14 +83,14 @@ export function applyTypedIpcMocks<TSchema extends Schema<Definition>>(
 }
 
 export function typedIpcSendFromMain<
-	TSchema extends Schema<Definition>,
-	TChannel extends string = SendableChannel<TSchema>,
+	TDefinitions extends Definition,
+	TChannel extends string = SendableChannel<TDefinitions>,
 >(
 	channel: TChannel,
-	payload: TSchema[TChannel] extends { operation: "sendFromMain" }
-		? TSchema[TChannel]["payload"] extends undefined
+	payload: TDefinitions[TChannel] extends { operation: "sendFromMain" }
+		? TDefinitions[TChannel]["payload"] extends undefined
 			? undefined
-			: TSchema[TChannel]["payload"]
+			: TDefinitions[TChannel]["payload"]
 		: never,
 	event?: IpcRendererEvent,
 ) {
@@ -115,40 +115,40 @@ export function createMockIpcRendererEvent(
 }
 
 export type TypedIpcMockRenderer<
-	TSchema extends Schema<Definition>,
-	TMockableKey extends keyof TSchema = MockableChannel<TSchema>,
+	TDefinitions extends Definition,
+	TMockableKey extends keyof TDefinitions = MockableChannel<TDefinitions>,
 > = {
-	[TKey in TMockableKey]: TSchema[TKey] extends {
+	[TKey in TMockableKey]: TDefinitions[TKey] extends {
 		operation: "query" | "mutation";
 	}
 		? (
-				input: TSchema[TKey]["input"],
-			) => Promise<Awaited<TSchema[TKey]["response"]>>
-		: TSchema[TKey] extends { operation: "sendFromRenderer" }
-			? (arg: TSchema[TKey]["payload"]) => void | Promise<void>
+				input: TDefinitions[TKey]["input"],
+			) => Promise<Awaited<TDefinitions[TKey]["response"]>>
+		: TDefinitions[TKey] extends { operation: "sendFromRenderer" }
+			? (arg: TDefinitions[TKey]["payload"]) => void | Promise<void>
 			: never;
 };
 
-type MockableChannel<TSchema extends Schema<Definition>> = ChannelForOperation<
-	TSchema,
+type MockableChannel<TDefinitions extends Definition> = ChannelForOperation<
+	TDefinitions,
 	"query" | "mutation" | "sendFromRenderer"
 >;
 
-type SendableChannel<TSchema extends Schema<Definition>> = ChannelForOperation<
-	TSchema,
+type SendableChannel<TDefinitions extends Definition> = ChannelForOperation<
+	TDefinitions,
 	"sendFromMain"
 >;
 
 type ChannelForOperation<
-	TSchema extends Schema<Definition>,
+	TDefinitions extends Definition,
 	TOperation extends Operation["operation"],
 > = string &
 	Extract<
 		{
-			[TChannel in keyof TSchema]: {
+			[TChannel in keyof TDefinitions]: {
 				channel: TChannel;
-				operation: TSchema[TChannel]["operation"];
+				operation: TDefinitions[TChannel]["operation"];
 			};
-		}[keyof TSchema],
+		}[keyof TDefinitions],
 		{ operation: TOperation }
 	>["channel"];

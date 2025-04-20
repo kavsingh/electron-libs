@@ -5,7 +5,7 @@ export default defineConfig([
 		tsconfig: "./src/tsconfig.json",
 		clean: true,
 		dts: true,
-		target: ["node20", "chrome130"],
+		target: ["node22", "chrome130"],
 		entry: [
 			"./src/common.ts",
 			"./src/main.ts",
@@ -18,7 +18,7 @@ export default defineConfig([
 		tsconfig: "./src/tsconfig.json",
 		clean: false,
 		dts: true,
-		target: ["node20", "chrome130"],
+		target: ["node22", "chrome130"],
 		entry: ["./src/preload.ts"],
 		format: ["cjs"],
 	},

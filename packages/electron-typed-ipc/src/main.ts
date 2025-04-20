@@ -1,26 +1,77 @@
 import { BrowserWindow, ipcMain } from "electron";
 
-import { scopeChannel } from "./internal.ts";
+import { exhaustive, scopeChannel } from "./internal.ts";
 import { defaultSerializer } from "./serializer.ts";
 
 import type {
 	Definition,
 	IpcResult,
 	Mutation,
-	Operation,
 	Query,
-	Schema,
 	SendFromMain,
 	SendFromRenderer,
+	SendFromRendererImpl,
+	SendFromMainImpl,
+	DisposeFn,
+	QueryImpl,
+	MutationImpl,
 } from "./internal.ts";
 import type { Logger } from "./logger.ts";
 import type { Serializer } from "./serializer.ts";
 import type { IpcMainEvent, IpcMainInvokeEvent, WebContents } from "electron";
 
-export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
-	schema: TSchema,
-	options: CreateTypedIpcMainOptions = {},
+export function query<TResponse, TInput>(
+	impl: QueryImpl<TResponse, TInput>,
+): Query<TResponse, TInput> {
+	return {
+		impl,
+		operation: "query",
+		input: undefined as TInput,
+		response: undefined as TResponse,
+	};
+}
+
+export function mutation<TResponse, TInput>(
+	impl: MutationImpl<TResponse, TInput>,
+): Mutation<TResponse, TInput> {
+	return {
+		impl,
+		operation: "mutation",
+		input: undefined as TInput,
+		response: undefined as TResponse,
+	};
+}
+
+export function sendFromMain<TPayload>(
+	impl: SendFromMainImpl<TPayload>,
+): SendFromMain<TPayload> {
+	return {
+		impl,
+		operation: "sendFromMain",
+		payload: undefined as TPayload,
+	};
+}
+
+export function sendFromRenderer<TPayload>(
+	impl: SendFromRendererImpl<TPayload>,
+): SendFromRenderer<TPayload> {
+	return {
+		impl,
+		operation: "sendFromRenderer",
+		payload: undefined as TPayload,
+	};
+}
+
+export function defineOperations<TDefinition extends Definition>(
+	definition: TDefinition,
 ) {
+	return definition;
+}
+
+export function createIpcMain(
+	definition: Definition,
+	options: CreateTypedIpcMainOptions = {},
+): DisposeFn {
 	const serializer = options.serializer ?? defaultSerializer;
 	const logger = options.logger;
 	const disposers: DisposeFn[] = [];
@@ -28,7 +79,7 @@ export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
 	function addHandler(
 		operation: "query" | "mutation",
 		channel: string,
-		handler: (...args: unknown[]) => unknown,
+		handler: (event: IpcMainInvokeEvent, ...args: unknown[]) => unknown,
 	) {
 		const scopedChannel = scopeChannel(`${channel}/${operation}`);
 
@@ -41,7 +92,7 @@ export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
 
 				try {
 					const result: IpcResult = {
-						__r: "ok",
+						result: "ok",
 						data: await handler(event, serializer.deserialize(input)),
 					};
 
@@ -52,7 +103,7 @@ export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
 					const error =
 						reason instanceof Error ? reason : new Error(String(reason));
 					const result: IpcResult = {
-						__r: "error",
+						result: "error",
 						error: serializer.serialize(error),
 					};
 
@@ -63,7 +114,7 @@ export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
 			},
 		);
 
-		disposers.push(() => {
+		disposers.push(function removeHandler() {
 			try {
 				ipcMain.removeHandler(scopedChannel);
 			} catch (reason) {
@@ -107,7 +158,7 @@ export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
 
 		const dispose = senderFn({ send: sendToChannel(channel) });
 
-		return function disposeSender() {
+		disposers.push(function disposeSender() {
 			logger?.debug("remove sender", channel);
 
 			try {
@@ -115,103 +166,68 @@ export function createElectronTypedIpcMain<TSchema extends Schema<Definition>>(
 			} catch (reason) {
 				logger?.warn(`failed to remove sender for ${channel}`, reason);
 			}
-		};
+		});
 	}
 
-	function ipcHandleAndSend(
-		operationFns: Partial<
-			Readonly<{
-				[TChannel in keyof HandleOrSendOps<TSchema>]: HandleOrSendFn<
-					HandleOrSendOps<TSchema>,
-					TChannel
-				>;
-			}>
-		>,
-	): DisposeFn {
-		for (const [channel, op] of Object.entries(schema)) {
-			const fn = operationFns[channel as keyof typeof operationFns];
+	function addSubscription(channel: string, subscriberFn: SubscribeToChannel) {
+		logger?.debug("add subscription", channel);
 
-			if (typeof fn !== "function") {
-				logger?.warn(
-					`could not setup ${channel} for ${op.operation}. expected a function, got ${typeof fn}`,
-				);
+		const scopedChannel = scopeChannel(`${channel}/sendFromRenderer`);
 
-				continue;
-			}
-
-			switch (op.operation) {
-				case "query":
-				case "mutation": {
-					addHandler(
-						op.operation,
-						channel,
-						fn as Parameters<typeof addHandler>[2],
-					);
-					break;
-				}
-
-				case "sendFromMain":
-					addSender(channel, fn as Parameters<typeof addSender>[1]);
-					break;
-			}
+		function eventHandler(event: IpcMainEvent, payload: unknown) {
+			logger?.debug("subscribe handler", { scopedChannel, payload });
+			void subscriberFn(event, serializer.deserialize(payload));
 		}
 
-		return function dispose() {
-			for (const disposeFn of disposers) disposeFn();
-		};
-	}
+		logger?.debug("subscribe", { scopedChannel, eventHandler });
+		ipcMain.addListener(scopedChannel, eventHandler);
 
-	const proxyObj = {};
-	const proxyFn = () => undefined;
+		disposers.push(function removeListener() {
+			logger?.debug("unsubscribe", { scopedChannel, eventHandler });
 
-	function subscribeProxy(channel: string) {
-		return new Proxy(proxyFn, {
-			apply: (_, __, [handler]: [(...args: unknown[]) => unknown]) => {
-				logger?.debug("add subscription", channel);
-
-				const scopedChannel = scopeChannel(`${channel}/sendFromRenderer`);
-
-				function eventHandler(event: unknown, payload: unknown) {
-					logger?.debug("subscribe handler", { scopedChannel, payload });
-					void handler(event, serializer.deserialize(payload));
-				}
-
-				logger?.debug("subscribe", { scopedChannel, handler });
-				ipcMain.addListener(scopedChannel, eventHandler);
-
-				return function unsubscribe() {
-					logger?.debug("unsubscribe", { scopedChannel, handler });
-					ipcMain.removeListener(scopedChannel, eventHandler);
-				};
-			},
+			try {
+				ipcMain.removeListener(scopedChannel, eventHandler);
+			} catch (reason) {
+				logger?.warn(`failed to remove listener for ${channel}`, reason);
+			}
 		});
 	}
 
-	function operationsProxy(channel: string) {
-		return new Proxy(proxyObj, {
-			get: (_, operation) => {
-				if (operation === "subscribe") return subscribeProxy(channel);
+	for (const [channel, def] of Object.entries(definition)) {
+		const { impl, operation } = def;
 
-				logger?.warn(
-					`invalid operation, expected 'subscribe', got ${String(operation)}`,
-				);
+		if (typeof impl !== "function") {
+			logger?.warn(
+				`could not setup ${channel} for ${operation}. expected a function, got ${typeof impl}`,
+			);
 
-				return undefined;
-			},
-		});
+			continue;
+		}
+
+		switch (operation) {
+			case "query":
+			case "mutation": {
+				addHandler(operation, channel, impl);
+				break;
+			}
+
+			case "sendFromMain":
+				addSender(channel, impl);
+				break;
+
+			case "sendFromRenderer":
+				addSubscription(channel, impl);
+				break;
+
+			default:
+				exhaustive(operation, logger);
+				break;
+		}
 	}
 
-	const ipcSubscriptions = new Proxy(proxyObj, {
-		get: (_, channel) => {
-			if (typeof channel !== "string") return undefined;
-
-			return operationsProxy(channel);
-		},
-	}) as Readonly<{
-		[TChannel in keyof SubscribeOps<TSchema>]: Subscribable<TSchema, TChannel>;
-	}>;
-
-	return { ipcHandleAndSend, ipcSubscriptions };
+	return function dispose() {
+		for (const disposeFn of disposers) disposeFn();
+	};
 }
 
 export interface CreateTypedIpcMainOptions {
@@ -224,72 +240,12 @@ export interface SendFromMainOptions {
 	targetWindows?: BrowserWindow[] | undefined;
 }
 
-type HandleOrSendFn<
-	TSchema extends HandleOrSendOps<Schema<Definition>>,
-	TChannel extends keyof TSchema,
-> = TSchema[TChannel] extends Query
-	? (
-			event: IpcMainInvokeEvent,
-			...args: TSchema[TChannel]["input"] extends undefined
-				? []
-				: [input: TSchema[TChannel]["input"]]
-		) =>
-			| Voidable<TSchema[TChannel]["response"]>
-			| Promise<Voidable<TSchema[TChannel]["response"]>>
-	: TSchema[TChannel] extends Mutation
-		? (
-				event: IpcMainInvokeEvent,
-				...args: TSchema[TChannel]["input"] extends undefined
-					? []
-					: [input: TSchema[TChannel]["input"]]
-			) =>
-				| Voidable<TSchema[TChannel]["response"]>
-				| Voidable<Promise<TSchema[TChannel]["response"]>>
-		: TSchema[TChannel] extends SendFromMain
-			? (senderApi: {
-					send: (
-						...args: TSchema[TChannel]["payload"] extends undefined
-							? [input?: SendFromMainOptions]
-							: [input: SendFromMainWithPayload<TSchema[TChannel]["payload"]>]
-					) => void;
-				}) => DisposeFn
-			: never;
-
-type Subscribable<
-	TSchema extends SubscribeOps<Schema<Definition>>,
-	TChannel extends keyof TSchema,
-> = TSchema[TChannel] extends SendFromRenderer
-	? {
-			subscribe: (
-				listener: (
-					...args: TSchema[TChannel]["payload"] extends undefined
-						? [event: IpcMainEvent]
-						: [event: IpcMainEvent, payload: TSchema[TChannel]["payload"]]
-				) => void | Promise<void>,
-			) => DisposeFn;
-		}
-	: never;
-
-type DisposeFn = () => void;
-
-// eslint-disable-next-line @typescript-eslint/no-invalid-void-type
-type Voidable<TVal> = TVal extends undefined ? void : TVal;
-
-type HandleOrSendOps<TSchema extends Schema<Definition>> = Pick<
-	TSchema,
-	KeysForOp<TSchema, Query | Mutation | SendFromMain>
->;
-
-type SubscribeOps<TSchema extends Schema<Definition>> = Pick<
-	TSchema,
-	KeysForOp<TSchema, SendFromRenderer>
->;
-
 type SendPayloadToChannel = (input?: SendFromMainWithPayload) => void;
 
-type KeysForOp<TSchema extends Schema<Definition>, TOp extends Operation> = {
-	[K in keyof TSchema]: TSchema[K] extends TOp ? K : never;
-}[keyof TSchema];
+type SubscribeToChannel = (
+	event: IpcMainEvent,
+	payload?: unknown,
+) => void | Promise<void>;
 
 interface SendFromMainWithPayload<TPayload = unknown>
 	extends SendFromMainOptions {

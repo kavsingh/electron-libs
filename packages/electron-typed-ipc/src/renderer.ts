@@ -1,12 +1,9 @@
-import { ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE, exhaustive } from "./internal.ts";
+import { ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE } from "./internal.ts";
 import { defaultSerializer } from "./serializer.ts";
 
 import type {
-	AllOpsSchema,
 	IpcResult,
-	KeysOfUnion,
-	UnsubscribeFn,
-	Schema,
+	DisposeFn,
 	Query,
 	Mutation,
 	SendFromRenderer,
@@ -18,9 +15,7 @@ import type { IpcPreloadApi } from "./preload.ts";
 import type { Serializer } from "./serializer.ts";
 import type { IpcRendererEvent } from "electron";
 
-export function createElectronTypedIpcRenderer<
-	TSchema extends Schema<Definition>,
->(options?: {
+export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	serializer?: Serializer | undefined;
 	logger?: Logger | undefined;
 }) {
@@ -58,7 +53,7 @@ export function createElectronTypedIpcRenderer<
 					response,
 				});
 
-				if (response.__r === "error") {
+				if (response.result === "error") {
 					throw serializer.deserialize(response.error);
 				}
 
@@ -79,7 +74,7 @@ export function createElectronTypedIpcRenderer<
 
 				logger?.debug("mutation result", { channel, response });
 
-				if (response.__r === "error") {
+				if (response.result === "error") {
 					throw serializer.deserialize(response.error);
 				}
 
@@ -130,9 +125,7 @@ export function createElectronTypedIpcRenderer<
 			get: (_, operation) => {
 				if (typeof operation !== "string") return undefined;
 
-				const op = operation as RendererProxyMethod;
-
-				switch (op) {
+				switch (operation) {
 					case "query":
 						return queryProxy(api, channel);
 
@@ -146,7 +139,7 @@ export function createElectronTypedIpcRenderer<
 						return subscribeProxy(api, channel);
 
 					default: {
-						exhaustive(op, logger);
+						logger?.warn(`unknown operation ${operation}`);
 
 						return undefined;
 					}
@@ -155,7 +148,7 @@ export function createElectronTypedIpcRenderer<
 		});
 	}
 
-	return new Proxy(proxyObj as ElectronTypedIpcRenderer<TSchema>, {
+	return new Proxy(proxyObj as ElectronTypedIpcRenderer<TDefinition>, {
 		get: (_, channel) => {
 			if (typeof channel !== "string") return undefined;
 
@@ -164,55 +157,50 @@ export function createElectronTypedIpcRenderer<
 	});
 }
 
-type ElectronTypedIpcRenderer<TDefinitions extends Schema<Definition>> =
-	Readonly<{
-		[TName in keyof TDefinitions]: TDefinitions[TName] extends Query
+type ElectronTypedIpcRenderer<TDefinition extends Definition> = Readonly<{
+	[TName in keyof TDefinition]: TDefinition[TName] extends Query
+		? {
+				query: (
+					...args: TDefinition[TName]["input"] extends undefined
+						? []
+						: [input: TDefinition[TName]["input"]]
+				) => Promise<TDefinition[TName]["response"]>;
+			}
+		: TDefinition[TName] extends Mutation
 			? {
-					query: (
-						...args: TDefinitions[TName]["input"] extends undefined
+					mutate: (
+						...args: TDefinition[TName]["input"] extends undefined
 							? []
-							: [input: TDefinitions[TName]["input"]]
-					) => Promise<TDefinitions[TName]["response"]>;
+							: [input: TDefinition[TName]["input"]]
+					) => Promise<TDefinition[TName]["response"]>;
 				}
-			: TDefinitions[TName] extends Mutation
+			: TDefinition[TName] extends SendFromRenderer
 				? {
-						mutate: (
-							...args: TDefinitions[TName]["input"] extends undefined
-								? []
-								: [input: TDefinitions[TName]["input"]]
-						) => Promise<TDefinitions[TName]["response"]>;
+						send: (
+							...args: TDefinition[TName]["payload"] extends undefined
+								? [options?: SendFromRendererOptions]
+								: [
+										payload: TDefinition[TName]["payload"],
+										options?: SendFromRendererOptions,
+									]
+						) => void;
 					}
-				: TDefinitions[TName] extends SendFromRenderer
+				: TDefinition[TName] extends SendFromMain
 					? {
-							send: (
-								...args: TDefinitions[TName]["payload"] extends undefined
-									? [options?: SendFromRendererOptions]
-									: [
-											payload: TDefinitions[TName]["payload"],
-											options?: SendFromRendererOptions,
-										]
-							) => void;
+							subscribe: (
+								listener: (
+									...args: TDefinition[TName]["payload"] extends undefined
+										? [event: IpcRendererEvent]
+										: [
+												event: IpcRendererEvent,
+												payload: TDefinition[TName]["payload"],
+											]
+								) => void | Promise<void>,
+							) => DisposeFn;
 						}
-					: TDefinitions[TName] extends SendFromMain
-						? {
-								subscribe: (
-									listener: (
-										...args: TDefinitions[TName]["payload"] extends undefined
-											? [event: IpcRendererEvent]
-											: [
-													event: IpcRendererEvent,
-													payload: TDefinitions[TName]["payload"],
-												]
-									) => void | Promise<void>,
-								) => UnsubscribeFn;
-							}
-						: never;
-	}>;
+					: never;
+}>;
 
 export interface SendFromRendererOptions {
 	toHost?: boolean | undefined;
 }
-
-type RendererProxyMethod = KeysOfUnion<
-	ElectronTypedIpcRenderer<AllOpsSchema>[keyof ElectronTypedIpcRenderer<AllOpsSchema>]
->;
