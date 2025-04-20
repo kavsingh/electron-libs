@@ -15,17 +15,17 @@ test.describe("app tests", () => {
 		await teardownApplication(app);
 	});
 
-	test("it should be able to ping", async () => {
+	test("it should be able to complete req / res", async () => {
 		const page = await app.firstWindow();
 
-		await page.getByRole("button", { name: "ping" }).click();
+		await page.getByRole("button", { name: "req" }).click();
 
-		await expect(page.getByText("pong")).toBeVisible();
+		await expect(page.getByText("res")).toBeVisible();
 	});
 
-	test("it should receive hello message", async () => {
+	test("it should be able to complete pub / sub", async () => {
 		const page = await app.firstWindow();
 
-		await expect(page.getByText(/^hello now:/)).toBeVisible();
+		await expect(page.getByText("pong (ping)")).toBeVisible();
 	});
 });

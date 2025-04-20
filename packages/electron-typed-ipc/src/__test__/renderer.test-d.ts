@@ -1,6 +1,6 @@
 import { describe, it, expectTypeOf, expect } from "vitest";
 
-import { createElectronTypedIpcRenderer } from "../renderer.ts";
+import { createIpcRenderer } from "../renderer.ts";
 
 import type {
 	SendFromMainPayload,
@@ -10,7 +10,7 @@ import type {
 import type { SendFromRendererOptions } from "../renderer.ts";
 import type { IpcRendererEvent } from "electron";
 
-const tipcRenderer = createElectronTypedIpcRenderer<TypedIpcApi>();
+const tipcRenderer = createIpcRenderer<TypedIpcApi>();
 
 describe("renderer types", () => {
 	describe("query", () => {

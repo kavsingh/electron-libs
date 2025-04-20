@@ -1,6 +1,6 @@
-import { createElectronTypedIpcRenderer } from "@kavsingh/electron-typed-ipc/renderer";
+import { createIpcRenderer } from "@kavsingh/electron-typed-ipc/renderer";
 
-import type { AppIpcSchema } from "./common.ts";
+import type { AppIpcDefinitions } from "./main.ts";
 
 function updateDisplay(select: string, updater: (current: string) => string) {
 	const el = document.querySelector(`[data-display=${select}]`);
@@ -9,7 +9,7 @@ function updateDisplay(select: string, updater: (current: string) => string) {
 }
 
 export function mount() {
-	const tipc = createElectronTypedIpcRenderer<AppIpcSchema>();
+	const tipc = createIpcRenderer<AppIpcDefinitions>();
 
 	updateDisplay("user-agent", () => navigator.userAgent);
 	updateDisplay("location", () => JSON.stringify(window.location, null, 2));
@@ -21,9 +21,9 @@ export function mount() {
 		);
 	};
 
-	document.querySelector("[data-click=ping]")?.addEventListener("click", () => {
-		void tipc.ping.query().then((response) => {
-			updateDisplay("pong", (current) => `${current}<br/>${response}`);
+	document.querySelector("[data-click=req]")?.addEventListener("click", () => {
+		void tipc.req.query().then((res) => {
+			updateDisplay("res", (current) => `${current}<br/>${res}`);
 		});
 	});
 
@@ -31,9 +31,13 @@ export function mount() {
 		window.postMessage("message", "*");
 	});
 
-	tipc.helloNow.subscribe((_, message) => {
-		updateDisplay("hello", () => message);
+	tipc.pong.subscribe((_, message) => {
+		updateDisplay("pongs", (current) => `${current}<br/>${message}`);
 	});
+
+	setInterval(() => {
+		tipc.ping.send("ping");
+	}, 500);
 }
 
 document.addEventListener("DOMContentLoaded", mount);
