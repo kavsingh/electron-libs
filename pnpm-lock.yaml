@@ -65,13 +65,13 @@ importers:
 
   apps/example:
     dependencies:
+      '@kavsingh/electron-typed-ipc':
+        specifier: workspace:*
+        version: link:../../packages/electron-typed-ipc
       electron:
         specifier: 37.1.0
         version: 37.1.0
     devDependencies:
-      '@kavsingh/electron-typed-ipc':
-        specifier: workspace:*
-        version: link:../../packages/electron-typed-ipc
       '@playwright/test':
         specifier: 1.53.2
         version: 1.53.2

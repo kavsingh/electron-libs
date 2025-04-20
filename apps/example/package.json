@@ -17,10 +17,10 @@
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
+		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"electron": "37.1.0"
 	},
 	"devDependencies": {
-		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"@playwright/test": "1.53.2",
 		"@tsconfig/node22": "22.0.2",
 		"@types/node": "22.13.14",
