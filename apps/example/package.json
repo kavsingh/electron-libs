@@ -12,13 +12,15 @@
 		"start": "cross-env pnpm run build && electron ./dist/main.js",
 		"test": "echo 'soon'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"keywords": [],
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
-		"electron": "35.2.0"
+		"electron": "35.2.0",
+		"@kavsingh/electron-typed-ipc": "workspace:*"
 	},
 	"devDependencies": {
 		"@playwright/test": "1.52.0",
