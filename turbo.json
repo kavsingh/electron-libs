@@ -5,6 +5,10 @@
 			"cache": false,
 			"dependsOn": ["^build"]
 		},
+		"typecheck": {
+			"cache": false,
+			"dependsOn": ["^build"]
+		},
 		"lint": {
 			"cache": false,
 			"dependsOn": ["^build"]

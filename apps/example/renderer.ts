@@ -4,8 +4,8 @@ export function mount() {
 	if (!(appMount instanceof HTMLElement)) throw new Error("no valid #app");
 
 	appMount.innerHTML = `
-	<button data-click="ping">ping</button>
-	<div data-display="pong"></div>
+		<button data-click="ping">ping</button>
+		<div data-display="pong"></div>
 	`;
 
 	document.querySelector("[data-click=ping]")?.addEventListener("click", () => {
