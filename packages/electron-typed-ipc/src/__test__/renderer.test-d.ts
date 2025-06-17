@@ -1,16 +1,37 @@
 import { describe, it, expectTypeOf, expect } from "vitest";
 
+import {
+	defineOperations,
+	mutation,
+	query,
+	sendFromMain,
+	sendFromRenderer,
+} from "../main.ts";
 import { createIpcRenderer } from "../renderer.ts";
 
-import type {
-	SendFromMainPayload,
-	SendFromRendererPayload,
-	TypedIpcApi,
-} from "./fixtures.ts";
 import type { SendFromRendererOptions } from "../renderer.ts";
 import type { IpcRendererEvent } from "electron";
 
-const tipcRenderer = createIpcRenderer<TypedIpcApi>();
+const _definition = defineOperations({
+	queryVoidArgVoidReturn: query<undefined, undefined>(stubUndefined),
+	queryVoidArgStringReturn: query<string, undefined>(stubString),
+	queryNumberArgVoidReturn: query<undefined, number>(stubUndefined),
+	queryStringArgNumberReturn: query<number, string>(stubNumber),
+
+	mutationVoidArgVoidReturn: mutation<undefined, undefined>(stubUndefined),
+	mutationVoidArgStringReturn: mutation<string, undefined>(stubString),
+	mutationNumberArgVoidReturn: mutation<undefined, number>(stubUndefined),
+	mutationStringArgNumberReturn: mutation<number, string>(stubNumber),
+
+	sendVoidFromMain: sendFromMain<undefined>(stubEvents),
+	sendPayloadFromMain: sendFromMain<SendFromMainPayload>(stubEvents),
+
+	sendVoidFromRenderer: sendFromRenderer<undefined>(stubUndefined),
+	sendPayloadFromRenderer:
+		sendFromRenderer<SendFromRendererPayload>(stubUndefined),
+});
+
+const tipcRenderer = createIpcRenderer<typeof _definition>();
 
 describe("renderer types", () => {
 	describe("query", () => {
@@ -139,3 +160,29 @@ describe("renderer types", () => {
 		});
 	});
 });
+
+function stubUndefined(..._: unknown[]) {
+	return undefined;
+}
+
+function stubString(..._: unknown[]) {
+	return "hello";
+}
+
+function stubNumber(..._: unknown[]) {
+	return 10;
+}
+
+function stubEvents() {
+	return function cleanup() {
+		// noop
+	};
+}
+
+interface SendFromMainPayload {
+	type: "sendFromMain";
+}
+
+interface SendFromRendererPayload {
+	type: "sendFromRenderer";
+}
