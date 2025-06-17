@@ -68,13 +68,13 @@
 	"devDependencies": {
 		"@tsconfig/node20": "20.1.6",
 		"@types/node": "20.17.30",
-		"@vitest/coverage-v8": "3.2.3",
+		"@vitest/coverage-v8": "3.2.4",
 		"electron": "36.4.0",
 		"eslint-plugin-vitest": "0.5.4",
 		"tsdown": "0.12.8",
-		"vitest": "3.2.3"
+		"vitest": "3.2.4"
 	},
 	"peerDependencies": {
-		"electron": ">=33"
+		"electron": ">=36"
 	}
 }
