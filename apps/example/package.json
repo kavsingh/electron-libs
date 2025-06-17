@@ -13,12 +13,14 @@
 		"test": "echo 'soon'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
 		"typecheck": "tsc",
-		"lint": "eslint ."
+		"lint": "eslint .",
+		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"keywords": [],
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
+		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"electron": "36.4.0"
 	},
 	"devDependencies": {
