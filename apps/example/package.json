@@ -4,7 +4,7 @@
 	"description": "libs usage examples and tests",
 	"type": "module",
 	"engines": {
-		"node": ">=22"
+		"node": "22.x.x"
 	},
 	"main": "./dist/main.js",
 	"scripts": {
@@ -19,12 +19,13 @@
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
-		"electron": "36.4.0"
+		"electron": "37.1.0"
 	},
 	"devDependencies": {
-		"@playwright/test": "1.53.0",
+		"@playwright/test": "1.53.2",
 		"@tsconfig/node22": "22.0.2",
+		"@types/node": "22.13.14",
 		"eslint-plugin-playwright": "2.2.0",
-		"tsdown": "0.12.8"
+		"tsdown": "0.12.9"
 	}
 }
