@@ -10,12 +10,14 @@ export default defineConfig([
 	{
 		entry: ["./renderer.ts"],
 		target: ["chrome130"],
+		noExternal: [/@kavsingh/],
 		format: ["esm"],
 		copy: [{ from: "./app.html", to: "./dist/app.html" }],
 	},
 	{
 		entry: ["./preload.ts"],
 		target: ["node20", "chrome130"],
+		noExternal: [/@kavsingh/],
 		format: ["cjs"],
 	},
 ]);
