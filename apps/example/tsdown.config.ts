@@ -3,8 +3,13 @@ import { defineConfig } from "tsdown";
 export default defineConfig([
 	{
 		clean: true,
-		entry: ["./main.ts", "./renderer.ts"],
-		target: ["node20", "chrome130"],
+		entry: ["./main.ts"],
+		target: ["node20"],
+		format: ["esm"],
+	},
+	{
+		entry: ["./renderer.ts"],
+		target: ["chrome130"],
 		format: ["esm"],
 		copy: [{ from: "./app.html", to: "./dist/app.html" }],
 	},

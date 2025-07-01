@@ -3,9 +3,6 @@
 	"version": "1.0.0-dev.0",
 	"description": "libs usage examples and tests",
 	"type": "module",
-	"engines": {
-		"node": "22.x.x"
-	},
 	"main": "./dist/main.js",
 	"scripts": {
 		"build": "tsdown",
