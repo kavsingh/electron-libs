@@ -5,6 +5,7 @@ export function mount() {
 
 	appMount.innerHTML = `
 		<pre>${JSON.stringify(window.location, null, 2)}</pre>
+		<hr />
 		<button data-click="ping">ping</button>
 		<button data-click="post">post</button>
 		<div data-display="pong"></div>

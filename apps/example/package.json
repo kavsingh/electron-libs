@@ -1,5 +1,6 @@
 {
 	"name": "example",
+	"productName": "Example",
 	"version": "1.0.0-dev.0",
 	"description": "libs usage examples and tests",
 	"type": "module",
@@ -16,13 +17,13 @@
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
-		"electron": "37.2.6"
+		"electron": "37.3.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "1.54.2",
 		"@tsconfig/node22": "22.0.2",
-		"@types/node": "24.2.0",
+		"@types/node": "24.3.0",
 		"eslint-plugin-playwright": "2.2.2",
-		"tsdown": "0.13.3"
+		"tsdown": "0.14.1"
 	}
 }

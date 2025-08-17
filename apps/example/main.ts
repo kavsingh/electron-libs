@@ -15,13 +15,13 @@ void app.whenReady().then(() => {
 	});
 
 	if (!process.env["IS_E2E"]) appWindow.webContents.openDevTools();
-	void appWindow.loadURL("app://dist/app.html");
+	void appWindow.loadURL("app://bundle/app.html");
 });
 
 async function appProtocolHandler(request: Request): Promise<Response> {
 	const { host, pathname } = new URL(request.url);
 
-	if (host !== "dist") {
+	if (host !== "bundle") {
 		return new Response("not found", {
 			status: 400,
 			headers: { "content-type": "text/html" },
