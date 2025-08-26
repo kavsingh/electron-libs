@@ -1,0 +1,9 @@
+:root {
+	font-family: system-ui;
+	line-height: 1.33;
+}
+
+pre {
+	text-wrap: wrap;
+	font-size: 0.68rem;
+}

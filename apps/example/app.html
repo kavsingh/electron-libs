@@ -2,15 +2,22 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+		<meta http-equiv="Content-Security-Policy" content="default-src app:;" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>app</title>
-		<meta
-			http-equiv="Content-Security-Policy"
-			content="default-src 'self' app:"
-		/>
+		<link href="./app.css" rel="stylesheet" />
 	</head>
 	<body>
-		<div id="app"></div>
+		<main>
+			<pre data-display="user-agent"></pre>
+			<hr />
+			<pre data-display="location"></pre>
+			<hr />
+			<button data-click="ping">ping</button>
+			<button data-click="post">post</button>
+			<div data-display="pong"></div>
+			<div data-display="posts"></div>
+		</main>
 		<script type="module" src="./renderer.js"></script>
 	</body>
 </html>

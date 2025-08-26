@@ -15,7 +15,8 @@ void app.whenReady().then(() => {
 	});
 
 	if (!process.env["IS_E2E"]) appWindow.webContents.openDevTools();
-	void appWindow.loadURL("app://bundle/app.html");
+
+	void appWindow.loadURL("app://bundle");
 });
 
 async function appProtocolHandler(request: Request): Promise<Response> {
@@ -28,7 +29,10 @@ async function appProtocolHandler(request: Request): Promise<Response> {
 		});
 	}
 
-	const pathToServe = path.resolve(dirname, pathname.replace(/^\//, ""));
+	const pathToServe = path.resolve(
+		dirname,
+		pathname.replace(/^\//, "") || "app.html",
+	);
 	const relativePath = path.relative(dirname, pathToServe);
 	const isSafe =
 		relativePath &&

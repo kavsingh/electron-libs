@@ -11,7 +11,10 @@ export default defineConfig([
 		entry: ["./renderer.ts"],
 		target: ["chrome130"],
 		format: ["esm"],
-		copy: [{ from: "./app.html", to: "./dist/app.html" }],
+		copy: [
+			{ from: "./app.html", to: "./dist/app.html" },
+			{ from: "./app.css", to: "./dist/app.css" },
+		],
 	},
 	{
 		entry: ["./preload.ts"],

@@ -1,36 +1,27 @@
+function updateDisplay(select: string, updater: (current: string) => string) {
+	const el = document.querySelector(`[data-display=${select}]`);
+
+	if (el instanceof HTMLElement) el.innerHTML = updater(el.innerHTML);
+}
+
 export function mount() {
-	const appMount = document.querySelector("#app");
+	updateDisplay("user-agent", () => navigator.userAgent);
+	updateDisplay("location", () => JSON.stringify(window.location, null, 2));
 
-	if (!(appMount instanceof HTMLElement)) throw new Error("no valid #app");
-
-	appMount.innerHTML = `
-		<pre>${JSON.stringify(window.location, null, 2)}</pre>
-		<hr />
-		<button data-click="ping">ping</button>
-		<button data-click="post">post</button>
-		<div data-display="pong"></div>
-		<div data-display="posts"></div>
-	`;
+	window.onmessage = (event) => {
+		updateDisplay(
+			"posts",
+			(current) => `${current}<br/>${event.data} (${event.origin})`,
+		);
+	};
 
 	document.querySelector("[data-click=ping]")?.addEventListener("click", () => {
-		const display = document.querySelector("[data-display=pong]");
-
-		if (display instanceof HTMLElement) {
-			display.innerHTML += `<br/>${window.api.ping()}`;
-		}
+		updateDisplay("pong", (current) => `${current}<br/>${window.api.ping()}`);
 	});
 
 	document.querySelector("[data-click=post]")?.addEventListener("click", () => {
 		window.postMessage("message", "*");
 	});
-
-	window.onmessage = (event) => {
-		const display = document.querySelector("[data-display=posts]");
-
-		if (display instanceof HTMLElement) {
-			display.innerHTML += `<br/>${event.data} (${event.origin})`;
-		}
-	};
 }
 
 document.addEventListener("DOMContentLoaded", mount);
