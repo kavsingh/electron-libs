@@ -1,10 +1,10 @@
+import { defineConfig } from "eslint/config";
 import playwright from "eslint-plugin-playwright";
 import globals from "globals";
-import * as tsEslint from "typescript-eslint";
 
 import baseConfig from "../../eslint.config.js";
 
-export default tsEslint.config(
+export default defineConfig(
 	{ ignores: ["dist/*", "reports/*"] },
 
 	...baseConfig,
