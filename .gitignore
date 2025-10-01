@@ -7,8 +7,11 @@
 **/*.log*
 **/*.tsbuildinfo
 
-.turbo/
+.nx/cache
+.nx/workspace-data
+.github/instructions/nx.instructions.md
 
 .vscode/**/*
 !.vscode/extensions.json
 !.vscode/settings.json
+

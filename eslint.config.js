@@ -7,7 +7,7 @@ import globals from "globals";
 import { configs as tsEslint } from "typescript-eslint";
 
 export default defineConfig(
-	{ ignores: [".vscode/*", ".turbo/*", ".temp/*"] },
+	{ ignores: [".vscode/*", ".nx/*", ".temp/*"] },
 
 	{
 		linterOptions: { reportUnusedDisableDirectives: true },

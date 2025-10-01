@@ -16,12 +16,12 @@
 		"node": ">=24"
 	},
 	"scripts": {
-		"test": "turbo test",
-		"test:e2e": "turbo test:e2e",
-		"typecheck": "turbo typecheck",
-		"lint": "turbo lint",
-		"start": "turbo start",
-		"clean:turbo": "rm -rf .turbo && pnpm -r exec rm -rf .turbo",
+		"test": "nx run-many -t test",
+		"test:e2e": "nx test:e2e example",
+		"typecheck": "nx run-many -t typecheck",
+		"lint": "nx run-many -t lint",
+		"start": "nx start example",
+		"clean:nx": "rm -rf .nx && pnpm -r exec rm -rf .nx",
 		"clean:modules": "rm -rf node_modules && pnpm -r exec rm -rf node_modules"
 	},
 	"devDependencies": {
@@ -30,7 +30,7 @@
 		"@tsconfig/node24": "24.0.1",
 		"@tsconfig/strictest": "2.0.6",
 		"@types/eslint": "9.6.1",
-		"@types/node": "24.6.0",
+		"@types/node": "24.6.1",
 		"cross-env": "10.1.0",
 		"eslint": "9.36.0",
 		"eslint-config-prettier": "10.1.8",
@@ -38,10 +38,10 @@
 		"eslint-plugin-import-x": "4.16.1",
 		"eslint-plugin-prettier": "5.5.4",
 		"globals": "16.4.0",
+		"nx": "21.6.2",
 		"prettier": "3.6.2",
 		"rimraf": "6.0.1",
-		"turbo": "2.5.8",
-		"typescript": "5.9.2",
+		"typescript": "5.9.3",
 		"typescript-eslint": "8.45.0"
 	}
 }

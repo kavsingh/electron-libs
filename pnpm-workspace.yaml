@@ -1,9 +1,10 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/*
+  - packages/*
 
 onlyBuiltDependencies:
-  - "electron"
-  - "electron-winstaller"
-  - "esbuild"
-  - "unrs-resolver"
+  - electron
+  - electron-winstaller
+  - esbuild
+  - nx
+  - unrs-resolver
