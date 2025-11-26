@@ -8,7 +8,7 @@ import type { ElectronApplication } from "@playwright/test";
 
 export function setupApplication() {
 	return electron.launch({
-		args: [path.join(PROJECT_ROOT, "dist/main.js")],
+		args: [path.join(PROJECT_ROOT, "dist/main.mjs")],
 		env: { IS_E2E: "true" },
 	});
 }
