@@ -7,7 +7,7 @@
 	"main": "./dist/main.js",
 	"scripts": {
 		"build": "tsdown",
-		"start": "cross-env pnpm run build && electron ./dist/main.js",
+		"start": "cross-env pnpm run build && electron ./dist/main.mjs",
 		"test": "echo 'soon'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
 		"typecheck": "tsc",
