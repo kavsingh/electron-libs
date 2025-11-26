@@ -38,10 +38,7 @@ export default defineConfig(
 		files: ["**/*.test.ts", "**/*.test?(-d).ts"],
 		languageOptions: { globals: { ...globals.node } },
 		settings: { vitest: { typecheck: true } },
-		extends: [
-			// @ts-expect-error upstream types
-			vitest.configs.all,
-		],
+		extends: [vitest.configs.all],
 		rules: {
 			"vitest/no-hooks": "off",
 			"vitest/require-mock-type-parameters": "off",

@@ -34,7 +34,7 @@ const _definition = defineOperations({
 const tipcRenderer = createIpcRenderer<typeof _definition>();
 
 describe("renderer types", () => {
-	describe("query", () => {
+	describe("query operation", () => {
 		it("should correctly type query without arg and void return", () => {
 			expect.assertions(2);
 
@@ -73,7 +73,7 @@ describe("renderer types", () => {
 		});
 	});
 
-	describe("mutate", () => {
+	describe("mutate operation", () => {
 		it("should correctly type mutation without arg and void return", () => {
 			expect.assertions(2);
 
@@ -111,7 +111,7 @@ describe("renderer types", () => {
 		});
 	});
 
-	describe("subscribe", () => {
+	describe("subscribe operation", () => {
 		it("should correctly type send from main without payload", () => {
 			expect.assertions(2);
 
@@ -137,7 +137,7 @@ describe("renderer types", () => {
 		});
 	});
 
-	describe("send", () => {
+	describe("send operation", () => {
 		it("should correctly type send from renderer without payload", () => {
 			expect.assertions(2);
 

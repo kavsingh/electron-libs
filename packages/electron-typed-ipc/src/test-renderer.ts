@@ -84,7 +84,7 @@ export function applyTypedIpcMocks<TDefinitions extends Definition>(
 
 export function typedIpcSendFromMain<
 	TDefinitions extends Definition,
-	TChannel extends string = SendableChannel<TDefinitions>,
+	TChannel extends SendableChannel<TDefinitions>,
 >(
 	channel: TChannel,
 	payload: TDefinitions[TChannel] extends { operation: "sendFromMain" }
@@ -94,7 +94,7 @@ export function typedIpcSendFromMain<
 		: never,
 	event?: IpcRendererEvent,
 ) {
-	eventHandlers[channel]?.forEach((handler) => {
+	eventHandlers[channel as string]?.forEach((handler) => {
 		handler(event ?? createMockIpcRendererEvent(), payload);
 	});
 }
@@ -142,13 +142,12 @@ type SendableChannel<TDefinitions extends Definition> = ChannelForOperation<
 type ChannelForOperation<
 	TDefinitions extends Definition,
 	TOperation extends Operation["operation"],
-> = string &
-	Extract<
-		{
-			[TChannel in keyof TDefinitions]: {
-				channel: TChannel;
-				operation: TDefinitions[TChannel]["operation"];
-			};
-		}[keyof TDefinitions],
-		{ operation: TOperation }
-	>["channel"];
+> = Extract<
+	{
+		[TChannel in keyof TDefinitions]: {
+			channel: TChannel;
+			operation: TDefinitions[TChannel]["operation"];
+		};
+	}[keyof TDefinitions],
+	{ operation: TOperation }
+>["channel"];
