@@ -55,7 +55,16 @@ void app.whenReady().then(() => {
 });
 
 async function appProtocolHandler(request: Request): Promise<Response> {
-	const { host, pathname } = new URL(request.url);
+	const requestUrl = URL.parse(request.url);
+
+	if (!requestUrl) {
+		return new Response(`could not parse: ${request.url}`, {
+			status: 400,
+			headers: { "content-type": "text/html" },
+		});
+	}
+
+	const { host, pathname } = requestUrl;
 
 	if (host !== "bundle") {
 		return new Response("not found", {

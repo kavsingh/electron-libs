@@ -18,7 +18,7 @@
 	"author": "<author>",
 	"license": "MIT",
 	"dependencies": {
-		"electron": "39.2.3"
+		"electron": "39.2.4"
 	},
 	"devDependencies": {
 		"@kavsingh/electron-typed-ipc": "workspace:*",
@@ -26,6 +26,6 @@
 		"@tsconfig/node22": "22.0.5",
 		"@types/node": "22.19.1",
 		"eslint-plugin-playwright": "2.3.0",
-		"tsdown": "0.16.7"
+		"tsdown": "0.16.8"
 	}
 }
