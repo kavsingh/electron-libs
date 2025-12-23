@@ -5,10 +5,13 @@ extends:
 pre-commit:
   jobs:
     - run: pnpm oxfmt {staged_files}
-      glob: "*.{js,ts,jsx,tsx,json,jsonc,yaml,yml,html,css}"
+      glob: "**/*.{js,ts,jsx,tsx,json,jsonc,yaml,yml,html,css}"
       stage_fixed: true
 
 pre-push:
+  parallel: true
   jobs:
+    - run: pnpm typecheck
+      glob: "**/*.*"
     - run: pnpm lint
-      glob: "*.*"
+      glob: "**/*.*"
