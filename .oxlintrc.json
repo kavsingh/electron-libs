@@ -1,6 +1,6 @@
 {
 	"$schema": "./node_modules/oxlint/configuration_schema.json",
-	"ignorePatterns": [".vscode/**/*", "**/.nx/**/*"],
+	"ignorePatterns": [".vscode/**", "**/.nx/**"],
 	"plugins": ["oxc", "eslint", "import", "unicorn", "promise"],
 	"categories": {
 		"correctness": "error",

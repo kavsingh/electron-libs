@@ -1,15 +1,17 @@
-import { defineConfig } from "eslint/config";
 import playwright from "eslint-plugin-playwright";
+import { defineConfig } from "eslint/config";
+import { configs as tsEslint } from "typescript-eslint";
 
-import baseConfig from "../../eslint.config.js";
+// TODO: move eslint plugins to oxlint jsPlugins once available in language server
 
 export default defineConfig(
-	{ ignores: ["dist/*", "reports/*"] },
-
-	...baseConfig,
+	{
+		ignores: ["dist/*", "reports/*"],
+		linterOptions: { reportUnusedDisableDirectives: true },
+	},
 
 	{
 		files: ["./e2e/**/*.test.ts"],
-		extends: [playwright.configs["flat/recommended"]],
+		extends: [tsEslint.base, playwright.configs["flat/recommended"]],
 	},
 );

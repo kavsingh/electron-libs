@@ -1,12 +1,13 @@
-nodeLinker: hoisted
-
 packages:
   - apps/*
   - packages/*
+
+nodeLinker: hoisted
 
 onlyBuiltDependencies:
   - electron
   - electron-winstaller
   - esbuild
+  - lefthook
   - nx
   - unrs-resolver
