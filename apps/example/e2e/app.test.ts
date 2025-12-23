@@ -5,6 +5,7 @@ import { setupApplication, teardownApplication } from "./lib/application.ts";
 import type { ElectronApplication } from "@playwright/test";
 
 test.describe("app tests", () => {
+	// oxlint-disable-next-line init-declarations
 	let app: ElectronApplication;
 
 	test.beforeEach(async () => {

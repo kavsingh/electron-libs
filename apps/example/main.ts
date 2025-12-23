@@ -35,8 +35,12 @@ const ipcDefinition = defineOperations({
 export type AppIpcDefinitions = typeof ipcDefinition;
 
 protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
+// oxlint-disable-next-line prefer-top-level-await
+void init();
 
-void app.whenReady().then(() => {
+async function init() {
+	await app.whenReady();
+
 	protocol.handle("app", appProtocolHandler);
 
 	const appWindow = new BrowserWindow({
@@ -52,25 +56,30 @@ void app.whenReady().then(() => {
 	app.on("quit", () => {
 		disposeIpc();
 	});
-});
+}
 
-async function appProtocolHandler(request: Request): Promise<Response> {
+// oxlint-disable-next-line max-statements
+function appProtocolHandler(request: Request): Promise<Response> {
 	const requestUrl = URL.parse(request.url);
 
 	if (!requestUrl) {
-		return new Response(`could not parse: ${request.url}`, {
-			status: 400,
-			headers: { "content-type": "text/html" },
-		});
+		return Promise.resolve(
+			new Response(`could not parse: ${request.url}`, {
+				status: 400,
+				headers: { "content-type": "text/html" },
+			}),
+		);
 	}
 
 	const { host, pathname } = requestUrl;
 
 	if (host !== "bundle") {
-		return new Response("not found", {
-			status: 400,
-			headers: { "content-type": "text/html" },
-		});
+		return Promise.resolve(
+			new Response("not found", {
+				status: 400,
+				headers: { "content-type": "text/html" },
+			}),
+		);
 	}
 
 	const pathToServe = path.resolve(
@@ -84,10 +93,12 @@ async function appProtocolHandler(request: Request): Promise<Response> {
 		!path.isAbsolute(relativePath);
 
 	if (!isSafe) {
-		return new Response(`unsafe path: ${pathname}`, {
-			status: 400,
-			headers: { "content-type": "text/html" },
-		});
+		return Promise.resolve(
+			new Response(`unsafe path: ${pathname}`, {
+				status: 400,
+				headers: { "content-type": "text/html" },
+			}),
+		);
 	}
 
 	return net.fetch(url.pathToFileURL(pathToServe).href);

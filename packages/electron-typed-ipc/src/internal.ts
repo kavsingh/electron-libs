@@ -1,5 +1,3 @@
-export const ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE = "__ELECTRON_TYPED_IPC__";
-
 import type { Logger } from "./logger.ts";
 import type {
 	BrowserWindow,
@@ -8,6 +6,7 @@ import type {
 	WebContents,
 } from "electron";
 
+export const ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE = "__ELECTRON_TYPED_IPC__";
 const channelPrefix = "__tipc__/";
 
 export function scopeChannel(channel: `${string}/${Operation["operation"]}`) {
@@ -19,7 +18,7 @@ export function isValidChannel(channel: string) {
 }
 
 export function exhaustive(param: never, logger?: Logger) {
-	// eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+	// oxlint-disable-next-line restrict-template-expressions
 	logger?.warn(`unknown value ${param}`);
 }
 
@@ -95,5 +94,5 @@ export type IpcResult<TValue = unknown> =
 	| { result: "ok"; data: TValue }
 	| { result: "error"; error: unknown };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line no-explicit-any
 type AnyImpl = (...args: any[]) => any;

@@ -15,6 +15,7 @@ import type { IpcPreloadApi } from "./preload.ts";
 import type { Serializer } from "./serializer.ts";
 import type { IpcRendererEvent } from "electron";
 
+// oxlint-disable-next-line max-lines-per-function, max-statements
 export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	serializer?: Serializer | undefined;
 	logger?: Logger | undefined;
@@ -22,6 +23,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	let preloadApi: IpcPreloadApi | undefined = undefined;
 
 	if (ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE in globalThis.window) {
+		// oxlint-disable-next-line no-unsafe-type-assertion
 		preloadApi = globalThis.window[
 			ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE
 		] as IpcPreloadApi;
@@ -35,7 +37,9 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 
 	const serializer = options?.serializer ?? defaultSerializer;
 	const logger = options?.logger;
-	const proxyObj = {};
+	// oxlint-disable-next-line no-unsafe-type-assertion
+	const proxyObj = {} as ElectronTypedIpcRenderer<TDefinition>;
+	// oxlint-disable-next-line func-style, consistent-function-scoping
 	const proxyFn = () => undefined;
 
 	function queryProxy(api: IpcPreloadApi, channel: string) {
@@ -43,6 +47,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 			apply: async (_, __, [arg]: [unknown]) => {
 				logger?.debug("query", { channel, arg });
 
+				// oxlint-disable-next-line no-unsafe-type-assertion
 				const response = (await api.query(
 					channel,
 					arg ? serializer.serialize(arg) : undefined,
@@ -67,6 +72,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 			apply: async (_, __, [arg]: [unknown]) => {
 				logger?.debug("mutation", { channel, arg });
 
+				// oxlint-disable-next-line no-unsafe-type-assertion
 				const response = (await api.mutate(
 					channel,
 					arg ? serializer.serialize(arg) : undefined,
@@ -126,17 +132,21 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 				if (typeof operation !== "string") return undefined;
 
 				switch (operation) {
-					case "query":
+					case "query": {
 						return queryProxy(api, channel);
+					}
 
-					case "mutate":
+					case "mutate": {
 						return mutationProxy(api, channel);
+					}
 
-					case "send":
+					case "send": {
 						return sendProxy(api, channel);
+					}
 
-					case "subscribe":
+					case "subscribe": {
 						return subscribeProxy(api, channel);
+					}
 
 					default: {
 						logger?.warn(`unknown operation ${operation}`);
@@ -148,7 +158,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 		});
 	}
 
-	return new Proxy(proxyObj as ElectronTypedIpcRenderer<TDefinition>, {
+	return new Proxy(proxyObj, {
 		get: (_, channel) => {
 			if (typeof channel !== "string") return undefined;
 

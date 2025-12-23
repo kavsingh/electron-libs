@@ -59,9 +59,10 @@
 		}
 	},
 	"scripts": {
-		"lint": "tsc && eslint .",
 		"tdd": "vitest --typecheck --reporter=verbose",
 		"test": "vitest run --typecheck --coverage",
+		"typecheck": "tsc",
+		"lint": "oxlint && eslint . && prettier . --check",
 		"build": "tsdown",
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
@@ -69,7 +70,6 @@
 		"@tsconfig/node22": "22.0.5",
 		"@types/node": "22.19.3",
 		"@vitest/coverage-v8": "4.0.16",
-		"@vitest/eslint-plugin": "1.6.3",
 		"electron": "39.2.7",
 		"tsdown": "0.18.2",
 		"vitest": "4.0.16"

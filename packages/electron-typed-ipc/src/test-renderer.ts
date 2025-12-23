@@ -17,13 +17,13 @@ async function mockInvoke(
 	const mock = fnMocks[channel];
 
 	if (typeof mock !== "function") {
-		throw new Error(`no mock for ${channel}`);
+		throw new TypeError(`expected function mock for ${channel}`);
 	}
 
 	try {
 		return { result: "ok", data: await mock(payload) };
-	} catch (reason) {
-		return { result: "error", error: reason };
+	} catch (cause) {
+		return { result: "error", error: cause };
 	}
 }
 
@@ -31,7 +31,7 @@ function mockSend(channel: string, payload: unknown) {
 	const mock = fnMocks[channel];
 
 	if (typeof mock !== "function") {
-		throw new Error(`no mock for ${channel}`);
+		throw new TypeError(`no mock for ${channel}`);
 	}
 
 	mock(payload);
@@ -72,7 +72,7 @@ export function applyTypedIpcMocks<TDefinitions extends Definition>(
 ) {
 	for (const [channel, fn] of Object.entries(mocks)) {
 		if (typeof fn !== "function") {
-			throw new Error(
+			throw new TypeError(
 				`exepcted mock for ${channel} to be a function, got ${typeof fn}`,
 			);
 		}
@@ -94,6 +94,8 @@ export function typedIpcSendFromMain<
 		: never,
 	event?: IpcRendererEvent,
 ) {
+	// handlers are sets, only forEach available for iteration
+	// oxlint-disable-next-line no-unsafe-type-assertion, no-array-for-each
 	eventHandlers[channel as string]?.forEach((handler) => {
 		handler(event ?? createMockIpcRendererEvent(), payload);
 	});
@@ -101,6 +103,7 @@ export function typedIpcSendFromMain<
 
 const mockIpcRendererEventDefaults: IpcRendererEvent = {
 	ports: [],
+	// oxlint-disable-next-line no-unsafe-type-assertion
 	sender: {} as IpcRenderer,
 	preventDefault: () => undefined,
 	defaultPrevented: false,

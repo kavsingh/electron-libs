@@ -12,19 +12,25 @@ export function mount() {
 	const tipc = createIpcRenderer<AppIpcDefinitions>();
 
 	updateDisplay("user-agent", () => navigator.userAgent);
-	updateDisplay("location", () => JSON.stringify(window.location, null, 2));
+	updateDisplay("location", () => {
+		return JSON.stringify(globalThis.location, undefined, 2);
+	});
 
-	window.onmessage = (event) => {
+	window.addEventListener("message", (event) => {
 		updateDisplay(
 			"posts",
 			(current) => `${current}<br/>${event.data} (${event.origin})`,
 		);
-	};
+	});
+
+	async function handleReqClick() {
+		const res = await tipc.req.query();
+
+		updateDisplay("res", (current) => `${current}<br/>${res}`);
+	}
 
 	document.querySelector("[data-click=req]")?.addEventListener("click", () => {
-		void tipc.req.query().then((res) => {
-			updateDisplay("res", (current) => `${current}<br/>${res}`);
-		});
+		void handleReqClick();
 	});
 
 	document.querySelector("[data-click=post]")?.addEventListener("click", () => {

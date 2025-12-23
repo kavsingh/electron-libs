@@ -26,7 +26,9 @@ export function query<TResponse, TInput>(
 	return {
 		impl,
 		operation: "query",
+		// oxlint-disable-next-line no-unsafe-type-assertion
 		input: undefined as TInput,
+		// oxlint-disable-next-line no-unsafe-type-assertion
 		response: undefined as TResponse,
 	};
 }
@@ -37,7 +39,9 @@ export function mutation<TResponse, TInput>(
 	return {
 		impl,
 		operation: "mutation",
+		// oxlint-disable-next-line no-unsafe-type-assertion
 		input: undefined as TInput,
+		// oxlint-disable-next-line no-unsafe-type-assertion
 		response: undefined as TResponse,
 	};
 }
@@ -48,6 +52,7 @@ export function sendFromMain<TPayload>(
 	return {
 		impl,
 		operation: "sendFromMain",
+		// oxlint-disable-next-line no-unsafe-type-assertion
 		payload: undefined as TPayload,
 	};
 }
@@ -58,6 +63,7 @@ export function sendFromRenderer<TPayload>(
 	return {
 		impl,
 		operation: "sendFromRenderer",
+		// oxlint-disable-next-line no-unsafe-type-assertion
 		payload: undefined as TPayload,
 	};
 }
@@ -68,12 +74,12 @@ export function defineOperations<TDefinition extends Definition>(
 	return definition;
 }
 
+// oxlint-disable-next-line max-lines-per-function, max-statements
 export function createIpcMain(
 	definition: Definition,
 	options: CreateTypedIpcMainOptions = {},
 ): DisposeFn {
-	const serializer = options.serializer ?? defaultSerializer;
-	const logger = options.logger;
+	const { logger, serializer = defaultSerializer } = options;
 	const disposers: DisposeFn[] = [];
 
 	function addHandler(
@@ -99,9 +105,9 @@ export function createIpcMain(
 					logger?.debug("handle result", operation, channel, result);
 
 					return result;
-				} catch (reason) {
+				} catch (cause) {
 					const error =
-						reason instanceof Error ? reason : new Error(String(reason));
+						cause instanceof Error ? cause : new Error(String(cause));
 					const result: IpcResult = {
 						result: "error",
 						error: serializer.serialize(error),
@@ -117,13 +123,14 @@ export function createIpcMain(
 		disposers.push(function removeHandler() {
 			try {
 				ipcMain.removeHandler(scopedChannel);
-			} catch (reason) {
-				logger?.warn(`failed to remove handler for ${channel}`, reason);
+			} catch (cause) {
+				logger?.warn(`failed to remove handler for ${channel}`, cause);
 			}
 		});
 	}
 
 	function sendToChannel(channel: string): SendPayloadToChannel {
+		// oxlint-disable-next-line max-statements
 		return function sendPayload(input) {
 			logger?.debug("send", channel, input?.payload);
 
@@ -163,8 +170,8 @@ export function createIpcMain(
 
 			try {
 				dispose();
-			} catch (reason) {
-				logger?.warn(`failed to remove sender for ${channel}`, reason);
+			} catch (cause) {
+				logger?.warn(`failed to remove sender for ${channel}`, cause);
 			}
 		});
 	}
@@ -187,8 +194,8 @@ export function createIpcMain(
 
 			try {
 				ipcMain.removeListener(scopedChannel, eventHandler);
-			} catch (reason) {
-				logger?.warn(`failed to remove listener for ${channel}`, reason);
+			} catch (cause) {
+				logger?.warn(`failed to remove listener for ${channel}`, cause);
 			}
 		});
 	}
@@ -211,17 +218,20 @@ export function createIpcMain(
 				break;
 			}
 
-			case "sendFromMain":
+			case "sendFromMain": {
 				addSender(channel, impl);
 				break;
+			}
 
-			case "sendFromRenderer":
+			case "sendFromRenderer": {
 				addSubscription(channel, impl);
 				break;
+			}
 
-			default:
+			default: {
 				exhaustive(operation, logger);
 				break;
+			}
 		}
 	}
 
@@ -247,7 +257,8 @@ type SubscribeToChannel = (
 	payload?: unknown,
 ) => void | Promise<void>;
 
-interface SendFromMainWithPayload<TPayload = unknown>
-	extends SendFromMainOptions {
+interface SendFromMainWithPayload<
+	TPayload = unknown,
+> extends SendFromMainOptions {
 	payload: TPayload;
 }

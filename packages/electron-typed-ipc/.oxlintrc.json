@@ -1,0 +1,42 @@
+{
+	"$schema": "../../node_modules/oxlint/configuration_schema.json",
+	"extends": ["../../.oxlintrc.json"],
+	"env": { "node": true, "browser": false },
+	"ignorePatterns": [
+		"dist/**",
+		"reports/**",
+		"**/__generated__/**",
+		"!**/__generated__/__mocks__/**"
+	],
+	"overrides": [
+		{
+			"files": ["src/**"],
+			"rules": {
+				"eslint/no-console": "error"
+			}
+		},
+		{
+			"files": ["src/**/*.test.ts", "src/**/*.test-d.ts"],
+			"env": { "browser": true, "node": true },
+			"rules": {
+				"eslint/max-lines-per-function": "off",
+				"eslint/no-console": "off",
+				"import/no-namespace": "off",
+				"unicorn/consistent-function-scoping": "off",
+				"vitest/no-disabled-tests": "error",
+				"vitest/no-focused-tests": "error",
+				"vitest/prefer-to-be-falsy": "off",
+				"vitest/prefer-to-be-truthy": "off"
+			}
+		},
+		{
+			"files": ["src/**/*.test-d.ts"],
+			"rules": {
+				"eslint/no-unused-expressions": "off"
+			}
+		}
+	],
+	"settings": {
+		"vitest": { "typecheck": true }
+	}
+}

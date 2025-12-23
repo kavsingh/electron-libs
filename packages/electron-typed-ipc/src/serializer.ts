@@ -10,10 +10,10 @@ export function createValueSerializer<TValue, TSerialized = unknown>(
 }
 
 export function createSerializer(
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line no-explicit-any
 	serializers: ValueSerializer<any, any>[],
 ): Serializer {
-	if (!serializers.length) return defaultSerializer;
+	if (serializers.length === 0) return defaultSerializer;
 
 	function serialize(value: unknown): unknown {
 		for (const serializer of serializers) {

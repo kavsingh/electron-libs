@@ -11,7 +11,7 @@
 		"test": "echo 'soon'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
 		"typecheck": "tsc",
-		"lint": "eslint .",
+		"lint": "oxlint && eslint . && prettier . --check",
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"keywords": [],
