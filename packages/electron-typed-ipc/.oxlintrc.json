@@ -18,6 +18,7 @@
 		{
 			"files": ["src/**/*.test.ts", "src/**/*.test-d.ts"],
 			"env": { "browser": true, "node": true },
+			"plugins": ["vitest"],
 			"rules": {
 				"eslint/max-lines-per-function": "off",
 				"eslint/no-console": "off",
