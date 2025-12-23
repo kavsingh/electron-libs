@@ -13,7 +13,7 @@
 		"test": "echo 'soon'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
 		"typecheck": "tsc",
-		"lint": "oxlint && eslint . && oxfmt . --check",
+		"lint": "oxlint --type-aware && eslint . && oxfmt . --check",
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"dependencies": {

@@ -1,28 +1,30 @@
 import { vi } from "vitest";
 
-import type { BrowserWindow, ipcMain, ipcRenderer } from "electron";
+import type { BrowserWindow, IpcMain, IpcRenderer } from "electron";
 
 export function createMockIpcMain() {
-	return {
+	// oxlint-disable-next-line no-unsafe-type-assertion
+	const mockIpcMain = {
 		handle: vi.fn(() => undefined),
-		send: vi.fn(() => undefined),
-		sendToFrame: vi.fn(() => undefined),
-		addListener: vi.fn(() => undefined),
-		removeListener: vi.fn(() => undefined),
-	} as unknown as typeof ipcMain;
+		addListener: vi.fn(() => mockIpcMain),
+		removeListener: vi.fn(() => mockIpcMain),
+	} as unknown as IpcMain;
 }
 
 export function createMockIpcRenderer() {
-	return {
-		invoke: vi.fn(() => undefined),
+	// oxlint-disable-next-line no-unsafe-type-assertion
+	const mockIpcRenderer = {
+		// oxlint-disable-next-line catch-or-return, prefer-await-to-then
+		invoke: vi.fn(() => Promise.resolve()),
 		send: vi.fn(() => undefined),
 		sendToHost: vi.fn(() => undefined),
-		addListener: vi.fn(() => undefined),
-		removeListener: vi.fn(() => undefined),
-	} as unknown as typeof ipcRenderer;
+		addListener: vi.fn(() => mockIpcRenderer),
+		removeListener: vi.fn(() => mockIpcRenderer),
+	} as unknown as IpcRenderer;
 }
 
 export function createMockBrowserWindow() {
+	// oxlint-disable-next-line no-unsafe-type-assertion
 	return {
 		getAllWindows: vi.fn(() => []),
 	} as unknown as typeof BrowserWindow;
