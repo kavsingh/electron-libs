@@ -8,7 +8,7 @@
 		"erasableSyntaxOnly": true,
 		"noEmit": true,
 		"verbatimModuleSyntax": true,
-		// leave the following to eslint
+		// leave the following to linters
 		"noUnusedLocals": false,
 		"noUnusedParameters": false,
 		"allowUnreachableCode": true

@@ -23,9 +23,12 @@
 		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"@playwright/test": "1.57.0",
 		"@tsconfig/node22": "22.0.5",
+		"@types/eslint": "9.6.1",
 		"@types/node": "22.19.3",
+		"eslint": "9.39.2",
 		"eslint-plugin-playwright": "2.4.0",
-		"tsdown": "0.18.2"
+		"tsdown": "0.18.2",
+		"typescript-eslint": "8.50.1"
 	},
 	"productName": "Example"
 }
