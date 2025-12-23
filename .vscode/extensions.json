@@ -1,7 +1,7 @@
 {
 	"recommendations": [
-		"tamasfe.even-better-toml",
+		"oxc.oxc-vscode",
 		"dbaeumer.vscode-eslint",
-		"esbenp.prettier-vscode"
+		"tamasfe.even-better-toml"
 	]
 }

@@ -3,15 +3,12 @@
 	"version": "1.0.0-dev.0",
 	"description": "typed electron ipc",
 	"keywords": [],
-	"author": "<author>",
 	"license": "MIT",
-	"type": "module",
-	"engines": {
-		"node": ">=22"
-	},
+	"author": "<author>",
 	"files": [
 		"./dist"
 	],
+	"type": "module",
 	"exports": {
 		".": {
 			"import": {
@@ -62,7 +59,7 @@
 		"tdd": "vitest --typecheck --reporter=verbose",
 		"test": "vitest run --typecheck --coverage",
 		"typecheck": "tsc",
-		"lint": "oxlint && eslint . && prettier . --check",
+		"lint": "oxlint && eslint . && oxfmt . --check",
 		"build": "tsdown",
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
@@ -76,5 +73,8 @@
 	},
 	"peerDependencies": {
 		"electron": ">=38"
+	},
+	"engines": {
+		"node": ">=22"
 	}
 }

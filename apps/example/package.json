@@ -1,8 +1,10 @@
 {
 	"name": "example",
-	"productName": "Example",
 	"version": "1.0.0-dev.0",
 	"description": "libs usage examples and tests",
+	"keywords": [],
+	"license": "MIT",
+	"author": "<author>",
 	"type": "module",
 	"main": "./dist/main.js",
 	"scripts": {
@@ -11,12 +13,9 @@
 		"test": "echo 'soon'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
 		"typecheck": "tsc",
-		"lint": "oxlint && eslint . && prettier . --check",
+		"lint": "oxlint && eslint . && oxfmt . --check",
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
-	"keywords": [],
-	"author": "<author>",
-	"license": "MIT",
 	"dependencies": {
 		"electron": "39.2.7"
 	},
@@ -27,5 +26,6 @@
 		"@types/node": "22.19.3",
 		"eslint-plugin-playwright": "2.4.0",
 		"tsdown": "0.18.2"
-	}
+	},
+	"productName": "Example"
 }
