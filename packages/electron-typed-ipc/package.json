@@ -59,7 +59,7 @@
 		"tdd": "vitest --typecheck --reporter=verbose",
 		"test": "vitest run --typecheck --coverage",
 		"typecheck": "tsc",
-		"lint": "oxlint && eslint . && oxfmt . --check",
+		"lint": "oxlint && oxfmt . --check",
 		"build": "tsdown",
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
