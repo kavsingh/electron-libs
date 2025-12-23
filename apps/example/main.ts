@@ -11,7 +11,7 @@ import {
 } from "@kavsingh/electron-typed-ipc/main";
 import { app, BrowserWindow, protocol, net } from "electron";
 
-const dirname = path.dirname(url.fileURLToPath(import.meta.url));
+const { dirname } = import.meta;
 const emitter = new EventEmitter<{ ping: [string] }>();
 
 const ipcDefinition = defineOperations({
