@@ -28,7 +28,7 @@ export function createSerializer(
 			return value.map((val: unknown) => serialize(val));
 		}
 
-		if (value instanceof Error) return Error;
+		if (value instanceof Error) return value;
 
 		if (typeof value === "object") {
 			return Object.fromEntries(
@@ -52,7 +52,7 @@ export function createSerializer(
 			return value.map((val: unknown) => deserialize(val));
 		}
 
-		if (value instanceof Error) return Error;
+		if (value instanceof Error) return value;
 
 		if (typeof value === "object") {
 			return Object.fromEntries(
