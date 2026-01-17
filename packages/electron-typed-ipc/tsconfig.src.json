@@ -1,0 +1,11 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"include": ["src"],
+	"extends": ["../../tsconfig.base.json", "@tsconfig/node22/tsconfig.json"],
+	"compilerOptions": {
+		"composite": true,
+		"emitDeclarationOnly": true,
+		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"],
+		"types": ["@types/node22"]
+	}
+}

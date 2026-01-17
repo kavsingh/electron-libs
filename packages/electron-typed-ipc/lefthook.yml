@@ -1,7 +1,7 @@
 pre-commit:
   parallel: true
   jobs:
-    - run: pnpm tsc
+    - run: pnpm tsc --build --noEmit
       root: "packages/electron-typed-ipc"
       glob: "**/*.{js,ts,jsx,tsx}"
     - run: pnpm oxlint --type-aware {staged_files}
