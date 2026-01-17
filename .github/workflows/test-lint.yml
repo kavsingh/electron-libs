@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
   workflow_call:
 
+env:
+  DO_NOT_TRACK: 1
+
 jobs:
   test-lint:
     name: Test and lint
