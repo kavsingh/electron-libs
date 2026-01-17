@@ -11,7 +11,7 @@
 			["internal"],
 			["parent"],
 			["sibling", "index"],
-			["type"],
+			["type"]
 		]
 	}
 }

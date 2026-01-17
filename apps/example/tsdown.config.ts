@@ -4,7 +4,7 @@ export default defineConfig([
 	{
 		clean: true,
 		entry: ["./main.ts"],
-		target: ["node22"],
+		target: ["node24"],
 		format: ["esm"],
 	},
 	{
@@ -16,7 +16,7 @@ export default defineConfig([
 	},
 	{
 		entry: ["./preload.ts"],
-		target: ["node22", "chrome130"],
+		target: ["node24", "chrome130"],
 		noExternal: [/@kavsingh/],
 		format: ["cjs"],
 	},

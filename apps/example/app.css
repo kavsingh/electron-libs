@@ -1,9 +1,18 @@
 :root {
 	font-family: system-ui;
 	line-height: 1.33;
+	color: oklch(14.5% 0 0);
+	background-color: oklch(98.5% 0 0);
 }
 
 pre {
 	text-wrap: wrap;
 	font-size: 0.68rem;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		color: oklch(98.5% 0 0);
+		background-color: oklch(14.5% 0 0);
+	}
 }

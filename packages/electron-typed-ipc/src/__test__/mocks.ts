@@ -2,30 +2,37 @@ import { vi } from "vitest";
 
 import type { BrowserWindow, IpcMain, IpcRenderer } from "electron";
 
+// allow sparse mocks
+// oxlint-disable no-unsafe-type-assertion, prefer-await-to-then
+
 export function createMockIpcMain() {
-	// oxlint-disable-next-line no-unsafe-type-assertion
-	const mockIpcMain = {
+	const mockIpcMain: Partial<IpcMain> = {
 		handle: vi.fn(() => undefined),
-		addListener: vi.fn(() => mockIpcMain),
-		removeListener: vi.fn(() => mockIpcMain),
-	} as unknown as IpcMain;
+		addListener: vi.fn(() => mockIpcMain as IpcMain),
+		removeListener: vi.fn(() => mockIpcMain as IpcMain),
+	};
+
+	return mockIpcMain as IpcMain;
 }
 
 export function createMockIpcRenderer() {
-	// oxlint-disable-next-line no-unsafe-type-assertion
-	const mockIpcRenderer = {
-		// oxlint-disable-next-line catch-or-return, prefer-await-to-then
+	const mockIpcRenderer: Partial<IpcRenderer> = {
 		invoke: vi.fn(() => Promise.resolve()),
 		send: vi.fn(() => undefined),
 		sendToHost: vi.fn(() => undefined),
-		addListener: vi.fn(() => mockIpcRenderer),
-		removeListener: vi.fn(() => mockIpcRenderer),
-	} as unknown as IpcRenderer;
+		addListener: vi.fn(() => mockIpcRenderer as IpcRenderer),
+		removeListener: vi.fn(() => mockIpcRenderer as IpcRenderer),
+	};
+
+	return mockIpcRenderer as IpcRenderer;
 }
 
+type BrowserWindowStatic = typeof BrowserWindow;
+
 export function createMockBrowserWindow() {
-	// oxlint-disable-next-line no-unsafe-type-assertion
-	return {
+	const mockBrowserWindow: Partial<BrowserWindowStatic> = {
 		getAllWindows: vi.fn(() => []),
-	} as unknown as typeof BrowserWindow;
+	};
+
+	return mockBrowserWindow as BrowserWindowStatic;
 }
