@@ -2,9 +2,8 @@ import { defineConfig } from "tsdown";
 
 export default defineConfig([
 	{
-		tsconfig: "./src/tsconfig.json",
 		clean: true,
-		dts: true,
+		dts: { build: true },
 		target: ["node22", "chrome130"],
 		entry: [
 			"./src/common.ts",
@@ -15,9 +14,8 @@ export default defineConfig([
 		format: ["cjs", "esm"],
 	},
 	{
-		tsconfig: "./src/tsconfig.json",
 		clean: false,
-		dts: true,
+		dts: { build: true },
 		target: ["node22", "chrome130"],
 		entry: ["./src/preload.ts"],
 		format: ["cjs"],
