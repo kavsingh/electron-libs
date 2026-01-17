@@ -19,5 +19,8 @@ export default defineConfig([
 		target: ["node24", "chrome130"],
 		noExternal: [/@kavsingh/],
 		format: ["cjs"],
+		// tsdown warns on cjs builds which are required for preload scripts
+		// this warning becomes an error on CI which blocks E2E
+		failOnWarn: false,
 	},
 ]);
