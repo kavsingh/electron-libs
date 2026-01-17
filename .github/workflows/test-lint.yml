@@ -10,7 +10,7 @@ jobs:
     name: Test and lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
         with:
           install_flags: --ignore-scripts
@@ -28,6 +28,6 @@ jobs:
         os: [macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
       - run: pnpm test:e2e
