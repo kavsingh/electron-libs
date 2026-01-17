@@ -12,23 +12,25 @@ import {
 import { app, BrowserWindow, protocol, net } from "electron";
 
 const { dirname } = import.meta;
-const emitter = new EventEmitter<{ ping: [string] }>();
+const emitter = new EventEmitter<{ "renderer/ping": [string] }>();
 
 const ipcDefinition = defineOperations({
 	req: query<string, undefined>(() => "res"),
 
-	pong: sendFromMain<string>(({ send }) => {
-		emitter.on("ping", (message) => {
-			send({ payload: `pong (${message})` });
-		});
-
-		return () => {
-			emitter.removeAllListeners("ping");
-		};
+	ping: sendFromRenderer<string>((_, message) => {
+		emitter.emit("renderer/ping", message);
 	}),
 
-	ping: sendFromRenderer<string>((_, message) => {
-		emitter.emit("ping", message);
+	pong: sendFromMain<string>(({ send }) => {
+		function handler(message: string) {
+			send({ payload: `pong (${message})` });
+		}
+
+		emitter.addListener("renderer/ping", handler);
+
+		return () => {
+			emitter.removeListener("renderer/ping", handler);
+		};
 	}),
 });
 
