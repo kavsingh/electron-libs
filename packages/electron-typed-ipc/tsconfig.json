@@ -1,8 +1,9 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"include": ["src", "./*.ts", "./*.js"],
-	"extends": ["../../tsconfig.base.json", "@tsconfig/node24/tsconfig.json"],
+	"extends": ["../../tsconfig.base.json", "@tsconfig/node22/tsconfig.json"],
 	"compilerOptions": {
-		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"]
+		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"],
+		"types": ["@types/node22"]
 	}
 }

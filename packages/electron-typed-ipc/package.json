@@ -65,6 +65,7 @@
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "22.0.5",
+		"@types/node22": "npm:@types/node@22.19.7",
 		"@vitest/coverage-v8": "4.0.17",
 		"electron": "40.0.0",
 		"tsdown": "0.19.0",
@@ -72,8 +73,5 @@
 	},
 	"peerDependencies": {
 		"electron": ">=38"
-	},
-	"engines": {
-		"node": ">=22"
 	}
 }
