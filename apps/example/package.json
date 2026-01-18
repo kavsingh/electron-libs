@@ -13,8 +13,7 @@
 		"test": "echo 'only e2e'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
 		"typecheck": "tsc --build --noEmit",
-		"lint": "oxlint --type-aware && eslint . && oxfmt . --check",
-		"typeinst": "tsc --extendedDiagnostics | grep Instantiations:"
+		"lint": "oxlint --type-aware && eslint . && oxfmt . --check"
 	},
 	"dependencies": {
 		"electron": "40.0.0"
