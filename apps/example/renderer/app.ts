@@ -1,6 +1,6 @@
 import { createIpcRenderer } from "@kavsingh/electron-typed-ipc/renderer";
 
-import type { AppIpcDefinitions } from "./main.ts";
+import type { AppIpcDefinitions } from "../electron/ipc.ts";
 
 function updateDisplay(select: string, updater: (current: string) => string) {
 	const el = document.querySelector(`[data-display=${select}]`);

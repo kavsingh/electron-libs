@@ -10,18 +10,12 @@
 	],
 	"overrides": [
 		{
-			"files": ["main.ts"],
+			"files": ["electron/*"],
 			"env": { "node": true, "browser": false },
-			"rules": {
-				"unicorn/prefer-event-target": "off"
-			}
+			"rules": { "unicorn/prefer-event-target": "off" }
 		},
 		{
-			"files": ["preload.ts", "renderer.ts"],
-			"env": { "node": true, "browser": true }
-		},
-		{
-			"files": ["renderer.ts"],
+			"files": ["renderer/*"],
 			"env": { "node": false, "browser": true }
 		}
 	]

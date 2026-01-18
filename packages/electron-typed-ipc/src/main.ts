@@ -20,6 +20,21 @@ import type { Logger } from "./logger.ts";
 import type { Serializer } from "./serializer.ts";
 import type { IpcMainEvent, IpcMainInvokeEvent, WebContents } from "electron";
 
+// support inference in consumers using typescript project references
+export type {
+	Definition,
+	IpcResult,
+	Mutation,
+	Query,
+	SendFromMain,
+	SendFromRenderer,
+	SendFromRendererImpl,
+	SendFromMainImpl,
+	DisposeFn,
+	QueryImpl,
+	MutationImpl,
+};
+
 export function query<TResponse, TInput>(
 	impl: QueryImpl<TResponse, TInput>,
 ): Query<TResponse, TInput> {

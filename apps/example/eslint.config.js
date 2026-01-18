@@ -6,7 +6,7 @@ import { configs as tsEslint } from "typescript-eslint";
 
 export default defineConfig(
 	{
-		ignores: ["dist/*", "reports/*", "./*.ts", "./*.js"],
+		ignores: ["**/*", "!e2e/**/*.test.ts"],
 		linterOptions: { reportUnusedDisableDirectives: true },
 	},
 

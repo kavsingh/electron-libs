@@ -11,8 +11,6 @@
 		"tombi": true
 	},
 
-	"file_scan_exclusions": ["**/node_modules", "**/dist", "**/reports"],
-
 	"lsp": {
 		"oxlint": {
 			"initialization_options": {

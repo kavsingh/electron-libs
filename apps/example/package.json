@@ -12,9 +12,8 @@
 		"start": "cross-env pnpm run build && electron ./dist/main.mjs",
 		"test": "echo 'only e2e'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
-		"typecheck": "tsc",
-		"lint": "oxlint --type-aware && eslint . && oxfmt . --check",
-		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
+		"typecheck": "tsc --build --noEmit",
+		"lint": "oxlint --type-aware && eslint . && oxfmt . --check"
 	},
 	"dependencies": {
 		"electron": "40.0.0"

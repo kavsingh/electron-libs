@@ -15,6 +15,17 @@ import type { IpcPreloadApi } from "./preload.ts";
 import type { Serializer } from "./serializer.ts";
 import type { IpcRendererEvent } from "electron";
 
+// support inference in consumers using typescript project references
+export type {
+	IpcResult,
+	DisposeFn,
+	Query,
+	Mutation,
+	SendFromRenderer,
+	SendFromMain,
+	Definition,
+};
+
 // oxlint-disable-next-line max-lines-per-function, max-statements
 export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	serializer?: Serializer | undefined;

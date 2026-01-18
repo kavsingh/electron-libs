@@ -1,0 +1,11 @@
+{
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"include": ["renderer", "electron/ipc.ts"],
+	"extends": ["../../tsconfig.base.json", "@tsconfig/node24/tsconfig.json"],
+	"compilerOptions": {
+		"composite": true,
+		"emitDeclarationOnly": true,
+		"lib": ["es2023", "dom", "dom.iterable", "dom.asynciterable"],
+		"types": []
+	}
+}
