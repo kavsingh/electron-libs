@@ -1,6 +1,9 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"include": ["e2e", "./*.ts", "./*.js"],
-	"extends": ["../../tsconfig.base.json", "@tsconfig/node24/tsconfig.json"],
-	"compilerOptions": { "lib": ["es2023", "dom"], "noEmit": true }
+	"include": [],
+	"references": [
+		{ "path": "./tsconfig.node.json" },
+		{ "path": "./tsconfig.electron.json" },
+		{ "path": "./tsconfig.renderer.json" }
+	]
 }

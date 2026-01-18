@@ -1,40 +1,12 @@
-import EventEmitter from "node:events";
 import path from "node:path";
 import url from "node:url";
 
-import {
-	defineOperations,
-	createIpcMain,
-	query,
-	sendFromMain,
-	sendFromRenderer,
-} from "@kavsingh/electron-typed-ipc/main";
+import { createIpcMain } from "@kavsingh/electron-typed-ipc/main";
 import { app, BrowserWindow, protocol, net } from "electron";
 
+import { ipcDefinition } from "./ipc.ts";
+
 const { dirname } = import.meta;
-const emitter = new EventEmitter<{ "renderer/ping": [string] }>();
-
-const ipcDefinition = defineOperations({
-	req: query<string, undefined>(() => "res"),
-
-	ping: sendFromRenderer<string>((_, message) => {
-		emitter.emit("renderer/ping", message);
-	}),
-
-	pong: sendFromMain<string>(({ send }) => {
-		function handler(message: string) {
-			send({ payload: `pong (${message})` });
-		}
-
-		emitter.addListener("renderer/ping", handler);
-
-		return () => {
-			emitter.removeListener("renderer/ping", handler);
-		};
-	}),
-});
-
-export type AppIpcDefinitions = typeof ipcDefinition;
 
 protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
 // oxlint-disable-next-line prefer-top-level-await
