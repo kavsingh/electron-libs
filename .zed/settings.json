@@ -6,6 +6,7 @@
 
 	"auto_install_extensions": {
 		"oxc": true,
+		"tsgo": true,
 		"html": true,
 		"toml": true,
 		"tombi": true
@@ -36,12 +37,16 @@
 	"languages": {
 		"TypeScript": {
 			"prettier": { "allowed": false },
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
+			"language_servers": ["tsgo", "vtsls", "oxlint", "oxfmt"],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"JavaScript": {
 			"prettier": { "allowed": false },
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
+			"language_servers": ["tsgo", "vtsls", "oxlint", "oxfmt"],
+			"formatter": [{ "language_server": { "name": "oxfmt" } }],
+			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"HTML": {

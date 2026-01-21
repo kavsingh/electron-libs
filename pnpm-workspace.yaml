@@ -4,10 +4,8 @@ packages:
 
 nodeLinker: hoisted
 
-onlyBuiltDependencies:
-  - electron
-  - electron-winstaller
-  - esbuild
-  - lefthook
-  - nx
-  - unrs-resolver
+allowBuilds:
+  electron: true
+  esbuild: true
+  lefthook: true
+  nx: true

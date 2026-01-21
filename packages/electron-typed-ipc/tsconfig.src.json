@@ -6,6 +6,6 @@
 		"composite": true,
 		"emitDeclarationOnly": true,
 		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"],
-		"types": ["@types/node22"]
+		"types": ["node22"]
 	}
 }

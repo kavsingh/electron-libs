@@ -68,7 +68,8 @@
 		"oxc/no-rest-spread-properties": "off",
 		"unicorn/catch-error-name": ["error", { "name": "cause" }],
 		"unicorn/no-array-reduce": "off",
-		"unicorn/no-useless-undefined": "off"
+		"unicorn/no-useless-undefined": "off",
+		"unicorn/prefer-node-protocol": "error"
 	},
 	"overrides": [
 		{

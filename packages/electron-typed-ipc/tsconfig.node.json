@@ -5,6 +5,6 @@
 	"compilerOptions": {
 		"composite": true,
 		"emitDeclarationOnly": true,
-		"types": ["@types/node"]
+		"types": ["node"]
 	}
 }

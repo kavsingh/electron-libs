@@ -1,5 +1,6 @@
 {
 	"recommendations": [
+		"typescriptteam.native-preview",
 		"oxc.oxc-vscode",
 		"dbaeumer.vscode-eslint",
 		"tamasfe.even-better-toml"

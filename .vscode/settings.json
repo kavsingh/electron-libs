@@ -20,6 +20,7 @@
 	},
 
 	"typescript.tsdk": "node_modules/typescript/lib",
+	"typescript.experimental.useTsgo": true,
 
 	"oxc.enable": true,
 	"oxc.typeAware": true,
