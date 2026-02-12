@@ -6,6 +6,7 @@
 		"composite": true,
 		"emitDeclarationOnly": true,
 		"lib": ["es2023", "dom", "dom.iterable", "dom.asynciterable"],
+		"paths": { "~/electron/*": ["./electron/*"] },
 		"types": []
 	}
 }

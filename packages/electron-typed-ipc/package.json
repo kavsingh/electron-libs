@@ -58,18 +58,17 @@
 	"scripts": {
 		"tdd": "vitest --typecheck --reporter=verbose",
 		"test": "vitest run --typecheck --coverage",
-		"typecheck": "tsgo --build --noEmit",
-		"lint": "oxlint --type-aware && oxfmt . --check",
+		"lint": "oxlint --type-aware --type-check && oxfmt . --check",
 		"build": "tsdown",
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "22.0.5",
-		"@types/node22": "npm:@types/node@22.19.7",
-		"@vitest/coverage-v8": "4.0.17",
-		"electron": "40.0.0",
-		"tsdown": "0.19.0",
-		"vitest": "4.0.17"
+		"@types/node22": "npm:@types/node@22.19.11",
+		"@vitest/coverage-v8": "4.0.18",
+		"electron": "40.4.0",
+		"tsdown": "0.20.3",
+		"vitest": "4.0.18"
 	},
 	"peerDependencies": {
 		"electron": ">=38"

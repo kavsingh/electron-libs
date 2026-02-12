@@ -1,12 +1,9 @@
 pre-commit:
   parallel: true
   jobs:
-    - run: pnpm tsgo --build --noEmit
+    - run: pnpm oxlint --type-aware --type-check {staged_files}
       root: "apps/example"
       glob: "**/*.{js,ts,jsx,tsx}"
-    - run: pnpm oxlint --type-aware {staged_files}
-      root: "apps/example"
-      glob: "**/*.{js,ts,jsx,tsx}"
-    - run: pnpm eslint {staged_files}
+    - run: pnpm eslint --max-warnings=0 --no-warn-ignored {staged_files}
       root: "apps/example"
       glob: "**/*.{js,ts,jsx,tsx}"

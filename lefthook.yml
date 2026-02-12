@@ -11,7 +11,5 @@ pre-commit:
 pre-push:
   parallel: true
   jobs:
-    - run: pnpm typecheck
-      glob: "**/*.*"
     - run: pnpm lint
       glob: "**/*.*"
