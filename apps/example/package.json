@@ -15,7 +15,7 @@
 		"lint": "oxlint --type-aware --type-check && eslint . --max-warnings=0 --no-warn-ignored && oxfmt . --check"
 	},
 	"dependencies": {
-		"electron": "40.4.0"
+		"electron": "catalog:"
 	},
 	"devDependencies": {
 		"@kavsingh/electron-typed-ipc": "workspace:*",
@@ -23,7 +23,7 @@
 		"@types/eslint": "9.6.1",
 		"eslint": "10.0.0",
 		"eslint-plugin-playwright": "2.5.1",
-		"tsdown": "0.20.3",
+		"tsdown": "catalog:",
 		"typescript-eslint": "8.55.0"
 	},
 	"productName": "Example"

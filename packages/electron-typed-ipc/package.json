@@ -66,8 +66,8 @@
 		"@tsconfig/node22": "22.0.5",
 		"@types/node22": "npm:@types/node@22.19.11",
 		"@vitest/coverage-v8": "4.0.18",
-		"electron": "40.4.0",
-		"tsdown": "0.20.3",
+		"electron": "catalog:",
+		"tsdown": "catalog:",
 		"vitest": "4.0.18"
 	},
 	"peerDependencies": {

@@ -3,7 +3,7 @@ description: Setup and install dependencies
 
 inputs:
   install_flags:
-    description: pnpm install flags
+    description: dependency install flags
     default: ""
 
 runs:

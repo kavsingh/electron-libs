@@ -1,7 +1,5 @@
 import { defineConfig } from "oxlint";
 
-import type { OxlintConfig } from "oxlint";
-
 export default defineConfig({
 	ignorePatterns: [".vscode/**", "**/.nx/**"],
 	plugins: ["oxc", "eslint", "import", "unicorn", "promise"],
@@ -109,4 +107,4 @@ export default defineConfig({
 			},
 		},
 	],
-} satisfies OxlintConfig);
+});

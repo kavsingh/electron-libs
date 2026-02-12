@@ -22,7 +22,7 @@
 	"devDependencies": {
 		"@tsconfig/node24": "24.0.4",
 		"@tsconfig/strictest": "2.0.8",
-		"@types/node": "25.2.3",
+		"@types/node24": "npm:@types/node@24.10.13",
 		"@typescript/native-preview": "7.0.0-dev.20260212.1",
 		"cross-env": "10.1.0",
 		"lefthook": "2.1.1",
