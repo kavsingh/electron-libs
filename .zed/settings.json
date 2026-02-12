@@ -4,14 +4,6 @@
 	// for some reason auto-indentation does not respect formatter configs
 	"hard_tabs": true,
 
-	"auto_install_extensions": {
-		"oxc": true,
-		"tsgo": true,
-		"html": true,
-		"toml": true,
-		"tombi": true
-	},
-
 	"lsp": {
 		"oxlint": {
 			"initialization_options": {
@@ -37,14 +29,14 @@
 	"languages": {
 		"TypeScript": {
 			"prettier": { "allowed": false },
-			"language_servers": ["tsgo", "vtsls", "oxlint", "oxfmt"],
+			"language_servers": ["tsgo", "oxlint", "eslint", "oxfmt"],
 			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"JavaScript": {
 			"prettier": { "allowed": false },
-			"language_servers": ["tsgo", "vtsls", "oxlint", "oxfmt"],
+			"language_servers": ["tsgo", "oxlint", "eslint", "oxfmt"],
 			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},

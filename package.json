@@ -16,8 +16,8 @@
 		"test:e2e": "nx test:e2e example",
 		"lint": "nx run-many -t lint --outputStyle stream",
 		"start": "nx start example",
-		"clean:nx": "pnpm -r exec rimraf .nx && rimraf .nx",
-		"clean:modules": "cross-env pnpm -r exec rimraf node_modules && rimraf node_modules"
+		"clean:nx": "rimraf ./**/.nx --glob",
+		"clean:modules": "rimraf ./**/node_modules --glob"
 	},
 	"devDependencies": {
 		"@tsconfig/node24": "24.0.4",
