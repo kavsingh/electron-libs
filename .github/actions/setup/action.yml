@@ -9,10 +9,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v4
-    - uses: actions/setup-node@v6
-      with:
-        node-version-file: .node-version
-        cache: pnpm
-    - run: pnpm install --frozen-lockfile ${{ inputs.install_flags }}
+    - uses: oven-sh/setup-bun@v2
+    - run: bun install --frozen-lockfile ${{ inputs.install_flags }}
       shell: bash

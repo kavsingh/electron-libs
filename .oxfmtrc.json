@@ -1,6 +1,6 @@
 {
 	"$schema": "./node_modules/oxfmt/configuration_schema.json",
-	"ignorePatterns": ["pnpm-*.yaml", "**/.nx/**", "**/dist/**", "**/reports/**"],
+	"ignorePatterns": ["**/.nx/**", "**/dist/**", "**/reports/**"],
 	"printWidth": 80,
 	"useTabs": true,
 	"experimentalSortImports": {

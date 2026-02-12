@@ -1,6 +1,6 @@
 pre-commit:
   parallel: true
   jobs:
-    - run: pnpm oxlint --type-aware --type-check {staged_files}
+    - run: bun oxlint --type-aware --type-check {staged_files}
       root: "packages/electron-typed-ipc"
       glob: "**/*.{js,ts,jsx,tsx}"

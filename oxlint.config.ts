@@ -58,7 +58,11 @@ export default defineConfig({
 		"eslint/sort-keys": "off",
 		"import/group-exports": "off",
 		"import/exports-last": "off",
-		"import/extensions": "off",
+		"import/extensions": [
+			"error",
+			"always",
+			{ checkTypeImports: true, ignorePackages: true },
+		],
 		"import/max-dependencies": "off",
 		"import/no-default-export": "error",
 		"import/no-named-export": "off",

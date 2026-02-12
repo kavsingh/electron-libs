@@ -60,7 +60,7 @@
 		"test": "vitest run --typecheck --coverage",
 		"lint": "oxlint --type-aware --type-check && oxfmt . --check",
 		"build": "tsdown",
-		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
+		"typeinst": "bun tsc --build --noEmit --extendedDiagnostics | grep Instantiations:"
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "22.0.5",

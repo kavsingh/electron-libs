@@ -17,8 +17,12 @@ jobs:
       - uses: ./.github/actions/setup
         with:
           install_flags: --ignore-scripts
-      - run: pnpm lint
-      - run: pnpm test
+      # needed for oxlint config resolution
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+      - run: bun run lint
+      - run: bun run test
 
   test-e2e:
     needs: test-lint
@@ -33,4 +37,4 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
-      - run: pnpm test:e2e
+      - run: bun run test:e2e
