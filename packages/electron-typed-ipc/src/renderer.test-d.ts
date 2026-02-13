@@ -6,10 +6,10 @@ import {
 	query,
 	sendFromMain,
 	sendFromRenderer,
-} from "../main.ts";
-import { createIpcRenderer } from "../renderer.ts";
+} from "./main.ts";
+import { createIpcRenderer } from "./renderer.ts";
 
-import type { SendFromRendererOptions } from "../renderer.ts";
+import type { SendFromRendererOptions } from "./renderer.ts";
 import type { IpcRendererEvent } from "electron";
 
 const _definition = defineOperations({

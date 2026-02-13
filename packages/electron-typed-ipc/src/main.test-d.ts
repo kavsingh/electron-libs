@@ -1,6 +1,6 @@
 import { describe, it, expectTypeOf, expect } from "vitest";
 
-import { mutation, query, sendFromMain, sendFromRenderer } from "../main.ts";
+import { mutation, query, sendFromMain, sendFromRenderer } from "./main.ts";
 
 import type { BrowserWindow, IpcMainEvent } from "electron";
 

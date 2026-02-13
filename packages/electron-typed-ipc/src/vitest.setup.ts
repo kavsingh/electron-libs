@@ -6,7 +6,7 @@ import {
 	createMockBrowserWindow,
 } from "./__test__/mocks.ts";
 
-vi.mock("electron", () => ({
+vi.mock(import("electron"), () => ({
 	ipcMain: createMockIpcMain(),
 	ipcRenderer: createMockIpcRenderer(),
 	BrowserWindow: createMockBrowserWindow(),
