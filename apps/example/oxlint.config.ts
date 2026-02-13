@@ -1,6 +1,5 @@
 import { defineConfig } from "oxlint";
 
-// oxlint-disable-next-line import/no-relative-parent-imports
 import baseConfig from "../../oxlint.config.ts";
 
 export default defineConfig({

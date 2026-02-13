@@ -2,7 +2,7 @@ import { defineConfig } from "oxlint";
 
 export default defineConfig({
 	ignorePatterns: [".vscode/**", "**/.nx/**"],
-	plugins: ["oxc", "eslint", "import", "unicorn", "promise"],
+	plugins: ["oxc", "eslint", "typescript", "import", "unicorn", "promise"],
 	categories: {
 		correctness: "error",
 		suspicious: "error",
@@ -68,6 +68,19 @@ export default defineConfig({
 		"oxc/no-async-await": "off",
 		"oxc/no-optional-chaining": "off",
 		"oxc/no-rest-spread-properties": "off",
+		"typescript/consistent-type-imports": [
+			"error",
+			{ fixStyle: "separate-type-imports", prefer: "type-imports" },
+		],
+		"typescript/explicit-function-return-type": "off",
+		"typescript/explicit-module-boundary-types": "off",
+		"typescript/no-non-null-assertion": "error",
+		"typescript/promise-function-async": "off",
+		"typescript/restrict-template-expressions": [
+			"error",
+			{ allowNumber: true },
+		],
+		"typescript/strict-boolean-expressions": "off",
 		"unicorn/catch-error-name": ["error", { name: "cause" }],
 		"unicorn/no-array-reduce": "off",
 		"unicorn/no-useless-undefined": "off",
@@ -83,27 +96,9 @@ export default defineConfig({
 		{
 			files: ["*.config.{js,ts}"],
 			rules: {
-				"import/no-default-export": "off",
 				"import/no-anonymous-default-export": "off",
-			},
-		},
-		{
-			files: ["**/*.{ts,tsx}"],
-			plugins: ["typescript"],
-			rules: {
-				"typescript/consistent-type-imports": [
-					"error",
-					{ fixStyle: "separate-type-imports", prefer: "type-imports" },
-				],
-				"typescript/explicit-function-return-type": "off",
-				"typescript/explicit-module-boundary-types": "off",
-				"typescript/no-non-null-assertion": "error",
-				"typescript/promise-function-async": "off",
-				"typescript/restrict-template-expressions": [
-					"error",
-					{ allowNumber: true },
-				],
-				"typescript/strict-boolean-expressions": "off",
+				"import/no-default-export": "off",
+				"import/no-relative-parent-imports": "off",
 			},
 		},
 	],
