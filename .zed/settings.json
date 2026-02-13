@@ -29,14 +29,14 @@
 	"languages": {
 		"TypeScript": {
 			"prettier": { "allowed": false },
-			"language_servers": ["tsgo", "oxlint", "eslint", "oxfmt"],
+			"language_servers": ["tsgo", "oxlint", "oxfmt"],
 			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"JavaScript": {
 			"prettier": { "allowed": false },
-			"language_servers": ["tsgo", "oxlint", "eslint", "oxfmt"],
+			"language_servers": ["tsgo", "oxlint", "oxfmt"],
 			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},

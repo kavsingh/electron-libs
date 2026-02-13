@@ -1,3 +1,4 @@
+import playwright from "eslint-plugin-playwright";
 import { defineConfig } from "oxlint";
 
 import baseConfig from "../../oxlint.config.ts";
@@ -21,6 +22,12 @@ export default defineConfig({
 			files: ["renderer/*"],
 			env: { node: false, browser: true },
 			rules: { "import/no-nodejs-modules": "error" },
+		},
+		{
+			files: ["e2e/**/*.test.ts"],
+			jsPlugins: ["eslint-plugin-playwright"],
+			// @ts-expect-error upstream types
+			rules: { ...playwright.configs["flat/recommended"].rules },
 		},
 	],
 });

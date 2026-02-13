@@ -12,7 +12,7 @@
 		"start": "cross-env pnpm run build && electron ./dist/main.mjs",
 		"test": "echo 'only e2e'",
 		"test:e2e": "cross-env pnpm run build && playwright test",
-		"lint": "oxlint --type-aware --type-check && eslint . --max-warnings=0 --no-warn-ignored && oxfmt . --check"
+		"lint": "oxlint --type-aware --type-check --max-warnings=0 && oxfmt . --check"
 	},
 	"dependencies": {
 		"electron": "catalog:"
@@ -20,11 +20,8 @@
 	"devDependencies": {
 		"@kavsingh/electron-typed-ipc": "workspace:*",
 		"@playwright/test": "1.58.2",
-		"@types/eslint": "9.6.1",
-		"eslint": "10.0.0",
 		"eslint-plugin-playwright": "2.5.1",
-		"tsdown": "catalog:",
-		"typescript-eslint": "8.55.0"
+		"tsdown": "catalog:"
 	},
 	"productName": "Example"
 }
