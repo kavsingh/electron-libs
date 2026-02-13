@@ -8,5 +8,5 @@ allowBuilds:
   lefthook: true
   nx: true
 catalog:
-  electron: 40.4.0
+  electron: 40.4.1
   tsdown: 0.20.3
