@@ -6,23 +6,11 @@
 
 	"lsp": {
 		"oxlint": {
-			"initialization_options": {
-				"settings": {
-					"typeAware": true,
-					"unusedDisableDirectives": "deny"
-				}
-			}
+			"initialization_options": { "settings": { "typeAware": true } }
 		},
 
 		"oxfmt": {
 			"initialization_options": { "settings": { "run": "onSave" } }
-		},
-
-		"eslint": {
-			"settings": {
-				"workingDirectories": [{ "mode": "auto" }],
-				"onIgnoredFiles": "off"
-			}
 		}
 	},
 
@@ -58,7 +46,7 @@
 
 		"TOML": {
 			"prettier": { "allowed": false },
-			"formatter": [{ "language_server": { "name": "tombi" } }]
+			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		},
 
 		"YAML": {

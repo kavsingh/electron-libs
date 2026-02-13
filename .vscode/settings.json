@@ -11,24 +11,14 @@
 	},
 
 	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": {
-		"source.fixAll.oxc": "always",
-		"source.fixAll.eslint": "always"
-	},
-	"editor.quickSuggestions": {
-		"strings": true
-	},
+	"editor.codeActionsOnSave": { "source.fixAll.oxc": "always" },
+	"editor.quickSuggestions": { "strings": true },
 
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.experimental.useTsgo": true,
 
 	"oxc.enable": true,
 	"oxc.typeAware": true,
-
-	"eslint.enable": true,
-	"eslint.workingDirectories": [{ "mode": "auto" }],
-
-	"prettier.enable": false,
 
 	"[javascript]": {
 		"editor.defaultFormatter": "oxc.oxc-vscode"
@@ -54,7 +44,13 @@
 	"[jsonc]": {
 		"editor.defaultFormatter": "oxc.oxc-vscode"
 	},
+	"[toml]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	},
 	"[yaml]": {
+		"editor.defaultFormatter": "oxc.oxc-vscode"
+	},
+	"[markdown]": {
 		"editor.defaultFormatter": "oxc.oxc-vscode"
 	}
 }
