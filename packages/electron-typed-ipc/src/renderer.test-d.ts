@@ -12,6 +12,21 @@ import { createIpcRenderer } from "./renderer.ts";
 import type { SendFromRendererOptions } from "./renderer.ts";
 import type { IpcRendererEvent } from "electron";
 
+type Stub<T> = (..._: unknown[]) => T;
+
+interface SendFromMainPayload {
+	type: "sendFromMain";
+}
+
+interface SendFromRendererPayload {
+	type: "sendFromRenderer";
+}
+
+const stubUndefined: Stub<undefined> = () => undefined;
+const stubString: Stub<string> = () => "hello";
+const stubNumber: Stub<number> = () => 10;
+const stubEvents: Stub<() => void> = () => () => undefined;
+
 const _definition = defineOperations({
 	queryVoidArgVoidReturn: query<undefined, undefined>(stubUndefined),
 	queryVoidArgStringReturn: query<string, undefined>(stubString),
@@ -160,29 +175,3 @@ describe("renderer types", () => {
 		});
 	});
 });
-
-function stubUndefined(..._: unknown[]) {
-	return undefined;
-}
-
-function stubString(..._: unknown[]) {
-	return "hello";
-}
-
-function stubNumber(..._: unknown[]) {
-	return 10;
-}
-
-function stubEvents() {
-	return function cleanup() {
-		// noop
-	};
-}
-
-interface SendFromMainPayload {
-	type: "sendFromMain";
-}
-
-interface SendFromRendererPayload {
-	type: "sendFromRenderer";
-}

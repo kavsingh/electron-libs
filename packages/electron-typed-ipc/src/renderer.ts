@@ -26,7 +26,6 @@ export type {
 	Definition,
 };
 
-// oxlint-disable-next-line max-lines-per-function, max-statements
 export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	serializer?: Serializer | undefined;
 	logger?: Logger | undefined;
@@ -48,9 +47,9 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 
 	const serializer = options?.serializer ?? defaultSerializer;
 	const logger = options?.logger;
-	// oxlint-disable-next-line no-unsafe-type-assertion
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 	const proxyObj = {} as ElectronTypedIpcRenderer<TDefinition>;
-	// oxlint-disable-next-line func-style, consistent-function-scoping
+	// oxlint-disable-next-line consistent-function-scoping
 	const proxyFn = () => undefined;
 
 	function queryProxy(api: IpcPreloadApi, channel: string) {

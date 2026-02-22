@@ -5,6 +5,6 @@
 	"compilerOptions": {
 		"composite": true,
 		"emitDeclarationOnly": true,
-		"types": ["node24"]
+		"types": ["node24", "undici-types"]
 	}
 }

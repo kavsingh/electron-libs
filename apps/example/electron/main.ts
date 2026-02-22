@@ -9,30 +9,7 @@ import { ipcDefinition } from "./ipc.ts";
 const { dirname } = import.meta;
 
 protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
-// oxlint-disable-next-line prefer-top-level-await
-void init();
 
-async function init() {
-	await app.whenReady();
-
-	protocol.handle("app", appProtocolHandler);
-
-	const appWindow = new BrowserWindow({
-		webPreferences: { preload: path.resolve(dirname, "preload.cjs") },
-	});
-
-	const disposeIpc = createIpcMain(ipcDefinition);
-
-	if (!process.env["IS_E2E"]) appWindow.webContents.openDevTools();
-
-	void appWindow.loadURL("app://bundle");
-
-	app.on("quit", () => {
-		disposeIpc();
-	});
-}
-
-// oxlint-disable-next-line max-statements
 function appProtocolHandler(request: Request): Promise<Response> {
 	const requestUrl = URL.parse(request.url);
 
@@ -77,3 +54,23 @@ function appProtocolHandler(request: Request): Promise<Response> {
 
 	return net.fetch(url.pathToFileURL(pathToServe).href);
 }
+
+async function init() {
+	await app.whenReady();
+
+	protocol.handle("app", appProtocolHandler);
+
+	const appWindow = new BrowserWindow({
+		webPreferences: { preload: path.resolve(dirname, "preload.cjs") },
+	});
+
+	const disposeIpc = createIpcMain(ipcDefinition);
+
+	if (!process.env["IS_E2E"]) appWindow.webContents.openDevTools();
+
+	void appWindow.loadURL("app://bundle");
+
+	app.on("quit", disposeIpc);
+}
+
+void init();

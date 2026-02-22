@@ -11,20 +11,25 @@ export default defineConfig({
 		"**/__generated__/**",
 		"!**/__generated__/__mocks__/**",
 	],
+	settings: { vitest: { typecheck: true } },
+	rules: {
+		"typescript/consistent-type-assertions": [
+			"error",
+			{ assertionStyle: "as" },
+		],
+	},
 	overrides: [
 		{
 			files: ["src/**"],
-			plugins: ["import"],
 			env: { node: false, browser: false },
+			plugins: ["import"],
 			rules: {
 				"eslint/no-console": "error",
 				"import/no-nodejs-modules": "error",
-				"import/no-relative-parent-imports": "off",
 			},
 		},
 		{
 			files: ["src/main.ts", "src/vitest.setup.ts"],
-			plugins: ["import"],
 			env: { node: true, browser: false },
 			rules: { "import/no-nodejs-modules": "off" },
 		},
@@ -35,26 +40,17 @@ export default defineConfig({
 		{
 			files: ["src/**/*.test.ts", "src/**/*.test-d.ts"],
 			env: { browser: true, node: true },
-			plugins: ["vitest"],
+			plugins: ["import", "vitest"],
 			rules: {
-				"eslint/max-lines-per-function": "off",
 				"eslint/no-console": "off",
-				"import/no-namespace": "off",
-				"unicorn/consistent-function-scoping": "off",
+				"import/no-nodejs-modules": "off",
 				"vitest/no-disabled-tests": "error",
 				"vitest/no-focused-tests": "error",
-				"vitest/prefer-to-be-falsy": "off",
-				"vitest/prefer-to-be-truthy": "off",
 			},
 		},
 		{
 			files: ["src/**/*.test-d.ts"],
-			rules: {
-				"eslint/no-unused-expressions": "off",
-			},
+			rules: { "eslint/no-unused-expressions": "off" },
 		},
 	],
-	settings: {
-		vitest: { typecheck: true },
-	},
 });

@@ -1,2 +1,2 @@
 export * from "./serializer.ts";
-export * from "./logger.ts";
+export type * from "./logger.ts";
