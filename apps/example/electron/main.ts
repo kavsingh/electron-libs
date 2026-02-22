@@ -6,7 +6,8 @@ import { app, BrowserWindow, protocol, net } from "electron";
 
 import { ipcDefinition } from "./ipc.ts";
 
-const { dirname } = import.meta;
+const dirname = import.meta.dirname;
+const isE2E = process.argv.includes("--e2e");
 
 protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
 
@@ -61,12 +62,15 @@ async function init() {
 	protocol.handle("app", appProtocolHandler);
 
 	const appWindow = new BrowserWindow({
-		webPreferences: { preload: path.resolve(dirname, "preload.cjs") },
+		webPreferences: {
+			preload: path.resolve(dirname, "preload.cjs"),
+			additionalArguments: isE2E ? ["--e2e"] : [],
+		},
 	});
 
 	const disposeIpc = createIpcMain(ipcDefinition);
 
-	if (!process.env["IS_E2E"]) appWindow.webContents.openDevTools();
+	if (!isE2E) appWindow.webContents.openDevTools();
 
 	void appWindow.loadURL("app://bundle");
 

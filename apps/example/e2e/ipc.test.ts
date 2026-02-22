@@ -1,17 +1,13 @@
 import { test, expect } from "./fixtures.ts";
 
-test.describe("ipc tests", () => {
-	test("it should be able to complete req / res over ipc", async ({
-		mainWindow,
-	}) => {
-		await mainWindow.getByRole("button", { name: "req" }).click();
+test.describe("ipc", () => {
+	test("completes req / res", async ({ page }) => {
+		await page.getByRole("button", { name: "req" }).click();
 
-		await expect(mainWindow.getByText("res")).toBeVisible();
+		await expect(page.getByText("res")).toBeVisible();
 	});
 
-	test("it should be able to complete pub / sub over ipc", async ({
-		mainWindow,
-	}) => {
-		await expect(mainWindow.getByText("pong (ping)")).toBeVisible();
+	test("completes pub / sub", async ({ page }) => {
+		await expect(page.getByText("pong (ping)")).toBeVisible();
 	});
 });
