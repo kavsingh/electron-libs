@@ -16,7 +16,6 @@ export default defineConfig({
 		{
 			files: ["electron/*", "e2e/*"],
 			env: { node: true, browser: false },
-			rules: { "unicorn/prefer-event-target": "off" },
 		},
 		{
 			files: ["renderer/*"],
