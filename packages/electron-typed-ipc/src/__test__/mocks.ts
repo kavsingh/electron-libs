@@ -3,7 +3,7 @@ import { vi } from "vitest";
 import type { BrowserWindow, IpcMain, IpcRenderer } from "electron";
 
 // allow sparse mocks
-// oxlint-disable no-unsafe-type-assertion, prefer-await-to-then
+// oxlint-disable typescript/no-unsafe-type-assertion
 
 export function createMockIpcMain() {
 	const mockIpcMain: Partial<IpcMain> = {

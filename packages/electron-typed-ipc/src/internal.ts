@@ -18,7 +18,7 @@ export function isValidChannel(channel: string) {
 }
 
 export function exhaustive(param: never, logger?: Logger) {
-	// oxlint-disable-next-line restrict-template-expressions
+	// oxlint-disable-next-line typescript/restrict-template-expressions
 	logger?.warn(`unknown value ${param}`);
 }
 
@@ -94,5 +94,5 @@ export type IpcResult<TValue = unknown> =
 	| { result: "ok"; data: TValue }
 	| { result: "error"; error: unknown };
 
-// oxlint-disable-next-line no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 type AnyImpl = (...args: any[]) => any;

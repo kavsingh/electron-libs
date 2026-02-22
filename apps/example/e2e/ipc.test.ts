@@ -1,32 +1,17 @@
-import { test, expect } from "@playwright/test";
-
-import { setupApplication, teardownApplication } from "./lib/application.ts";
-
-import type { ElectronApplication } from "@playwright/test";
+import { test, expect } from "./fixtures.ts";
 
 test.describe("ipc tests", () => {
-	// oxlint-disable-next-line init-declarations
-	let app: ElectronApplication;
+	test("it should be able to complete req / res over ipc", async ({
+		mainWindow,
+	}) => {
+		await mainWindow.getByRole("button", { name: "req" }).click();
 
-	test.beforeEach(async () => {
-		app = await setupApplication();
+		await expect(mainWindow.getByText("res")).toBeVisible();
 	});
 
-	test.afterEach(async () => {
-		await teardownApplication(app);
-	});
-
-	test("it should be able to complete req / res over ipc", async () => {
-		const page = await app.firstWindow();
-
-		await page.getByRole("button", { name: "req" }).click();
-
-		await expect(page.getByText("res")).toBeVisible();
-	});
-
-	test("it should be able to complete pub / sub over ipc", async () => {
-		const page = await app.firstWindow();
-
-		await expect(page.getByText("pong (ping)")).toBeVisible();
+	test("it should be able to complete pub / sub over ipc", async ({
+		mainWindow,
+	}) => {
+		await expect(mainWindow.getByText("pong (ping)")).toBeVisible();
 	});
 });

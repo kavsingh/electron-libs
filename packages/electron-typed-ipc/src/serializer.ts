@@ -10,7 +10,7 @@ export function createValueSerializer<TValue, TSerialized = unknown>(
 }
 
 export function createSerializer(
-	// oxlint-disable-next-line no-explicit-any
+	// oxlint-disable-next-line typescript/no-explicit-any
 	serializers: Array<ValueSerializer<any, any>>,
 ): Serializer {
 	if (serializers.length === 0) return defaultSerializer;

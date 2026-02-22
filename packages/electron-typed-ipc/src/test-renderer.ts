@@ -58,7 +58,7 @@ export function applyTypedIpcMocks<TDefinitions extends Definition>(
 
 const mockIpcRendererEventDefaults: IpcRendererEvent = {
 	ports: [],
-	// oxlint-disable-next-line no-unsafe-type-assertion
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 	sender: {} as IpcRenderer,
 	preventDefault: () => undefined,
 	defaultPrevented: false,
@@ -111,7 +111,7 @@ export function typedIpcSendFromMain<
 	event?: IpcRendererEvent,
 ) {
 	// handlers are sets, only forEach available for iteration
-	// oxlint-disable-next-line no-unsafe-type-assertion, no-array-for-each
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 	eventHandlers[channel as string]?.forEach((handler) => {
 		handler(event ?? createMockIpcRendererEvent(), payload);
 	});

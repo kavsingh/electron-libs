@@ -41,9 +41,9 @@ export function query<TResponse, TInput>(
 	return {
 		impl,
 		operation: "query",
-		// oxlint-disable-next-line no-unsafe-type-assertion
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		input: undefined as TInput,
-		// oxlint-disable-next-line no-unsafe-type-assertion
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		response: undefined as TResponse,
 	};
 }
@@ -54,9 +54,9 @@ export function mutation<TResponse, TInput>(
 	return {
 		impl,
 		operation: "mutation",
-		// oxlint-disable-next-line no-unsafe-type-assertion
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		input: undefined as TInput,
-		// oxlint-disable-next-line no-unsafe-type-assertion
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		response: undefined as TResponse,
 	};
 }
@@ -67,7 +67,7 @@ export function sendFromMain<TPayload>(
 	return {
 		impl,
 		operation: "sendFromMain",
-		// oxlint-disable-next-line no-unsafe-type-assertion
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		payload: undefined as TPayload,
 	};
 }
@@ -78,7 +78,7 @@ export function sendFromRenderer<TPayload>(
 	return {
 		impl,
 		operation: "sendFromRenderer",
-		// oxlint-disable-next-line no-unsafe-type-assertion
+		// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		payload: undefined as TPayload,
 	};
 }
@@ -89,7 +89,6 @@ export function defineOperations<TDefinition extends Definition>(
 	return definition;
 }
 
-// oxlint-disable-next-line max-lines-per-function, max-statements
 export function createIpcMain(
 	definition: Definition,
 	options: CreateTypedIpcMainOptions = {},
@@ -145,7 +144,6 @@ export function createIpcMain(
 	}
 
 	function sendToChannel(channel: string): SendPayloadToChannel {
-		// oxlint-disable-next-line max-statements
 		return function sendPayload(input) {
 			logger?.debug("send", channel, input?.payload);
 
