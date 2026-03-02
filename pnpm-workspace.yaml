@@ -3,7 +3,7 @@ packages:
   - packages/*
 
 catalog:
-  electron: 40.6.0
+  electron: 40.6.1
   tsdown: 0.20.3
 
 nodeLinker: hoisted
