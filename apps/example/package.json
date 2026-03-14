@@ -20,6 +20,7 @@
 	},
 	"devDependencies": {
 		"@kavsingh/electron-typed-ipc": "workspace:*",
+		"@kavsingh/electron-typed-ipc-devtools": "workspace:*",
 		"@playwright/test": "1.63.0",
 		"code-config": "workspace:*",
 		"eslint-plugin-playwright": "2.12.0",

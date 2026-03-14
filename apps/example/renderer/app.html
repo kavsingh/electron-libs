@@ -2,13 +2,17 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
-		<meta http-equiv="Content-Security-Policy" content="default-src app:;" />
+		<meta
+			http-equiv="Content-Security-Policy"
+			content="default-src app:; style-src app: 'unsafe-inline';"
+		/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>app</title>
 		<link href="./app.css" rel="stylesheet" />
 	</head>
 	<body>
 		<main>
+			<div data-devtools-container></div>
 			<pre data-display="user-agent"></pre>
 			<hr />
 			<pre data-display="location"></pre>

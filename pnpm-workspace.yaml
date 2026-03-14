@@ -11,11 +11,13 @@ packages:
 
 catalog:
   '@types/node24': npm:@types/node@24.13.5
+  '@vitest/coverage-v8': 5.0.1
   electron: 44.4.3
   oxfmt: 0.68.0
   oxlint: 1.83.0
   oxlint-tsgolint: 7.0.2002
   tsdown: 0.23.0
+  vitest: 5.0.1
 
 savePrefix: ''
 

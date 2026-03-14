@@ -1,3 +1,4 @@
+import { renderDevtools } from "@kavsingh/electron-typed-ipc-devtools";
 import { createIpcRenderer } from "@kavsingh/electron-typed-ipc/renderer";
 
 import type { Subscription } from "@kavsingh/electron-typed-ipc/renderer";
@@ -41,6 +42,11 @@ function setupSubscription(tipc: Tipc, label: string) {
 
 function mount() {
 	const tipc = createIpcRenderer<AppIpcDefinitions>({ logger: console });
+	const devtoolsContainer = document.querySelector("[data-devtools-container]");
+
+	if (devtoolsContainer instanceof HTMLElement) {
+		renderDevtools(devtoolsContainer);
+	}
 
 	updateDisplay("user-agent", () => navigator.userAgent);
 	updateDisplay("location", () => {
