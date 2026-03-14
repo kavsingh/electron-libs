@@ -1,0 +1,18 @@
+import { defineConfig } from "oxfmt";
+
+export default defineConfig({
+	ignorePatterns: ["pnpm-*.yaml", "**/.nx/**", "**/dist/**", "**/reports/**"],
+	printWidth: 80,
+	useTabs: true,
+	sortImports: {
+		order: "asc",
+		groups: [
+			["builtin"],
+			["external"],
+			["internal", "subpath"],
+			["parent"],
+			["sibling", "index"],
+			["type"],
+		],
+	},
+});

@@ -64,11 +64,12 @@
 	},
 	"devDependencies": {
 		"@tsconfig/node22": "22.0.5",
-		"@types/node22": "npm:@types/node@22.19.13",
-		"@vitest/coverage-v8": "4.0.18",
+		"@types/node22": "npm:@types/node@25.5.0",
+		"@vitest/coverage-v8": "4.1.0",
 		"electron": "catalog:",
 		"tsdown": "catalog:",
-		"vitest": "4.0.18"
+		"typescript": "5.9.3",
+		"vitest": "4.1.0"
 	},
 	"peerDependencies": {
 		"electron": ">=38"

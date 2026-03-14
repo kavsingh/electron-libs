@@ -4,7 +4,7 @@ extends:
 
 pre-commit:
   jobs:
-    - run: pnpm oxfmt {staged_files}
+    - run: pnpm oxfmt --no-error-on-unmatched-pattern {staged_files}
       glob: "**/*.{js,ts,jsx,tsx,json,jsonc,toml,yaml,yml,html,css,md}"
       stage_fixed: true
 
