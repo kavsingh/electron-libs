@@ -47,7 +47,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 
 	const serializer = options?.serializer ?? defaultSerializer;
 	const logger = options?.logger;
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion, typescript/consistent-type-assertions
 	const proxyObj = {} as ElectronTypedIpcRenderer<TDefinition>;
 	// oxlint-disable-next-line unicorn/consistent-function-scoping
 	const proxyFn = () => undefined;

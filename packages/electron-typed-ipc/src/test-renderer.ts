@@ -58,7 +58,7 @@ export function applyTypedIpcMocks<TDefinitions extends Definition>(
 
 const mockIpcRendererEventDefaults: IpcRendererEvent = {
 	ports: [],
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion, typescript/consistent-type-assertions
 	sender: {} as IpcRenderer,
 	preventDefault: () => undefined,
 	defaultPrevented: false,
