@@ -3,8 +3,13 @@ packages:
   - packages/*
 
 catalog:
+  '@tsconfig/node22': 22.0.5
+  '@types/node22': npm:@types/node@22.19.15
+  '@vitest/coverage-v8': 4.1.0
   electron: 41.0.2
   tsdown: 0.21.3
+  typescript: 5.9.3
+  vitest: 4.1.0
 
 nodeLinker: hoisted
 

@@ -1,14 +1,14 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"include": ["renderer", "electron/ipc.ts"],
+	"include": ["src"],
 	"extends": ["../../tsconfig.base.json"],
 	"compilerOptions": {
 		"composite": true,
 		"emitDeclarationOnly": true,
+		"jsx": "preserve",
+		"jsxImportSource": "solid-js",
 		"module": "esnext",
 		"moduleResolution": "bundler",
-		"lib": ["es2023", "dom", "dom.iterable", "dom.asynciterable"],
-		"paths": { "~/electron/*": ["./electron/*"] },
-		"types": []
+		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"]
 	}
 }
