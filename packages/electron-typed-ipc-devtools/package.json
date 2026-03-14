@@ -1,0 +1,40 @@
+{
+	"name": "@kavsingh/electron-typed-ipc-devtools",
+	"version": "1.0.0-dev.0",
+	"description": "devtools for typed electron ipc",
+	"keywords": [],
+	"license": "MIT",
+	"author": "<author>",
+	"files": [
+		"./dist"
+	],
+	"type": "module",
+	"exports": {
+		".": {
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
+		}
+	},
+	"scripts": {
+		"tdd": "vitest --typecheck --reporter=verbose",
+		"test": "vitest run --typecheck --coverage",
+		"lint": "oxlint --type-aware --type-check && oxfmt . --check",
+		"build": "tsdown"
+	},
+	"devDependencies": {
+		"@tsdown/css": "0.21.5",
+		"@vitest/coverage-v8": "catalog:",
+		"eslint-plugin-better-tailwindcss": "4.3.2",
+		"eslint-plugin-solid": "0.14.5",
+		"rolldown-plugin-solid": "0.2.1",
+		"solid-js": "1.9.12",
+		"tsdown": "catalog:",
+		"vitest": "catalog:"
+	},
+	"peerDependencies": {
+		"@kavsingh/electron-typed-ipc": "workspace:*",
+		"electron": ">=38"
+	}
+}

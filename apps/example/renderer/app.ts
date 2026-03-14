@@ -1,3 +1,4 @@
+import { renderDevtools } from "@kavsingh/electron-typed-ipc-devtools";
 import { createIpcRenderer } from "@kavsingh/electron-typed-ipc/renderer";
 
 import type { AppIpcDefinitions } from "~/electron/ipc.ts";
@@ -15,6 +16,12 @@ export function mount() {
 	updateDisplay("location", () => {
 		return JSON.stringify(globalThis.location, undefined, 2);
 	});
+
+	const devtoolsContainer = document.querySelector("[data-devtools-container]");
+
+	if (devtoolsContainer instanceof HTMLElement) {
+		renderDevtools(devtoolsContainer);
+	}
 
 	tipc.testSendFromMain.subscribe((_, message) => {
 		updateDisplay("events-from-main", (current) => `${current}<br/>${message}`);

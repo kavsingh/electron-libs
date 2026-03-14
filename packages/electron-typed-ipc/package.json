@@ -47,13 +47,13 @@
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"devDependencies": {
-		"@tsconfig/node22": "22.0.5",
-		"@types/node22": "npm:@types/node@22.19.15",
-		"@vitest/coverage-v8": "4.1.1",
+		"@tsconfig/node22": "catalog:",
+		"@types/node22": "catalog:",
+		"@vitest/coverage-v8": "catalog:",
 		"electron": "catalog:",
 		"tsdown": "catalog:",
-		"typescript": "6.0.2",
-		"vitest": "4.1.1"
+		"typescript": "catalog:",
+		"vitest": "catalog:"
 	},
 	"peerDependencies": {
 		"electron": ">=38"
