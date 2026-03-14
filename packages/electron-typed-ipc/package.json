@@ -12,12 +12,8 @@
 	"exports": {
 		".": {
 			"import": {
-				"types": "./dist/common.d.mts",
-				"default": "./dist/common.mjs"
-			},
-			"require": {
-				"types": "./dist/common.d.cts",
-				"default": "./dist/common.cjs"
+				"types": "./dist/common.d.ts",
+				"default": "./dist/common.js"
 			}
 		},
 		"./preload": {
@@ -28,30 +24,18 @@
 			"import": {
 				"types": "./dist/main.d.mts",
 				"default": "./dist/main.mjs"
-			},
-			"require": {
-				"types": "./dist/main.d.cts",
-				"default": "./dist/main.cjs"
 			}
 		},
 		"./renderer": {
 			"import": {
-				"types": "./dist/renderer.d.mts",
-				"default": "./dist/renderer.mjs"
-			},
-			"require": {
-				"types": "./dist/renderer.d.cts",
-				"default": "./dist/renderer.cjs"
+				"types": "./dist/renderer.d.ts",
+				"default": "./dist/renderer.js"
 			}
 		},
 		"./test/renderer": {
 			"import": {
-				"types": "./dist/test-renderer.d.mts",
-				"default": "./dist/test-renderer.mjs"
-			},
-			"require": {
-				"types": "./dist/test-renderer.d.cts",
-				"default": "./dist/test-renderer.cjs"
+				"types": "./dist/test-renderer.d.ts",
+				"default": "./dist/test-renderer.js"
 			}
 		}
 	},
