@@ -1,0 +1,10 @@
+{
+	"name": "electron-typed-ipc-shared",
+	"version": "0.0.0",
+	"private": true,
+	"description": "shared libs for electron-typed-ipc",
+	"keywords": [],
+	"license": "MIT",
+	"author": "<author>",
+	"type": "module"
+}

@@ -26,7 +26,7 @@
 	"devDependencies": {
 		"@tsdown/css": "0.21.3",
 		"@vitest/coverage-v8": "catalog:",
-		"eslint-plugin-better-tailwindcss": "4.3.2",
+		"electron-typed-ipc-shared": "workspace:*",
 		"eslint-plugin-solid": "0.14.5",
 		"rolldown-plugin-solid": "0.2.1",
 		"solid-js": "1.9.11",
