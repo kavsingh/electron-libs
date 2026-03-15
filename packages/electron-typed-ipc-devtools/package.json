@@ -27,7 +27,7 @@
 		"@tsdown/css": "0.23.0",
 		"@vitest/coverage-v8": "catalog:",
 		"code-config": "workspace:*",
-		"eslint-plugin-better-tailwindcss": "4.7.0",
+		"electron-typed-ipc-shared": "workspace:*",
 		"eslint-plugin-solid": "0.18.0",
 		"rolldown-plugin-solid": "0.2.1",
 		"solid-js": "1.9.15",

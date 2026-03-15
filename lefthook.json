@@ -19,6 +19,18 @@
 				"glob": "*.{ts,js,tsx,jsx}",
 				"run": "pnpm oxlint --fix --no-error-on-unmatched-pattern {staged_files}",
 				"stage_fixed": true
+			},
+			{
+				"root": "packages/electron-typed-ipc-shared",
+				"glob": "*.{ts,js,tsx,jsx}",
+				"run": "pnpm oxlint --fix --no-error-on-unmatched-pattern {staged_files}",
+				"stage_fixed": true
+			},
+			{
+				"root": "packages/electron-typed-ipc-devtools",
+				"glob": "*.{ts,js,tsx,jsx}",
+				"run": "pnpm oxlint --fix --no-error-on-unmatched-pattern {staged_files}",
+				"stage_fixed": true
 			}
 		]
 	},

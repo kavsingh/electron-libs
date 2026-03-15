@@ -13,6 +13,12 @@ const config: OxlintConfig = defineConfig({
 		"!**/__generated__/__mocks__/**",
 	],
 	settings: { vitest: { typecheck: true } },
+	rules: {
+		"typescript/consistent-type-assertions": [
+			"error",
+			{ assertionStyle: "as" },
+		],
+	},
 	overrides: [
 		{
 			files: ["src/**"],

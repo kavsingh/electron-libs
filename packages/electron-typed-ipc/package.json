@@ -49,6 +49,7 @@
 		"@vitest/coverage-v8": "catalog:",
 		"code-config": "workspace:*",
 		"electron": "catalog:",
+		"electron-typed-ipc-shared": "workspace:*",
 		"tsdown": "catalog:",
 		"vitest": "catalog:"
 	},
