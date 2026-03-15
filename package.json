@@ -23,7 +23,7 @@
 		"@tsconfig/node24": "24.0.4",
 		"@tsconfig/strictest": "2.0.8",
 		"@types/node24": "npm:@types/node@24.12.0",
-		"@typescript/native-preview": "7.0.0-dev.20260314.1",
+		"@typescript/native-preview": "7.0.0-dev.20260315.1",
 		"cross-env": "10.1.0",
 		"lefthook": "2.1.4",
 		"nx": "22.5.4",

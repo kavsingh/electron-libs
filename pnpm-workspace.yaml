@@ -4,7 +4,7 @@ packages:
 
 catalog:
   electron: 41.0.2
-  tsdown: 0.21.2
+  tsdown: 0.21.3
 
 nodeLinker: hoisted
 

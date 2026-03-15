@@ -3,28 +3,33 @@ import EventEmitter from "node:events";
 import {
 	defineOperations,
 	query,
+	mutation,
 	sendFromMain,
 	sendFromRenderer,
 } from "@kavsingh/electron-typed-ipc/main";
 
-const emitter = new EventEmitter<{ "renderer/ping": [string] }>();
+const emitter = new EventEmitter<{ acknowledge: [string] }>();
 
 export const ipcDefinition = defineOperations({
-	req: query<string, undefined>(() => "res"),
+	testQuery: query<string, undefined>(() => "query response"),
 
-	ping: sendFromRenderer<string>((_, message) => {
-		emitter.emit("renderer/ping", message);
+	testMutation: mutation<string, string>((_, input) => {
+		return `mutation response (${input})`;
 	}),
 
-	pong: sendFromMain<string>(({ send }) => {
+	testSendFromRenderer: sendFromRenderer<string>((_, message) => {
+		emitter.emit("acknowledge", message);
+	}),
+
+	testSendFromMain: sendFromMain<string>(({ send }) => {
 		function handler(message: string) {
-			send({ payload: `pong (${message})` });
+			send({ payload: `event acknowledged (${message})` });
 		}
 
-		emitter.addListener("renderer/ping", handler);
+		emitter.addListener("acknowledge", handler);
 
 		return () => {
-			emitter.removeListener("renderer/ping", handler);
+			emitter.removeListener("acknowledge", handler);
 		};
 	}),
 });

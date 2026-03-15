@@ -7,6 +7,10 @@ export default defineConfig({
 	rules: {
 		"eslint/curly": ["error", "multi-line", "consistent"],
 		"eslint/eqeqeq": "error",
+		"eslint/no-duplicate-imports": [
+			"error",
+			{ allowSeparateTypeImports: true },
+		],
 		"eslint/no-plusplus": ["error", { allowForLoopAfterthoughts: true }],
 		"eslint/no-shadow": ["error", { ignoreTypeValueShadow: false }],
 		"eslint/no-unreachable": "error",
@@ -27,6 +31,8 @@ export default defineConfig({
 		"import/consistent-type-specifier-style": ["error", "prefer-top-level"],
 		"import/no-cycle": "error",
 		"import/no-default-export": "error",
+
+		"promise/always-return": ["error", { ignoreLastCallback: true }],
 
 		"unicorn/catch-error-name": ["error", { name: "cause" }],
 		"unicorn/filename-case": ["error", { cases: { kebabCase: true } }],

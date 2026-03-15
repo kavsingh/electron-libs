@@ -16,34 +16,44 @@ export function mount() {
 		return JSON.stringify(globalThis.location, undefined, 2);
 	});
 
+	tipc.testSendFromMain.subscribe((_, message) => {
+		updateDisplay("events-from-main", (current) => `${current}<br/>${message}`);
+	});
+
 	window.addEventListener("message", (event) => {
 		updateDisplay(
-			"posts",
+			"postmessages",
 			(current) => `${current}<br/>${event.data} (${event.origin})`,
 		);
 	});
 
-	async function handleReqClick() {
-		const res = await tipc.req.query();
+	document
+		.querySelector("[data-click=query]")
+		?.addEventListener("click", () => {
+			void tipc.testQuery.query().then((res) => {
+				updateDisplay("query-responses", (current) => `${current}<br/>${res}`);
+			});
+		});
 
-		updateDisplay("res", (current) => `${current}<br/>${res}`);
-	}
+	document
+		.querySelector("[data-click=mutate]")
+		?.addEventListener("click", () => {
+			void tipc.testMutation.mutate("input").then((res) => {
+				updateDisplay("query-responses", (current) => `${current}<br/>${res}`);
+			});
+		});
 
-	document.querySelector("[data-click=req]")?.addEventListener("click", () => {
-		void handleReqClick();
-	});
+	document
+		.querySelector("[data-click=send-event]")
+		?.addEventListener("click", () => {
+			tipc.testSendFromRenderer.send("ping");
+		});
 
-	document.querySelector("[data-click=post]")?.addEventListener("click", () => {
-		window.postMessage("message", "*");
-	});
-
-	tipc.pong.subscribe((_, message) => {
-		updateDisplay("pongs", (current) => `${current}<br/>${message}`);
-	});
-
-	setInterval(() => {
-		tipc.ping.send("ping");
-	}, 500);
+	document
+		.querySelector("[data-click=postmessage]")
+		?.addEventListener("click", () => {
+			window.postMessage("message", "*");
+		});
 }
 
 document.addEventListener("DOMContentLoaded", mount);
