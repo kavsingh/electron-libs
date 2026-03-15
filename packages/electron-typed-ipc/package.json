@@ -51,6 +51,7 @@
 		"@types/node22": "catalog:",
 		"@vitest/coverage-v8": "catalog:",
 		"electron": "catalog:",
+		"electron-typed-ipc-shared": "workspace:*",
 		"tsdown": "catalog:",
 		"typescript": "catalog:",
 		"vitest": "catalog:"

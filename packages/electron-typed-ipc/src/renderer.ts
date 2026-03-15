@@ -1,3 +1,5 @@
+import { DEVTOOLS_EVENT_BUS_NAME } from "electron-typed-ipc-shared/devtools.ts";
+
 import { ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE } from "./internal.ts";
 import { defaultSerializer } from "./serializer.ts";
 
@@ -14,6 +16,10 @@ import type { Logger } from "./logger.ts";
 import type { IpcPreloadApi } from "./preload.ts";
 import type { Serializer } from "./serializer.ts";
 import type { IpcRendererEvent } from "electron";
+import type {
+	DevtoolsEventBus,
+	DevtoolsEvent,
+} from "electron-typed-ipc-shared/devtools.ts";
 
 // support inference in consumers using typescript project references
 export type {
@@ -25,6 +31,20 @@ export type {
 	SendFromMain,
 	Definition,
 };
+
+function getDebugId(): string {
+	return Math.random().toString(36).slice(2);
+}
+
+function publishDevtoolsEvent(event: DevtoolsEvent): void {
+	// @ts-expect-error isolate type
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
+	const eventBus = globalThis.window[DEVTOOLS_EVENT_BUS_NAME] as
+		| DevtoolsEventBus
+		| undefined;
+
+	eventBus?.publish(event);
+}
 
 export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	serializer?: Serializer | undefined;
@@ -57,6 +77,16 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 			apply: async (_, __, [arg]: [unknown]) => {
 				logger?.debug("query", { channel, arg });
 
+				const id = getDebugId();
+
+				publishDevtoolsEvent({
+					id,
+					channel,
+					type: "queryStarted",
+					input: arg,
+					timestamp: Date.now(),
+				});
+
 				// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 				const response = (await api.query(
 					channel,
@@ -69,10 +99,30 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 				});
 
 				if (response.result === "error") {
-					throw serializer.deserialize(response.error);
+					const deserialized = serializer.deserialize(response.error);
+
+					publishDevtoolsEvent({
+						id,
+						channel,
+						type: "queryResolved",
+						result: { type: "error", cause: deserialized },
+						timestamp: Date.now(),
+					});
+
+					throw deserialized;
 				}
 
-				return serializer.deserialize(response.data);
+				const deserialized = serializer.deserialize(response.data);
+
+				publishDevtoolsEvent({
+					id,
+					channel,
+					type: "queryResolved",
+					result: { type: "success", response: deserialized },
+					timestamp: Date.now(),
+				});
+
+				return deserialized;
 			},
 		});
 	}
@@ -81,6 +131,16 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 		return new Proxy(proxyFn, {
 			apply: async (_, __, [arg]: [unknown]) => {
 				logger?.debug("mutation", { channel, arg });
+
+				const id = getDebugId();
+
+				publishDevtoolsEvent({
+					id,
+					channel,
+					type: "mutationStarted",
+					input: arg,
+					timestamp: Date.now(),
+				});
 
 				// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 				const response = (await api.mutate(
@@ -91,10 +151,30 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 				logger?.debug("mutation result", { channel, response });
 
 				if (response.result === "error") {
-					throw serializer.deserialize(response.error);
+					const deserialized = serializer.deserialize(response.error);
+
+					publishDevtoolsEvent({
+						id,
+						channel,
+						type: "mutationResolved",
+						result: { type: "error", cause: deserialized },
+						timestamp: Date.now(),
+					});
+
+					throw deserialized;
 				}
 
-				return serializer.deserialize(response.data);
+				const deserialized = serializer.deserialize(response.data);
+
+				publishDevtoolsEvent({
+					id,
+					channel,
+					type: "mutationResolved",
+					result: { type: "success", response: deserialized },
+					timestamp: Date.now(),
+				});
+
+				return deserialized;
 			},
 		});
 	}
@@ -116,6 +196,13 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 
 				if (sendOptions?.toHost) api.sendToHost(channel, serialized);
 				else api.send(channel, serialized);
+
+				publishDevtoolsEvent({
+					channel,
+					payload,
+					type: "sendFromRenderer",
+					timestamp: Date.now(),
+				});
 			},
 		});
 	}
@@ -130,7 +217,16 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 						handler,
 					});
 
-					void handler(event, serializer.deserialize(payload));
+					const deserialized = serializer.deserialize(payload);
+
+					publishDevtoolsEvent({
+						channel,
+						payload: deserialized,
+						type: "sendFromMain",
+						timestamp: Date.now(),
+					});
+
+					void handler(event, deserialized);
 				});
 			},
 		});
