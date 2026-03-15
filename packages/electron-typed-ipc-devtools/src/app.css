@@ -1,17 +1,39 @@
-div[data-electron-typed-ipc-devtools] {
-	--etid-col-text: oklch(1 0 0);
-	--etid-col-bg: oklch(0.7 0.1899 32.16);
+@layer components {
+	div[data-electron-typed-ipc-devtools] {
+		--etid-col-text: oklch(1 0 0);
+		--etid-col-bg: oklch(0.7 0.1899 32.16);
 
-	box-sizing: border-box;
-	background-color: var(--etid-col-bg);
-	color: var(--etid-col-text);
-}
+		box-sizing: border-box;
 
-div[data-electron-typed-ipc-devtools] *,
-div[data-electron-typed-ipc-devtools] *::before,
-div[data-electron-typed-ipc-devtools] *::after {
-	box-sizing: inherit;
-	margin: 0;
-	padding: 0;
-	font-size: 16px;
+		*,
+		*::before,
+		*::after {
+			box-sizing: inherit;
+			margin: 0;
+			padding: 0;
+			font-size: 16px;
+		}
+
+		button {
+			appearance: none;
+			display: block;
+			font: inherit;
+			cursor: default;
+		}
+
+		button:not(:disabled) {
+			cursor: pointer;
+		}
+
+		.etid--devtools-trigger {
+			background-color: var(--etid-col-bg);
+			color: var(--etid-col-text);
+		}
+
+		.etid--devtools-panel {
+			padding: 20px;
+			background-color: var(--etid-col-bg);
+			color: var(--etid-col-text);
+		}
+	}
 }
