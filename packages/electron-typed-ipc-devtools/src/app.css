@@ -31,9 +31,24 @@
 		}
 
 		.etid--devtools-panel {
+			position: fixed;
+			bottom: 0;
+			width: 100%;
 			padding: 20px;
 			background-color: var(--etid-col-bg);
 			color: var(--etid-col-text);
+		}
+
+		.etid--timeline-item {
+			position: relative;
+			height: 10px;
+			border-bottom: 1px solid var(--etid-col-text);
+
+			div {
+				position: absolute;
+				inset-block: 0;
+				background-color: var(--etid-col-text);
+			}
 		}
 	}
 }
