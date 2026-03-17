@@ -8,8 +8,9 @@ import type { DevtoolsEvent } from "electron-typed-ipc-shared/devtools";
 import type { ParentProps } from "solid-js";
 
 const [devtoolsEvents, updateDevtoolsEvents] = createStore<{
+	minTimestamp: number;
 	events: DevtoolsEvent[];
-}>({ events: [] });
+}>({ minTimestamp: 0, events: [] });
 
 let eventBus: EventBus | undefined;
 
@@ -23,6 +24,8 @@ function DevtoolsEventsProvider(props: ParentProps) {
 	let unsubscribe: (() => void) | undefined;
 
 	onMount(() => {
+		updateDevtoolsEvents("minTimestamp", Date.now());
+
 		unsubscribe = eventBus?.subscribe((event) => {
 			updateDevtoolsEvents(
 				"events",
