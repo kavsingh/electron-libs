@@ -1,4 +1,5 @@
 import EventEmitter from "node:events";
+import { setTimeout } from "node:timers/promises";
 
 import {
 	defineOperations,
@@ -11,14 +12,22 @@ import {
 const emitter = new EventEmitter<{ acknowledge: [string] }>();
 
 export const ipcDefinition = defineOperations({
-	testQuery: query<string, undefined>(() => "query response"),
+	testQuery: query<string, undefined>(async () => {
+		await setTimeout(1_000);
 
-	testMutation: mutation<string, string>((_, input) => {
+		return "query response";
+	}),
+
+	testMutation: mutation<string, string>(async (_, input) => {
+		await setTimeout(1_000);
+
 		return `mutation response (${input})`;
 	}),
 
 	testSendFromRenderer: sendFromRenderer<string>((_, message) => {
-		emitter.emit("acknowledge", message);
+		void setTimeout(500).then(() => {
+			emitter.emit("acknowledge", message);
+		});
 	}),
 
 	testSendFromMain: sendFromMain<string>(({ send }) => {
