@@ -1,4 +1,4 @@
-import { Show, createSignal, createMemo, For } from "solid-js";
+import { Show, createSignal, createMemo, For, onMount } from "solid-js";
 import { Portal, render } from "solid-js/web";
 
 import css from "./app.css?inline";
@@ -32,8 +32,13 @@ function computePosition(
 		"inset-inline-end": item.endEvent
 			? `${100 - norm(item.endEvent.timestamp)}%`
 			: 0,
-		// "inset-inline-end": 0,
 	};
+}
+
+function hasPendingRequest(timeline: Timeline) {
+	return timeline.items.some(
+		(item) => item.type === "request" && !item.endEvent,
+	);
 }
 
 function Timeline() {
@@ -41,6 +46,10 @@ function Timeline() {
 	const timeline = createMemo(() => {
 		return createTimelineFromEvents(devtoolsEvents.events);
 	});
+	const maxTimestamp = createSignal(Date.now());
+	let timeout: number | undefined;
+
+	onMount(() => {});
 
 	return (
 		<div>
@@ -78,9 +87,11 @@ function DevtoolsPanel() {
 	return (
 		<Show when={panelIsOpen()}>
 			<Portal>
-				<div data-electron-typed-ipc-devtools class="etid--devtools-panel">
-					<div>Devtools Panel</div>
-					<Timeline />
+				<div data-electron-typed-ipc-devtools>
+					<div class="etid--devtools-panel">
+						<div>Devtools Panel</div>
+						<Timeline />
+					</div>
 				</div>
 			</Portal>
 		</Show>

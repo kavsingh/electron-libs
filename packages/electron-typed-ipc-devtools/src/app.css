@@ -32,8 +32,8 @@
 
 		.etid--devtools-panel {
 			position: fixed;
-			bottom: 0;
-			width: 100%;
+			inset-inline: 0;
+			inset-block-end: 0;
 			padding: 20px;
 			background-color: var(--etid-col-bg);
 			color: var(--etid-col-text);
