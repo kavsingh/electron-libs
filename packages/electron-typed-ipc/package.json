@@ -49,11 +49,11 @@
 	"devDependencies": {
 		"@tsconfig/node22": "22.0.5",
 		"@types/node22": "npm:@types/node@22.19.15",
-		"@vitest/coverage-v8": "4.1.1",
+		"@vitest/coverage-v8": "4.1.2",
 		"electron": "catalog:",
 		"tsdown": "catalog:",
 		"typescript": "6.0.2",
-		"vitest": "4.1.1"
+		"vitest": "4.1.2"
 	},
 	"peerDependencies": {
 		"electron": ">=38"
