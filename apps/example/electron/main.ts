@@ -9,6 +9,7 @@ import { ipcDefinition } from "./ipc.ts";
 const dirname = import.meta.dirname;
 const isE2E = process.argv.includes("--e2e");
 
+app.enableSandbox();
 protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
 
 function appProtocolHandler(request: Request): Promise<Response> {
@@ -77,4 +78,4 @@ async function init() {
 	app.on("quit", disposeIpc);
 }
 
-void init();
+init().catch(console.error);
