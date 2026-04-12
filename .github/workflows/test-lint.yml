@@ -23,7 +23,7 @@ jobs:
         uses: davelosert/vitest-coverage-report-action@v2
         with:
           working-directory: packages/electron-typed-ipc
-          json-summary-path: ${working-directory}/reports/vitest/coverage/coverage-summary.json
+          json-summary-path: reports/vitest/coverage/coverage-summary.json
 
   test-e2e:
     needs: test-lint
