@@ -13,7 +13,7 @@ export default defineConfig({
 				"**/types.ts",
 			],
 			provider: "v8",
-			reporter: "lcov",
+			reporter: ["text", "json-summary", "html"],
 			reportsDirectory: "./reports/vitest/coverage",
 		},
 	},
