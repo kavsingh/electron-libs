@@ -19,11 +19,6 @@ jobs:
           install_flags: --ignore-scripts
       - run: pnpm lint
       - run: pnpm test
-      - if: always()
-        uses: davelosert/vitest-coverage-report-action@v2
-        with:
-          working-directory: packages/electron-typed-ipc
-          json-summary-path: reports/vitest/coverage/coverage-summary.json
 
   test-e2e:
     needs: test-lint

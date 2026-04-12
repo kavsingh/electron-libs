@@ -13,7 +13,7 @@ export default defineConfig({
 				"**/types.ts",
 			],
 			provider: "v8",
-			reporter: ["text", "json-summary", "html"],
+			reporter: process.env["CI"] ? [] : ["text", "html"],
 			reportsDirectory: "./reports/vitest/coverage",
 		},
 	},
