@@ -1,7 +1,7 @@
 {
-	"prettier": { "allowed": false },
 	"format_on_save": "on",
-	"hard_tabs": true,
+	"prettier": { "allowed": false },
+	"formatter": [{ "language_server": { "name": "oxfmt" } }],
 
 	"lsp": {
 		"oxlint": {
@@ -12,38 +12,12 @@
 	"languages": {
 		"TypeScript": {
 			"language_servers": ["tsgo", "oxlint", "oxfmt"],
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.oxc": true }
 		},
 
 		"JavaScript": {
 			"language_servers": ["tsgo", "oxlint", "oxfmt"],
-			"formatter": [{ "language_server": { "name": "oxfmt" } }],
 			"code_actions_on_format": { "source.fixAll.oxc": true }
-		},
-
-		"HTML": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
-		},
-
-		"JSON": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
-		},
-
-		"JSONC": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
-		},
-
-		"TOML": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
-		},
-
-		"YAML": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
-		},
-
-		"Markdown": {
-			"formatter": [{ "language_server": { "name": "oxfmt" } }]
 		}
 	}
 }
