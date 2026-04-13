@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@tanstack/intent':
+      specifier: 0.0.29
+      version: 0.0.29
     electron:
       specifier: 41.2.0
       version: 41.2.0
@@ -18,7 +21,7 @@ importers:
   .:
     devDependencies:
       '@tanstack/intent':
-        specifier: 0.0.29
+        specifier: 'catalog:'
         version: 0.0.29
       '@tsconfig/node24':
         specifier: 24.0.4
@@ -75,6 +78,9 @@ importers:
 
   packages/electron-typed-ipc:
     devDependencies:
+      '@tanstack/intent':
+        specifier: 'catalog:'
+        version: 0.0.29
       '@tsconfig/node22':
         specifier: 22.0.5
         version: 22.0.5

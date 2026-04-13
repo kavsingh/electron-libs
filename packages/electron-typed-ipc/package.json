@@ -55,7 +55,7 @@
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"devDependencies": {
-		"@tanstack/intent": "0.0.29",
+		"@tanstack/intent": "catalog:",
 		"@tsconfig/node22": "22.0.5",
 		"@types/node22": "npm:@types/node@22.19.15",
 		"@vitest/coverage-v8": "4.1.4",

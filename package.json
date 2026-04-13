@@ -20,7 +20,7 @@
 		"clean:modules": "rimraf ./**/node_modules --glob"
 	},
 	"devDependencies": {
-		"@tanstack/intent": "0.0.29",
+		"@tanstack/intent": "catalog:",
 		"@tsconfig/node24": "24.0.4",
 		"@tsconfig/strictest": "2.0.8",
 		"@types/node24": "npm:@types/node@24.12.0",
