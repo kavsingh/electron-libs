@@ -9,9 +9,6 @@ import { ipcDefinition } from "./ipc.ts";
 const dirname = import.meta.dirname;
 const isE2E = process.argv.includes("--e2e");
 
-app.enableSandbox();
-protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
-
 function appProtocolHandler(request: Request): Promise<Response> {
 	const requestUrl = URL.parse(request.url);
 
@@ -57,9 +54,7 @@ function appProtocolHandler(request: Request): Promise<Response> {
 	return net.fetch(url.pathToFileURL(pathToServe).href);
 }
 
-async function init() {
-	await app.whenReady();
-
+function init() {
 	protocol.handle("app", appProtocolHandler);
 
 	const appWindow = new BrowserWindow({
@@ -78,4 +73,6 @@ async function init() {
 	app.on("quit", disposeIpc);
 }
 
-init().catch(console.error);
+app.enableSandbox();
+protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
+app.whenReady().then(init).catch(console.error);

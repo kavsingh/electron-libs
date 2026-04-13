@@ -8,7 +8,7 @@ function updateDisplay(select: string, updater: (current: string) => string) {
 	if (el instanceof HTMLElement) el.innerHTML = updater(el.innerHTML);
 }
 
-export function mount() {
+function mount() {
 	const tipc = createIpcRenderer<AppIpcDefinitions>();
 
 	updateDisplay("user-agent", () => navigator.userAgent);

@@ -16,8 +16,8 @@ export default defineConfig({
 		{
 			files: ["src/**"],
 			env: { node: false, browser: false },
-			plugins: ["import"],
 			rules: {
+				"import/exports-last": "off",
 				"eslint/no-console": "error",
 				"import/no-nodejs-modules": "error",
 			},
@@ -34,7 +34,7 @@ export default defineConfig({
 		{
 			files: ["src/**/*.test.ts", "src/**/*.test-d.ts"],
 			env: { browser: true, node: true },
-			plugins: ["import", "vitest"],
+			plugins: ["vitest"],
 			rules: {
 				"eslint/no-console": "off",
 				"import/no-nodejs-modules": "off",
