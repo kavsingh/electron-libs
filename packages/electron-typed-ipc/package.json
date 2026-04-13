@@ -2,11 +2,19 @@
 	"name": "@kavsingh/electron-typed-ipc",
 	"version": "1.0.0-dev.0",
 	"description": "typed electron ipc",
-	"keywords": [],
+	"keywords": [
+		"electron",
+		"intent",
+		"ipc",
+		"skills",
+		"tanstack-intent",
+		"type-safe"
+	],
 	"license": "MIT",
 	"author": "<author>",
 	"files": [
-		"./dist"
+		"dist",
+		"skills"
 	],
 	"type": "module",
 	"exports": {
@@ -47,6 +55,7 @@
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"devDependencies": {
+		"@tanstack/intent": "0.0.29",
 		"@tsconfig/node22": "22.0.5",
 		"@types/node22": "npm:@types/node@22.19.15",
 		"@vitest/coverage-v8": "4.1.4",
