@@ -2,22 +2,9 @@
 	"format_on_save": "on",
 	"prettier": { "allowed": false },
 	"formatter": [{ "language_server": { "name": "oxfmt" } }],
-
-	"lsp": {
-		"oxlint": {
-			"initialization_options": { "settings": { "typeAware": true } }
-		}
-	},
-
+	"code_actions_on_format": { "source.fixAll.oxc": true },
 	"languages": {
-		"TypeScript": {
-			"language_servers": ["tsgo", "oxlint", "oxfmt"],
-			"code_actions_on_format": { "source.fixAll.oxc": true }
-		},
-
-		"JavaScript": {
-			"language_servers": ["tsgo", "oxlint", "oxfmt"],
-			"code_actions_on_format": { "source.fixAll.oxc": true }
-		}
+		"TypeScript": { "language_servers": ["tsgo", "oxlint", "oxfmt"] },
+		"JavaScript": { "language_servers": ["tsgo", "oxlint", "oxfmt"] }
 	}
 }
