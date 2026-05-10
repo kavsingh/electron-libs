@@ -6,6 +6,8 @@ import { app, BrowserWindow, protocol, net } from "electron";
 
 import { ipcDefinition } from "./ipc.ts";
 
+import type { CustomScheme } from "electron";
+
 const dirname = import.meta.dirname;
 const isE2E = process.argv.includes("--e2e");
 
@@ -54,8 +56,13 @@ function appProtocolHandler(request: Request): Promise<Response> {
 	return net.fetch(url.pathToFileURL(pathToServe).href);
 }
 
+const appProtocol: CustomScheme = {
+	scheme: "app",
+	privileges: { corsEnabled: true },
+};
+
 function init() {
-	protocol.handle("app", appProtocolHandler);
+	protocol.handle(appProtocol.scheme, appProtocolHandler);
 
 	const appWindow = new BrowserWindow({
 		webPreferences: {
@@ -74,5 +81,5 @@ function init() {
 }
 
 app.enableSandbox();
-protocol.registerSchemesAsPrivileged([{ scheme: "app" }]);
+protocol.registerSchemesAsPrivileged([appProtocol]);
 app.whenReady().then(init).catch(console.error);

@@ -1,6 +1,0 @@
-pre-commit:
-  parallel: true
-  jobs:
-    - run: pnpm oxlint {staged_files}
-      root: "packages/electron-typed-ipc"
-      glob: "**/*.{js,ts,jsx,tsx}"

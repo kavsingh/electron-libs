@@ -2,14 +2,10 @@ packages:
   - apps/*
   - packages/*
 
-catalog:
-  electron: 41.3.0
-  tsdown: 0.21.10
-
-nodeLinker: hoisted
-
 allowBuilds:
-  electron: true
-  esbuild: true
   lefthook: true
   nx: true
+
+catalog:
+  electron: 42.0.1
+  tsdown: 0.22.0

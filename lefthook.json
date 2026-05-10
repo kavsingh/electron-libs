@@ -1,0 +1,13 @@
+{
+	"$schema": "./node_modules/lefthook/schema.json",
+	"extends": ["apps/*/lefthook.yml", "packages/*/lefthook.yml"],
+	"pre-commit": {
+		"jobs": [
+			{
+				"glob": "*.{ts,js,tsx,jsx,json,jsonc,toml,yaml,yml,html,css,md}",
+				"run": "pnpm oxfmt {staged_files}"
+			}
+		]
+	},
+	"pre-push": { "jobs": [{ "run": "pnpm lint" }] }
+}
