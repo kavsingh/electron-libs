@@ -25,7 +25,6 @@ export default defineConfig({
 		{
 			files: ["e2e/**/*.test.ts"],
 			jsPlugins: ["eslint-plugin-playwright"],
-			// @ts-expect-error upstream types
 			rules: { ...playwright.configs["flat/recommended"].rules },
 		},
 	],

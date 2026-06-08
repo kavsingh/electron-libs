@@ -2,10 +2,14 @@ packages:
   - apps/*
   - packages/*
 
+catalog:
+  '@types/node22': npm:@types/node@22.19.20
+  '@types/node24': npm:@types/node@24.13.1
+  electron: 42.3.3
+  tsdown: 0.22.2
+
+savePrefix: ''
+
 allowBuilds:
   lefthook: true
   nx: true
-
-catalog:
-  electron: 42.0.1
-  tsdown: 0.22.0
