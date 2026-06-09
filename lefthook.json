@@ -1,11 +1,23 @@
 {
 	"$schema": "./node_modules/lefthook/schema.json",
-	"extends": ["apps/*/lefthook.yml", "packages/*/lefthook.yml"],
 	"pre-commit": {
 		"jobs": [
 			{
-				"glob": "*.{ts,js,tsx,jsx,json,jsonc,toml,yaml,yml,html,css,md}",
-				"run": "pnpm oxfmt {staged_files}"
+				"glob": "*.{ts,js,tsx,jsx,html,css,md,json,jsonc,toml,yaml,yml}",
+				"run": "pnpm oxfmt --no-error-on-unmatched-pattern {staged_files}",
+				"stage_fixed": true
+			},
+			{
+				"root": "apps/example",
+				"glob": "*.{ts,js,tsx,jsx}",
+				"run": "pnpm oxlint --fix --no-error-on-unmatched-pattern {staged_files}",
+				"stage_fixed": true
+			},
+			{
+				"root": "packages/electron-typed-ipc",
+				"glob": "*.{ts,js,tsx,jsx}",
+				"run": "pnpm oxlint --fix --no-error-on-unmatched-pattern {staged_files}",
+				"stage_fixed": true
 			}
 		]
 	},

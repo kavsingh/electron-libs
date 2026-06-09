@@ -24,7 +24,7 @@ export default defineConfig([
 		clean: false,
 		dts: { build: true },
 		platform: "node",
-		target: ["node22"],
+		target: ["node24"],
 		entry: ["./src/main.ts"],
 		format: ["esm"],
 	},

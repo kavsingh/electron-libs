@@ -3,7 +3,6 @@ packages:
   - packages/*
 
 catalog:
-  '@types/node22': npm:@types/node@22.19.20
   '@types/node24': npm:@types/node@24.13.1
   electron: 42.3.3
   tsdown: 0.22.2
