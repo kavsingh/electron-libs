@@ -33,4 +33,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: ./.github/actions/setup
+      - working-directory: ./apps/example
+        run: pnpm install-electron
       - run: pnpm test:e2e
