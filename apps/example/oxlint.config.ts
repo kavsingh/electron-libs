@@ -1,9 +1,10 @@
+import { baseConfig } from "code-config/oxlint";
 import playwright from "eslint-plugin-playwright";
 import { defineConfig } from "oxlint";
 
-import baseConfig from "../../oxlint.config.ts";
+import type { OxlintConfig } from "oxlint";
 
-export default defineConfig({
+const config: OxlintConfig = defineConfig({
 	extends: [baseConfig],
 	env: { node: true, browser: false },
 	ignorePatterns: [
@@ -29,3 +30,5 @@ export default defineConfig({
 		},
 	],
 });
+
+export default config;

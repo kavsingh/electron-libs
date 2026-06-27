@@ -1,11 +1,10 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"include": ["src"],
-	"extends": ["../../tsconfig.base.json", "@tsconfig/node24/tsconfig.json"],
+	"extends": "code-config/tsconfig.node.json",
 	"compilerOptions": {
 		"composite": true,
 		"emitDeclarationOnly": true,
-		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"],
-		"types": ["node24"]
+		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"]
 	}
 }

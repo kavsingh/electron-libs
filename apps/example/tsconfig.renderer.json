@@ -1,7 +1,7 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"include": ["renderer", "electron/ipc.ts"],
-	"extends": ["../../tsconfig.base.json", "@tsconfig/node24/tsconfig.json"],
+	"extends": "code-config/tsconfig.base.json",
 	"compilerOptions": {
 		"composite": true,
 		"emitDeclarationOnly": true,

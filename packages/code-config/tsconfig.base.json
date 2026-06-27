@@ -3,10 +3,8 @@
 	"extends": "@tsconfig/strictest/tsconfig.json",
 	"compilerOptions": {
 		"allowImportingTsExtensions": true,
-		"allowJs": true,
-		"checkJs": true,
-		"erasableSyntaxOnly": true,
-		"verbatimModuleSyntax": true,
+		"declaration": true,
+		"emitDeclarationOnly": true,
 
 		// leave the following to linters
 		"noUnusedLocals": false,

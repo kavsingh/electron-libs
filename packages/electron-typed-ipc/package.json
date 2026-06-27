@@ -47,11 +47,10 @@
 		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
 	},
 	"devDependencies": {
-		"@vitest/coverage-v8": "4.1.8",
+		"@vitest/coverage-v8": "4.1.9",
 		"electron": "catalog:",
 		"tsdown": "catalog:",
-		"typescript": "6.0.3",
-		"vitest": "4.1.8"
+		"vitest": "4.1.9"
 	},
 	"peerDependencies": {
 		"electron": ">=40"

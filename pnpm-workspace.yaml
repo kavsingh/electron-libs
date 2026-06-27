@@ -1,11 +1,20 @@
+minimumReleaseAge: 4320 # 3 days in minutes
+strictDepBuilds: true
+trustPolicy: no-downgrade
+trustPolicyIgnoreAfter: 10080
+verifyDepsBeforeRun: prompt
+
 packages:
   - apps/*
   - packages/*
 
 catalog:
-  '@types/node24': npm:@types/node@24.13.1
-  electron: 42.3.3
-  tsdown: 0.22.2
+  '@types/node24': npm:@types/node@24.13.2
+  electron: 42.5.0
+  oxfmt: 0.56.0
+  oxlint: 1.71.0
+  oxlint-tsgolint: 0.23.0
+  tsdown: 0.22.3
 
 savePrefix: ''
 
