@@ -23,9 +23,9 @@ function appProtocolHandler(request: Request): Promise<Response> {
 		);
 	}
 
-	const { host, pathname } = requestUrl;
+	const { protocol: urlProtocol, host, pathname } = requestUrl;
 
-	if (host !== "bundle") {
+	if (urlProtocol !== "app:" || host !== "bundle") {
 		return Promise.resolve(
 			new Response("not found", {
 				status: 400,

@@ -16,8 +16,8 @@ function mount() {
 		return JSON.stringify(globalThis.location, undefined, 2);
 	});
 
-	tipc.testSendFromMain.subscribe((...args) => {
-		updateDisplay("events-from-main", (current) => `${current}<br/>${args[0]}`);
+	tipc.testSendFromMain.subscribe((message) => {
+		updateDisplay("events-from-main", (current) => `${current}<br/>${message}`);
 	});
 
 	window.addEventListener("message", (event) => {
