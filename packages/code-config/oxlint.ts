@@ -2,7 +2,7 @@ import { defineConfig } from "oxlint";
 
 import type { OxlintConfig } from "oxlint";
 
-export const baseConfig: OxlintConfig = defineConfig({
+const baseConfig: OxlintConfig = defineConfig({
 	options: {
 		typeAware: true,
 		typeCheck: true,
@@ -38,6 +38,7 @@ export const baseConfig: OxlintConfig = defineConfig({
 
 		"import/consistent-type-specifier-style": ["error", "prefer-top-level"],
 		"import/exports-last": "error",
+		"import/group-exports": "error",
 		"import/no-cycle": "error",
 		"import/no-default-export": "error",
 
@@ -58,7 +59,7 @@ export const baseConfig: OxlintConfig = defineConfig({
 		"typescript/consistent-return": "error",
 		"typescript/consistent-type-assertions": [
 			"error",
-			{ assertionStyle: "as", objectLiteralTypeAssertions: "never" },
+			{ assertionStyle: "as" },
 		],
 		"typescript/consistent-type-definitions": ["error", "interface"],
 		"typescript/consistent-type-exports": "error",
@@ -129,3 +130,5 @@ export const baseConfig: OxlintConfig = defineConfig({
 		},
 	],
 });
+
+export { baseConfig };

@@ -47,12 +47,12 @@ describe("main types", () => {
 
 			expectTypeOf(sendFromRenderer<undefined>)
 				.parameter(0)
-				.toExtend<
+				.toEqualTypeOf<
 					(event: IpcMainEvent, payload: undefined) => void | Promise<void>
 				>();
 
 			expectTypeOf(sendFromRenderer<{ type: "sendFromRenderer" }>).parameter(0)
-				.toExtend<
+				.toEqualTypeOf<
 				(
 					event: IpcMainEvent,
 					payload: { type: "sendFromRenderer" },
@@ -63,7 +63,7 @@ describe("main types", () => {
 		it("should type sendFromMain handler", () => {
 			expect.assertions(2);
 
-			expectTypeOf(sendFromMain<undefined>).parameter(0).toExtend<
+			expectTypeOf(sendFromMain<undefined>).parameter(0).toEqualTypeOf<
 				(input: {
 					send: (options?: {
 						frames?: number | [number, number] | undefined;

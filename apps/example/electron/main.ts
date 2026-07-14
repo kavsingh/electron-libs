@@ -71,7 +71,7 @@ function init() {
 		},
 	});
 
-	const disposeIpc = createIpcMain(ipcDefinition);
+	const disposeIpc = createIpcMain(ipcDefinition, { logger: console });
 
 	if (!isE2E) appWindow.webContents.openDevTools();
 

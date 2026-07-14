@@ -1,6 +1,6 @@
 import { createIpcRenderer } from "@kavsingh/electron-typed-ipc/renderer";
 
-import type { AppIpcDefinitions } from "~/electron/ipc.ts";
+import type { AppIpcDefinitions } from "~/electron/ipc";
 
 function updateDisplay(select: string, updater: (current: string) => string) {
 	const el = document.querySelector(`[data-display=${select}]`);
@@ -9,15 +9,15 @@ function updateDisplay(select: string, updater: (current: string) => string) {
 }
 
 function mount() {
-	const tipc = createIpcRenderer<AppIpcDefinitions>();
+	const tipc = createIpcRenderer<AppIpcDefinitions>({ logger: console });
 
 	updateDisplay("user-agent", () => navigator.userAgent);
 	updateDisplay("location", () => {
 		return JSON.stringify(globalThis.location, undefined, 2);
 	});
 
-	tipc.testSendFromMain.subscribe((_, message) => {
-		updateDisplay("events-from-main", (current) => `${current}<br/>${message}`);
+	tipc.testSendFromMain.subscribe((...args) => {
+		updateDisplay("events-from-main", (current) => `${current}<br/>${args[0]}`);
 	});
 
 	window.addEventListener("message", (event) => {

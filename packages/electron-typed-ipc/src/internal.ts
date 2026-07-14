@@ -6,93 +6,121 @@ import type {
 	WebContents,
 } from "electron";
 
-export const ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE = "__ELECTRON_TYPED_IPC__";
+const ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE = "__ELECTRON_TYPED_IPC__";
 const channelPrefix = "__tipc__/";
 
-export function scopeChannel(channel: `${string}/${Operation["operation"]}`) {
-	return `${channelPrefix}${channel}` as const;
+function scopeChannel<TChannel extends `${string}/${Operation["operation"]}`>(
+	channel: TChannel,
+): `${typeof channelPrefix}${TChannel}` {
+	return `${channelPrefix}${channel}`;
 }
 
-export function isValidChannel(channel: string) {
+function isValidChannel(channel: string): boolean {
 	return channel.startsWith(channelPrefix);
 }
 
-export function exhaustive(param: never, logger?: Logger) {
+function exhaustive(param: never, logger?: Logger): void {
 	// oxlint-disable-next-line typescript/restrict-template-expressions
 	logger?.warn(`unknown value ${param}`);
 }
 
-export type Definition = Readonly<Record<string, Operation>>;
+// oxlint-disable-next-line typescript/no-explicit-any
+type AnyImpl = (...args: any[]) => any;
 
-export type Operation = Query | Mutation | SendFromMain | SendFromRenderer;
+type Definition = Readonly<Record<string, Operation>>;
 
-export interface Query<TResponse = unknown, TInput = unknown> {
+type Operation = Query | Mutation | SendFromMain | SendFromRenderer;
+
+interface Query<TResponse = unknown, TInput = unknown> {
 	operation: "query";
 	input: TInput;
 	response: TResponse;
 	impl: AnyImpl;
 }
 
-export type QueryImpl<TResponse, TInput> = (
+type QueryImpl<TResponse, TInput> = (
 	event: IpcMainInvokeEvent,
 	input: TInput,
 ) => TResponse | Promise<TResponse>;
 
-export interface Mutation<TResponse = unknown, TInput = unknown> {
+interface Mutation<TResponse = unknown, TInput = unknown> {
 	operation: "mutation";
 	input: TInput;
 	response: TResponse;
 	impl: AnyImpl;
 }
 
-export type MutationImpl<TResponse, TInput> = (
+type MutationImpl<TResponse, TInput> = (
 	event: IpcMainInvokeEvent,
 	input: TInput,
 ) => TResponse | Promise<TResponse>;
 
-export interface SendFromMain<TPayload = unknown> {
+interface SendFromMain<TPayload = unknown> {
 	operation: "sendFromMain";
 	payload: TPayload;
 	impl: AnyImpl;
 }
 
-export type SendFromMainImpl<TPayload> = (input: {
+type SendFromMainImpl<TPayload> = (input: {
 	send: (...args: SendFromMainArgs<TPayload>) => void;
 }) => DisposeFn;
 
-export type SendFromMainArgs<TPayload> = TPayload extends undefined
+type SendFromMainArgs<TPayload> = TPayload extends undefined
 	? [input?: SendFromMainOptions]
 	: [input: { payload: TPayload } & SendFromMainOptions];
 
-export interface SendFromMainOptions {
+interface SendFromMainOptions {
 	frames?: Parameters<WebContents["sendToFrame"]>[0] | undefined;
 	targetWindows?: BrowserWindow[] | undefined;
 }
 
-export interface SendFromRenderer<TPayload = unknown> {
+interface SendFromRenderer<TPayload = unknown> {
 	operation: "sendFromRenderer";
 	payload: TPayload;
 	impl: AnyImpl;
 }
 
-export type SendFromRendererImpl<TPayload> = (
+type SendFromRendererImpl<TPayload> = (
 	event: IpcMainEvent,
 	payload: TPayload,
 ) => void | Promise<void>;
 
-export type SendFromRendererArgs<TPayload> = TPayload extends undefined
+type SendFromRendererArgs<TPayload> = TPayload extends undefined
 	? [input?: SendFromRendererOptions]
 	: [input: { payload: TPayload } & SendFromRendererOptions];
 
-export interface SendFromRendererOptions {
+interface SendFromRendererOptions {
 	toHost?: boolean | undefined;
 }
 
-export type DisposeFn = () => void;
+type DisposeFn = () => void;
 
-export type IpcResult<TValue = unknown> =
+type IpcResult<TValue = unknown> =
 	| { result: "ok"; data: TValue }
 	| { result: "error"; error: unknown };
 
-// oxlint-disable-next-line typescript/no-explicit-any
-type AnyImpl = (...args: any[]) => any;
+export {
+	ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE,
+	scopeChannel,
+	isValidChannel,
+	exhaustive,
+};
+
+export type {
+	Definition,
+	Operation,
+	Query,
+	QueryImpl,
+	Mutation,
+	MutationImpl,
+	SendFromMain,
+	SendFromMainImpl,
+	SendFromMainArgs,
+	SendFromMainOptions,
+	SendFromRenderer,
+	SendFromRendererImpl,
+	SendFromRendererArgs,
+	SendFromRendererOptions,
+	DisposeFn,
+	IpcResult,
+};

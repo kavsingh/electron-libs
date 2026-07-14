@@ -5,6 +5,7 @@
 	"compilerOptions": {
 		"composite": true,
 		"emitDeclarationOnly": true,
+		"isolatedDeclarations": true,
 		"lib": ["esnext", "dom", "dom.iterable", "dom.asynciterable"]
 	}
 }

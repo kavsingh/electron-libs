@@ -10,7 +10,7 @@ export default defineConfig([
 	{
 		entry: ["./electron/preload.ts"],
 		target: ["node24"],
-		noExternal: [/@kavsingh/],
+		deps: { alwaysBundle: [/@kavsingh/] },
 		format: ["cjs"],
 		// tsdown warns on cjs builds which are required for sandboxed preload
 		// scripts. this warning becomes an error on CI and blocks workflows
@@ -19,7 +19,7 @@ export default defineConfig([
 	{
 		entry: ["./renderer/app.ts"],
 		target: ["chrome130"],
-		noExternal: [/@kavsingh/],
+		deps: { alwaysBundle: [/@kavsingh/] },
 		format: ["esm"],
 		copy: [{ from: "./renderer/app.{html,css}", to: "./dist" }],
 	},

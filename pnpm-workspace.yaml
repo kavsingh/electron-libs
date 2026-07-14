@@ -10,11 +10,11 @@ packages:
 
 catalog:
   '@types/node24': npm:@types/node@24.13.2
-  electron: 42.5.0
-  oxfmt: 0.56.0
-  oxlint: 1.71.0
-  oxlint-tsgolint: 0.23.0
-  tsdown: 0.22.3
+  electron: 43.1.0
+  oxfmt: 0.58.0
+  oxlint: 1.73.0
+  oxlint-tsgolint: 0.24.0
+  tsdown: 0.22.5
 
 savePrefix: ''
 

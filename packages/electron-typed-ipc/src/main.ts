@@ -20,22 +20,30 @@ import type { Logger } from "./logger.ts";
 import type { Serializer } from "./serializer.ts";
 import type { IpcMainEvent, IpcMainInvokeEvent, WebContents } from "electron";
 
-// support inference in consumers using typescript project references
-export type {
-	Definition,
-	IpcResult,
-	Mutation,
-	Query,
-	SendFromMain,
-	SendFromRenderer,
-	SendFromRendererImpl,
-	SendFromMainImpl,
-	DisposeFn,
-	QueryImpl,
-	MutationImpl,
-};
+interface CreateTypedIpcMainOptions {
+	serializer?: Serializer | undefined;
+	logger?: Logger | undefined;
+}
 
-export function query<TResponse, TInput>(
+interface SendFromMainOptions {
+	frames?: Parameters<WebContents["sendToFrame"]>[0] | undefined;
+	targetWindows?: BrowserWindow[] | undefined;
+}
+
+type SendPayloadToChannel = (input?: SendFromMainWithPayload) => void;
+
+type SubscribeToChannel = (
+	event: IpcMainEvent,
+	payload?: unknown,
+) => void | Promise<void>;
+
+interface SendFromMainWithPayload<
+	TPayload = unknown,
+> extends SendFromMainOptions {
+	payload: TPayload;
+}
+
+function query<TResponse, TInput>(
 	impl: QueryImpl<TResponse, TInput>,
 ): Query<TResponse, TInput> {
 	return {
@@ -48,7 +56,7 @@ export function query<TResponse, TInput>(
 	};
 }
 
-export function mutation<TResponse, TInput>(
+function mutation<TResponse, TInput>(
 	impl: MutationImpl<TResponse, TInput>,
 ): Mutation<TResponse, TInput> {
 	return {
@@ -61,7 +69,7 @@ export function mutation<TResponse, TInput>(
 	};
 }
 
-export function sendFromMain<TPayload>(
+function sendFromMain<TPayload>(
 	impl: SendFromMainImpl<TPayload>,
 ): SendFromMain<TPayload> {
 	return {
@@ -72,7 +80,7 @@ export function sendFromMain<TPayload>(
 	};
 }
 
-export function sendFromRenderer<TPayload>(
+function sendFromRenderer<TPayload>(
 	impl: SendFromRendererImpl<TPayload>,
 ): SendFromRenderer<TPayload> {
 	return {
@@ -83,13 +91,13 @@ export function sendFromRenderer<TPayload>(
 	};
 }
 
-export function defineOperations<TDefinition extends Definition>(
+function defineOperations<TDefinition extends Definition>(
 	definition: TDefinition,
-) {
+): TDefinition {
 	return definition;
 }
 
-export function createIpcMain(
+function createIpcMain(
 	definition: Definition,
 	options: CreateTypedIpcMainOptions = {},
 ): DisposeFn {
@@ -163,7 +171,7 @@ export function createIpcMain(
 						serialized,
 					);
 				} else {
-					logger?.debug("send to window", channel, input?.payload);
+					logger?.debug("send to window", channel, input?.payload, serialized);
 					target.webContents.send(scopedChannel, serialized);
 				}
 			}
@@ -253,25 +261,27 @@ export function createIpcMain(
 	};
 }
 
-export interface CreateTypedIpcMainOptions {
-	serializer?: Serializer | undefined;
-	logger?: Logger | undefined;
-}
+export {
+	query,
+	mutation,
+	sendFromMain,
+	sendFromRenderer,
+	defineOperations,
+	createIpcMain,
+};
 
-export interface SendFromMainOptions {
-	frames?: Parameters<WebContents["sendToFrame"]>[0] | undefined;
-	targetWindows?: BrowserWindow[] | undefined;
-}
-
-type SendPayloadToChannel = (input?: SendFromMainWithPayload) => void;
-
-type SubscribeToChannel = (
-	event: IpcMainEvent,
-	payload?: unknown,
-) => void | Promise<void>;
-
-interface SendFromMainWithPayload<
-	TPayload = unknown,
-> extends SendFromMainOptions {
-	payload: TPayload;
-}
+export type {
+	CreateTypedIpcMainOptions,
+	SendFromMainOptions,
+	Definition,
+	IpcResult,
+	Mutation,
+	Query,
+	SendFromMain,
+	SendFromRenderer,
+	SendFromRendererImpl,
+	SendFromMainImpl,
+	DisposeFn,
+	QueryImpl,
+	MutationImpl,
+};

@@ -4,7 +4,7 @@ export default defineConfig([
 	// common should run in any platform
 	{
 		clean: true,
-		dts: { build: true },
+		dts: { build: true, oxc: true },
 		platform: "neutral",
 		target: ["es2022"],
 		entry: ["./src/common.ts"],
@@ -14,7 +14,7 @@ export default defineConfig([
 	// Electron APIs
 	{
 		clean: false,
-		dts: { build: true },
+		dts: { build: true, oxc: true },
 		target: ["es2022"],
 		entry: ["./src/preload.ts"],
 		format: ["cjs"],
@@ -22,7 +22,7 @@ export default defineConfig([
 	// main process Node.js only
 	{
 		clean: false,
-		dts: { build: true },
+		dts: { build: true, oxc: true },
 		platform: "node",
 		target: ["node24"],
 		entry: ["./src/main.ts"],
@@ -31,7 +31,7 @@ export default defineConfig([
 	// renderer process browser only
 	{
 		clean: false,
-		dts: { build: true },
+		dts: { build: true, oxc: true },
 		platform: "browser",
 		target: ["chrome130"],
 		entry: ["./src/renderer.ts", "./src/test-renderer.ts"],

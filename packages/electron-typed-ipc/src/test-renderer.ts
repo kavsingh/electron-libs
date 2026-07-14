@@ -2,13 +2,47 @@ import { ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE } from "./internal.ts";
 
 import type { IpcResult, Definition, Operation } from "./internal.ts";
 import type { IpcPreloadApi } from "./preload.ts";
-import type { IpcRenderer, IpcRendererEvent } from "electron";
+
+type MockableChannel<TDefinitions extends Definition> = ChannelForOperation<
+	TDefinitions,
+	"query" | "mutation" | "sendFromRenderer"
+>;
+
+type SendableChannel<TDefinitions extends Definition> = ChannelForOperation<
+	TDefinitions,
+	"sendFromMain"
+>;
+
+type ChannelForOperation<
+	TDefinitions extends Definition,
+	TOperation extends Operation["operation"],
+> = Extract<
+	{
+		[TChannel in keyof TDefinitions]: {
+			channel: TChannel;
+			operation: TDefinitions[TChannel]["operation"];
+		};
+	}[keyof TDefinitions],
+	{ operation: TOperation }
+>["channel"];
+
+type TypedIpcMockRenderer<
+	TDefinitions extends Definition,
+	TMockableKey extends keyof TDefinitions = MockableChannel<TDefinitions>,
+> = {
+	[TKey in TMockableKey]: TDefinitions[TKey] extends {
+		operation: "query" | "mutation";
+	}
+		? (
+				input: TDefinitions[TKey]["input"],
+			) => Promise<Awaited<TDefinitions[TKey]["response"]>>
+		: TDefinitions[TKey] extends { operation: "sendFromRenderer" }
+			? (arg: TDefinitions[TKey]["payload"]) => void | Promise<void>
+			: never;
+};
 
 const fnMocks: Record<string, (...args: unknown[]) => unknown> = {};
-const eventHandlers: Record<
-	string,
-	Set<(event: IpcRendererEvent, payload: unknown) => void>
-> = {};
+const eventHandlers: Record<string, Set<(payload: unknown) => void>> = {};
 
 async function mockInvoke(
 	channel: string,
@@ -37,13 +71,16 @@ function mockSend(channel: string, payload: unknown) {
 	mock(payload);
 }
 
-export function getTypedIpcRendererMocks() {
-	return { fnMocks, eventHandlers } as const;
+function getTypedIpcRendererMocks(): Readonly<{
+	readonly fnMocks: typeof fnMocks;
+	readonly eventHandlers: typeof eventHandlers;
+}> {
+	return { fnMocks, eventHandlers };
 }
 
-export function applyTypedIpcMocks<TDefinitions extends Definition>(
+function applyTypedIpcMocks<TDefinitions extends Definition>(
 	mocks: Partial<TypedIpcMockRenderer<TDefinitions>>,
-) {
+): void {
 	for (const [channel, fn] of Object.entries(mocks)) {
 		if (typeof fn !== "function") {
 			throw new TypeError(
@@ -56,26 +93,18 @@ export function applyTypedIpcMocks<TDefinitions extends Definition>(
 	}
 }
 
-const mockIpcRendererEventDefaults: IpcRendererEvent = {
-	ports: [],
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion, typescript/consistent-type-assertions
-	sender: {} as IpcRenderer,
-	preventDefault: () => undefined,
-	defaultPrevented: false,
-};
-
-export function mockTypedIpcRenderer<TDefinitions extends Definition>(
+function mockTypedIpcRenderer<TDefinitions extends Definition>(
 	mocks: TypedIpcMockRenderer<TDefinitions>,
-) {
+): {
+	api: IpcPreloadApi;
+	namespace: typeof ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE;
+} {
 	const api: IpcPreloadApi = {
 		query: mockInvoke,
 		mutate: mockInvoke,
 		send: mockSend,
 		sendToHost: mockSend,
-		subscribe: (
-			channel: string,
-			handler: (event: IpcRendererEvent, payload: unknown) => void,
-		) => {
+		subscribe: (channel: string, handler: (payload: unknown) => void) => {
 			if (eventHandlers[channel]) eventHandlers[channel].add(handler);
 			else eventHandlers[channel] = new Set([handler]);
 
@@ -90,15 +119,7 @@ export function mockTypedIpcRenderer<TDefinitions extends Definition>(
 	return { api, namespace: ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE };
 }
 
-export function createMockIpcRendererEvent(
-	transform?: (defaults: IpcRendererEvent) => IpcRendererEvent,
-) {
-	return transform
-		? transform({ ...mockIpcRendererEventDefaults })
-		: { ...mockIpcRendererEventDefaults };
-}
-
-export function typedIpcSendFromMain<
+function typedIpcSendFromMain<
 	TDefinitions extends Definition,
 	TChannel extends SendableChannel<TDefinitions>,
 >(
@@ -108,49 +129,18 @@ export function typedIpcSendFromMain<
 			? undefined
 			: TDefinitions[TChannel]["payload"]
 		: never,
-	event?: IpcRendererEvent,
-) {
+): void {
 	// handlers are sets, only forEach available for iteration
 	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 	eventHandlers[channel as string]?.forEach((handler) => {
-		handler(event ?? createMockIpcRendererEvent(), payload);
+		handler(payload);
 	});
 }
 
-export type TypedIpcMockRenderer<
-	TDefinitions extends Definition,
-	TMockableKey extends keyof TDefinitions = MockableChannel<TDefinitions>,
-> = {
-	[TKey in TMockableKey]: TDefinitions[TKey] extends {
-		operation: "query" | "mutation";
-	}
-		? (
-				input: TDefinitions[TKey]["input"],
-			) => Promise<Awaited<TDefinitions[TKey]["response"]>>
-		: TDefinitions[TKey] extends { operation: "sendFromRenderer" }
-			? (arg: TDefinitions[TKey]["payload"]) => void | Promise<void>
-			: never;
+export {
+	getTypedIpcRendererMocks,
+	applyTypedIpcMocks,
+	mockTypedIpcRenderer,
+	typedIpcSendFromMain,
 };
-
-type MockableChannel<TDefinitions extends Definition> = ChannelForOperation<
-	TDefinitions,
-	"query" | "mutation" | "sendFromRenderer"
->;
-
-type SendableChannel<TDefinitions extends Definition> = ChannelForOperation<
-	TDefinitions,
-	"sendFromMain"
->;
-
-type ChannelForOperation<
-	TDefinitions extends Definition,
-	TOperation extends Operation["operation"],
-> = Extract<
-	{
-		[TChannel in keyof TDefinitions]: {
-			channel: TChannel;
-			operation: TDefinitions[TChannel]["operation"];
-		};
-	}[keyof TDefinitions],
-	{ operation: TOperation }
->["channel"];
+export type { TypedIpcMockRenderer };

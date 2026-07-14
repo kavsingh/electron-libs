@@ -13,23 +13,56 @@ import type {
 import type { Logger } from "./logger.ts";
 import type { IpcPreloadApi } from "./preload.ts";
 import type { Serializer } from "./serializer.ts";
-import type { IpcRendererEvent } from "electron";
 
-// support inference in consumers using typescript project references
-export type {
-	IpcResult,
-	DisposeFn,
-	Query,
-	Mutation,
-	SendFromRenderer,
-	SendFromMain,
-	Definition,
-};
+interface SendFromRendererOptions {
+	toHost?: boolean | undefined;
+}
+
+type ElectronTypedIpcRenderer<TDefinition extends Definition> = Readonly<{
+	[TName in keyof TDefinition]: TDefinition[TName] extends Query
+		? {
+				query: (
+					...args: TDefinition[TName]["input"] extends undefined
+						? []
+						: [input: TDefinition[TName]["input"]]
+				) => Promise<TDefinition[TName]["response"]>;
+			}
+		: TDefinition[TName] extends Mutation
+			? {
+					mutate: (
+						...args: TDefinition[TName]["input"] extends undefined
+							? []
+							: [input: TDefinition[TName]["input"]]
+					) => Promise<TDefinition[TName]["response"]>;
+				}
+			: TDefinition[TName] extends SendFromRenderer
+				? {
+						send: (
+							...args: TDefinition[TName]["payload"] extends undefined
+								? [options?: SendFromRendererOptions]
+								: [
+										payload: TDefinition[TName]["payload"],
+										options?: SendFromRendererOptions,
+									]
+						) => void;
+					}
+				: TDefinition[TName] extends SendFromMain
+					? {
+							subscribe: (
+								listener: (
+									...args: TDefinition[TName]["payload"] extends undefined
+										? []
+										: [payload: TDefinition[TName]["payload"]]
+								) => void | Promise<void>,
+							) => DisposeFn;
+						}
+					: never;
+}>;
 
 export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	serializer?: Serializer | undefined;
 	logger?: Logger | undefined;
-}) {
+}): ElectronTypedIpcRenderer<TDefinition> {
 	let preloadApi: IpcPreloadApi | undefined = undefined;
 
 	if (ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE in globalThis.window) {
@@ -47,7 +80,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 
 	const serializer = options?.serializer ?? defaultSerializer;
 	const logger = options?.logger;
-	// oxlint-disable-next-line typescript/no-unsafe-type-assertion, typescript/consistent-type-assertions
+	// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 	const proxyObj = {} as ElectronTypedIpcRenderer<TDefinition>;
 	// oxlint-disable-next-line unicorn/consistent-function-scoping
 	const proxyFn = () => undefined;
@@ -123,14 +156,14 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	function subscribeProxy(api: IpcPreloadApi, channel: string) {
 		return new Proxy(proxyFn, {
 			apply: (__, ___, [handler]: [(...args: unknown[]) => unknown]) => {
-				return api.subscribe(channel, (event, payload) => {
+				return api.subscribe(channel, (payload) => {
 					logger?.debug("subscribe receive", {
 						channel,
 						payload,
 						handler,
 					});
 
-					void handler(event, serializer.deserialize(payload));
+					void handler(serializer.deserialize(payload));
 				});
 			},
 		});
@@ -177,50 +210,13 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	});
 }
 
-type ElectronTypedIpcRenderer<TDefinition extends Definition> = Readonly<{
-	[TName in keyof TDefinition]: TDefinition[TName] extends Query
-		? {
-				query: (
-					...args: TDefinition[TName]["input"] extends undefined
-						? []
-						: [input: TDefinition[TName]["input"]]
-				) => Promise<TDefinition[TName]["response"]>;
-			}
-		: TDefinition[TName] extends Mutation
-			? {
-					mutate: (
-						...args: TDefinition[TName]["input"] extends undefined
-							? []
-							: [input: TDefinition[TName]["input"]]
-					) => Promise<TDefinition[TName]["response"]>;
-				}
-			: TDefinition[TName] extends SendFromRenderer
-				? {
-						send: (
-							...args: TDefinition[TName]["payload"] extends undefined
-								? [options?: SendFromRendererOptions]
-								: [
-										payload: TDefinition[TName]["payload"],
-										options?: SendFromRendererOptions,
-									]
-						) => void;
-					}
-				: TDefinition[TName] extends SendFromMain
-					? {
-							subscribe: (
-								listener: (
-									...args: TDefinition[TName]["payload"] extends undefined
-										? [event: IpcRendererEvent]
-										: [
-												event: IpcRendererEvent,
-												payload: TDefinition[TName]["payload"],
-											]
-								) => void | Promise<void>,
-							) => DisposeFn;
-						}
-					: never;
-}>;
-
-export interface SendFromRendererOptions {
-	toHost?: boolean | undefined;
-}
+export type {
+	IpcResult,
+	DisposeFn,
+	Query,
+	Mutation,
+	SendFromRenderer,
+	SendFromRendererOptions,
+	SendFromMain,
+	Definition,
+};

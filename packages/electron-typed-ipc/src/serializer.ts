@@ -1,15 +1,27 @@
-export const defaultSerializer: Serializer = {
+interface Serializer {
+	serialize: (val: unknown) => unknown;
+	deserialize: (val: unknown) => unknown;
+}
+
+interface ValueSerializer<TValue, TSerialized> {
+	isDeserialized: (value: unknown) => value is TValue;
+	isSerialized: (value: unknown) => value is TSerialized;
+	serialize: (value: TValue) => TSerialized;
+	deserialize: (value: TSerialized) => TValue;
+}
+
+const defaultSerializer: Serializer = {
 	serialize: (val) => val,
 	deserialize: (val) => val,
 };
 
-export function createValueSerializer<TValue, TSerialized = unknown>(
+function createValueSerializer<TValue, TSerialized = unknown>(
 	serializer: ValueSerializer<TValue, TSerialized>,
-) {
+): ValueSerializer<TValue, TSerialized> {
 	return serializer;
 }
 
-export function createSerializer(
+function createSerializer(
 	// oxlint-disable-next-line typescript/no-explicit-any
 	serializers: Array<ValueSerializer<any, any>>,
 ): Serializer {
@@ -66,14 +78,5 @@ export function createSerializer(
 	return { serialize, deserialize };
 }
 
-export interface Serializer {
-	serialize: (val: unknown) => unknown;
-	deserialize: (val: unknown) => unknown;
-}
-
-export interface ValueSerializer<TValue, TSerialized> {
-	isDeserialized: (value: unknown) => value is TValue;
-	isSerialized: (value: unknown) => value is TSerialized;
-	serialize: (value: TValue) => TSerialized;
-	deserialize: (value: TSerialized) => TValue;
-}
+export { defaultSerializer, createValueSerializer, createSerializer };
+export type { Serializer, ValueSerializer };

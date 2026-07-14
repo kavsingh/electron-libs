@@ -43,14 +43,13 @@
 		"tdd": "vitest --typecheck --reporter=verbose",
 		"test": "vitest run --typecheck --coverage",
 		"lint": "oxlint && oxfmt . --check",
-		"build": "tsdown",
-		"typeinst": "pnpm tsc --extendedDiagnostics | grep Instantiations:"
+		"build": "tsdown"
 	},
 	"devDependencies": {
-		"@vitest/coverage-v8": "4.1.9",
+		"@vitest/coverage-v8": "4.1.10",
 		"electron": "catalog:",
 		"tsdown": "catalog:",
-		"vitest": "4.1.9"
+		"vitest": "4.1.10"
 	},
 	"peerDependencies": {
 		"electron": ">=40"

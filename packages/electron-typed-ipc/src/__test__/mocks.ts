@@ -2,10 +2,12 @@ import { vi } from "vitest";
 
 import type { BrowserWindow, IpcMain, IpcRenderer } from "electron";
 
+type BrowserWindowStatic = typeof BrowserWindow;
+
 // allow sparse mocks
 // oxlint-disable typescript/no-unsafe-type-assertion
 
-export function createMockIpcMain() {
+function createMockIpcMain() {
 	const mockIpcMain: Partial<IpcMain> = {
 		handle: vi.fn(() => undefined),
 		addListener: vi.fn(() => mockIpcMain as IpcMain),
@@ -15,7 +17,7 @@ export function createMockIpcMain() {
 	return mockIpcMain as IpcMain;
 }
 
-export function createMockIpcRenderer() {
+function createMockIpcRenderer() {
 	const mockIpcRenderer: Partial<IpcRenderer> = {
 		invoke: vi.fn(() => Promise.resolve()),
 		send: vi.fn(() => undefined),
@@ -27,12 +29,12 @@ export function createMockIpcRenderer() {
 	return mockIpcRenderer as IpcRenderer;
 }
 
-type BrowserWindowStatic = typeof BrowserWindow;
-
-export function createMockBrowserWindow() {
+function createMockBrowserWindow() {
 	const mockBrowserWindow: Partial<BrowserWindowStatic> = {
 		getAllWindows: vi.fn(() => []),
 	};
 
 	return mockBrowserWindow as BrowserWindowStatic;
 }
+
+export { createMockIpcMain, createMockIpcRenderer, createMockBrowserWindow };
