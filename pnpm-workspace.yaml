@@ -2,6 +2,7 @@ minimumReleaseAge: 4320 # 3 days in minutes
 strictDepBuilds: true
 trustPolicy: no-downgrade
 trustPolicyIgnoreAfter: 10080
+blockExoticSubdeps: true
 verifyDepsBeforeRun: prompt
 
 packages:
@@ -10,11 +11,11 @@ packages:
 
 catalog:
   '@types/node24': npm:@types/node@24.13.2
-  electron: 43.1.0
-  oxfmt: 0.58.0
-  oxlint: 1.73.0
-  oxlint-tsgolint: 0.24.0
-  tsdown: 0.22.5
+  electron: 43.2.0
+  oxfmt: 0.60.0
+  oxlint: 1.75.0
+  oxlint-tsgolint: 7.0.2001
+  tsdown: 0.22.13
 
 savePrefix: ''
 
