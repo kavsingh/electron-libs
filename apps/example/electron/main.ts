@@ -6,7 +6,7 @@ import { app, BrowserWindow, ipcMain, protocol, net } from "electron";
 
 import { ipcDefinition } from "./ipc.ts";
 
-import type { ValidateInvoker } from "@kavsingh/electron-typed-ipc/main";
+import type { ValidateResult } from "@kavsingh/electron-typed-ipc/main";
 import type { CustomScheme } from "electron";
 
 const dirname = import.meta.dirname;
@@ -78,17 +78,20 @@ function appProtocolHandler(request: Request): Promise<Response> {
 	return net.fetch(url.pathToFileURL(pathToServe).href);
 }
 
-const validateInvoker: ValidateInvoker<typeof ipcDefinition> = (event) => {
-	const urlValidation = validateAppUrl(event.sender.getURL());
+function ipcValidateSourceUrl(
+	label: string,
+	sourceUrl: string,
+): ValidateResult {
+	const urlValidation = validateAppUrl(sourceUrl);
 
 	if (urlValidation.result === "malformed") {
-		return { valid: false, error: new Error("could not validate sender") };
+		return { valid: false, error: new Error(`${label}: could not validate`) };
 	}
 
 	return urlValidation.result === "valid"
 		? { valid: true }
-		: { valid: false, error: new Error("invalid sender") };
-};
+		: { valid: false, error: new Error(`${label}: invalid`) };
+}
 
 function init() {
 	protocol.handle(appCustomScheme.scheme, appProtocolHandler);
@@ -103,8 +106,16 @@ function init() {
 	const disposeIpc = createIpcMain(ipcDefinition, {
 		ipcMain,
 		BrowserWindow,
-		validateInvoker,
 		logger: console,
+		validateInvoker: (event) => {
+			return ipcValidateSourceUrl("invoker", event.sender.getURL());
+		},
+		validateSendFromMainTarget: (target) => {
+			return ipcValidateSourceUrl("target", target.webContents.getURL());
+		},
+		validateSendFromRendererSource: (event) => {
+			return ipcValidateSourceUrl("source", event.sender.getURL());
+		},
 	});
 
 	if (!isE2E) appWindow.webContents.openDevTools();

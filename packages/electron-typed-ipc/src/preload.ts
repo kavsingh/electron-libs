@@ -1,14 +1,16 @@
-import { contextBridge, ipcRenderer } from "electron";
-
 import {
 	ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE,
 	scopeChannel,
 } from "./internal.ts";
 
 import type { Logger } from "./logger.ts";
+import type { IpcRenderer } from "electron";
 
-function createTypedIpcPreload(options?: { logger?: Logger | undefined }) {
-	const logger = options?.logger;
+function createTypedIpcPreload(options: {
+	ipcRenderer: IpcRenderer;
+	logger?: Logger | undefined;
+}) {
+	const { ipcRenderer, logger } = options;
 
 	return {
 		query: async (channel: string, payload: unknown): Promise<unknown> => {
@@ -68,13 +70,11 @@ function createTypedIpcPreload(options?: { logger?: Logger | undefined }) {
 	} as const;
 }
 
-export function exposeTypedIpc(options?: {
-	logger?: Logger | undefined;
-}): void {
-	contextBridge.exposeInMainWorld(
-		ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE,
-		createTypedIpcPreload(options),
-	);
+export function exposeTypedIpc(
+	options: { ipcRenderer: IpcRenderer; logger?: Logger | undefined },
+	exposer: (namespace: string, api: unknown) => void,
+): void {
+	exposer(ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE, createTypedIpcPreload(options));
 }
 
 export type IpcPreloadApi = ReturnType<typeof createTypedIpcPreload>;

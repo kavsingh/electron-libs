@@ -24,13 +24,25 @@ import type {
 	WebContents,
 } from "electron";
 
-type ValidateInvokerResult = { valid: true } | { valid: false; error: Error };
+type ValidateResult = { valid: true } | { valid: false; error: Error };
 
 type ValidateInvoker<TDefinition extends Definition> = (
 	ipcMainEvent: IpcMainInvokeEvent,
 	channel: keyof TDefinition,
 	input: unknown,
-) => ValidateInvokerResult;
+) => ValidateResult;
+
+type ValidateSendFromMainTarget<TDefinition extends Definition> = (
+	target: TBrowserWindow,
+	channel: keyof TDefinition,
+	payload: unknown,
+) => ValidateResult;
+
+type ValidateSendFromRendererSource<TDefinition extends Definition> = (
+	ipcMainEvent: IpcMainEvent,
+	channel: keyof TDefinition,
+	payload: unknown,
+) => ValidateResult;
 
 interface CreateTypedIpcMainOptions<TDefinition extends Definition> {
 	ipcMain: IpcMain;
@@ -38,6 +50,12 @@ interface CreateTypedIpcMainOptions<TDefinition extends Definition> {
 	serializer?: Serializer | undefined;
 	logger?: Logger | undefined;
 	validateInvoker?: ValidateInvoker<TDefinition> | undefined;
+	validateSendFromMainTarget?:
+		| ValidateSendFromMainTarget<TDefinition>
+		| undefined;
+	validateSendFromRendererSource?:
+		| ValidateSendFromRendererSource<TDefinition>
+		| undefined;
 }
 
 interface SendFromMainOptions {
@@ -121,6 +139,8 @@ function createIpcMain<TDefinition extends Definition>(
 		BrowserWindow,
 		logger,
 		validateInvoker,
+		validateSendFromMainTarget,
+		validateSendFromRendererSource,
 		serializer = defaultSerializer,
 	} = options;
 	const disposers: DisposeFn[] = [];
@@ -222,22 +242,49 @@ function createIpcMain<TDefinition extends Definition>(
 
 			const scopedChannel = scopeChannel(`${channel}/sendFromMain`);
 			const targets = input?.targetWindows ?? BrowserWindow.getAllWindows();
+			const payload = input?.payload ?? undefined;
+			const serializedPayload = serializer.serialize(payload);
 
 			for (const target of targets) {
 				if (target.isDestroyed()) continue;
 
-				const serialized = serializer.serialize(input?.payload);
+				if (validateSendFromMainTarget) {
+					try {
+						const validationResult = validateSendFromMainTarget(
+							target,
+							channel,
+							payload,
+						);
+
+						if (!validationResult.valid) {
+							logger?.warn(
+								"sendFromMain target invalid",
+								channel,
+								validationResult.error,
+							);
+
+							continue;
+						}
+					} catch (cause) {
+						logger?.error("failed to validate sendFromMain target", {
+							channel,
+							cause,
+						});
+
+						continue;
+					}
+				}
 
 				if (input?.frames) {
-					logger?.debug("send to frame", channel, input.frames, input.payload);
+					logger?.debug("send to frame", channel, input);
 					target.webContents.sendToFrame(
 						input.frames,
 						scopedChannel,
-						serialized,
+						serializedPayload,
 					);
 				} else {
-					logger?.debug("send to window", channel, input?.payload, serialized);
-					target.webContents.send(scopedChannel, serialized);
+					logger?.debug("send to window", channel, serializedPayload);
+					target.webContents.send(scopedChannel, serializedPayload);
 				}
 			}
 		};
@@ -269,7 +316,37 @@ function createIpcMain<TDefinition extends Definition>(
 
 		function eventHandler(event: IpcMainEvent, payload: unknown) {
 			logger?.debug("subscribe handler", { scopedChannel, payload });
-			void subscriberFn(event, serializer.deserialize(payload));
+
+			const deserializedPayload = serializer.serialize(payload);
+
+			if (validateSendFromRendererSource) {
+				try {
+					const validationResult = validateSendFromRendererSource(
+						event,
+						channel,
+						deserializedPayload,
+					);
+
+					if (!validationResult.valid) {
+						logger?.warn(
+							"sendFromRenderer sender invalid",
+							channel,
+							validationResult.error,
+						);
+
+						return;
+					}
+				} catch (cause) {
+					logger?.error("failed to validate sendFromRenderer sender", {
+						channel,
+						cause,
+					});
+
+					return;
+				}
+			}
+
+			void subscriberFn(event, deserializedPayload);
 		}
 
 		logger?.debug("subscribe", { scopedChannel, eventHandler });
@@ -336,8 +413,10 @@ export {
 };
 
 export type {
+	ValidateResult,
 	ValidateInvoker,
-	ValidateInvokerResult,
+	ValidateSendFromMainTarget,
+	ValidateSendFromRendererSource,
 	CreateTypedIpcMainOptions,
 	SendFromMainOptions,
 	Definition,
