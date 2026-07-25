@@ -1,5 +1,3 @@
-import { BrowserWindow, ipcMain } from "electron";
-
 import { exhaustive, scopeChannel } from "./internal.ts";
 import { defaultSerializer } from "./serializer.ts";
 
@@ -18,16 +16,33 @@ import type {
 } from "./internal.ts";
 import type { Logger } from "./logger.ts";
 import type { Serializer } from "./serializer.ts";
-import type { IpcMainEvent, IpcMainInvokeEvent, WebContents } from "electron";
+import type {
+	BrowserWindow as TBrowserWindow,
+	IpcMain,
+	IpcMainEvent,
+	IpcMainInvokeEvent,
+	WebContents,
+} from "electron";
 
-interface CreateTypedIpcMainOptions {
+type ValidateInvokerResult = { valid: true } | { valid: false; error: Error };
+
+type ValidateInvoker<TDefinition extends Definition> = (
+	ipcMainEvent: IpcMainInvokeEvent,
+	channel: keyof TDefinition,
+	input: unknown,
+) => ValidateInvokerResult;
+
+interface CreateTypedIpcMainOptions<TDefinition extends Definition> {
+	ipcMain: IpcMain;
+	BrowserWindow: typeof TBrowserWindow;
 	serializer?: Serializer | undefined;
 	logger?: Logger | undefined;
+	validateInvoker?: ValidateInvoker<TDefinition> | undefined;
 }
 
 interface SendFromMainOptions {
 	frames?: Parameters<WebContents["sendToFrame"]>[0] | undefined;
-	targetWindows?: BrowserWindow[] | undefined;
+	targetWindows?: TBrowserWindow[] | undefined;
 }
 
 type SendPayloadToChannel = (input?: SendFromMainWithPayload) => void;
@@ -97,11 +112,17 @@ function defineOperations<TDefinition extends Definition>(
 	return definition;
 }
 
-function createIpcMain(
+function createIpcMain<TDefinition extends Definition>(
 	definition: Definition,
-	options: CreateTypedIpcMainOptions = {},
+	options: CreateTypedIpcMainOptions<TDefinition>,
 ): DisposeFn {
-	const { logger, serializer = defaultSerializer } = options;
+	const {
+		ipcMain,
+		BrowserWindow,
+		logger,
+		validateInvoker,
+		serializer = defaultSerializer,
+	} = options;
 	const disposers: DisposeFn[] = [];
 
 	function addHandler(
@@ -115,16 +136,60 @@ function createIpcMain(
 
 		ipcMain.handle(
 			scopedChannel,
-			async (event, input: unknown): Promise<IpcResult> => {
-				logger?.debug("handle", operation, channel, input);
+			async (event, serializedInput: unknown): Promise<IpcResult> => {
+				logger?.debug("handle", operation, channel, serializedInput);
+
+				let input: unknown;
+
+				try {
+					input = serializer.deserialize(serializedInput);
+				} catch (cause) {
+					const error = new Error("failed to deserialize invoke input");
+					const result: IpcResult = {
+						result: "error",
+						error: serializer.serialize(error),
+					};
+
+					logger?.error(error, { cause, operation, channel });
+
+					return result;
+				}
+
+				if (validateInvoker) {
+					try {
+						const validationResult = validateInvoker(event, channel, input);
+
+						if (!validationResult.valid) {
+							const error = new Error("invoker invalid");
+							const result: IpcResult = {
+								result: "error",
+								error: serializer.serialize(error),
+							};
+
+							logger?.warn(error, { operation, channel });
+
+							return result;
+						}
+					} catch (cause) {
+						const error = new Error("failed to validate ipc invocation");
+						const result: IpcResult = {
+							result: "error",
+							error: serializer.serialize(error),
+						};
+
+						logger?.error(error, { cause, operation, channel });
+
+						return result;
+					}
+				}
 
 				try {
 					const result: IpcResult = {
 						result: "ok",
-						data: await handler(event, serializer.deserialize(input)),
+						data: await handler(event, input),
 					};
 
-					logger?.debug("handle result", operation, channel, result);
+					logger?.debug("handle result", { operation, channel, result });
 
 					return result;
 				} catch (cause) {
@@ -135,7 +200,7 @@ function createIpcMain(
 						error: serializer.serialize(error),
 					};
 
-					logger?.debug("handle result", operation, channel, result);
+					logger?.debug("handle result", { operation, channel, result });
 
 					return result;
 				}
@@ -271,6 +336,8 @@ export {
 };
 
 export type {
+	ValidateInvoker,
+	ValidateInvokerResult,
 	CreateTypedIpcMainOptions,
 	SendFromMainOptions,
 	Definition,

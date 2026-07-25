@@ -5,6 +5,8 @@
 		"allowImportingTsExtensions": true,
 		"declaration": true,
 		"emitDeclarationOnly": true,
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true,
 
 		// leave the following to linters
 		"noUnusedLocals": false,

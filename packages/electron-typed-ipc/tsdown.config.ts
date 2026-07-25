@@ -17,7 +17,10 @@ export default defineConfig([
 		dts: { build: true, oxc: true },
 		target: ["es2022"],
 		entry: ["./src/preload.ts"],
+		// cjs for preload scripts to ensure support for sandboxed environments:
+		// https://www.electronjs.org/docs/latest/tutorial/esm#sandboxed-preload-scripts-cant-use-esm-imports
 		format: ["cjs"],
+		checks: { legacyCjs: false },
 	},
 	// main process Node.js only
 	{
