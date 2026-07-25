@@ -13,14 +13,32 @@
 			<hr />
 			<pre data-display="location"></pre>
 			<hr />
-			<button data-click="query">query</button>
-			<button data-click="mutate">mutate</button>
-			<button data-click="send-event">send event</button>
-			<button data-click="postmessage">postmessage</button>
-			<div data-display="query-responses"></div>
-			<div data-display="mutation-responses"></div>
-			<div data-display="events-from-main"></div>
-			<div data-display="postmessages"></div>
+			<div class="group">
+				<button type="button" data-click="query">query</button>
+				<button type="button" data-click="mutate">mutate</button>
+			</div>
+			<hr />
+			<div class="group">
+				<button type="button" data-click="subscribe-a">subscribe a</button>
+				<button type="button" data-click="unsubscribe-a" disabled>
+					unsubscribe a
+				</button>
+			</div>
+			<div class="group">
+				<button type="button" data-click="subscribe-b">subscribe b</button>
+				<button type="button" data-click="unsubscribe-b" disabled>
+					unsubscribe b
+				</button>
+			</div>
+			<button type="button" data-click="send-event">send event</button>
+			<hr />
+			<button type="button" data-click="postmessage">postmessage</button>
+			<hr />
+			<ul data-display="query-responses"></ul>
+			<ul data-display="mutation-responses"></ul>
+			<ul data-display="events-from-main-a"></ul>
+			<ul data-display="events-from-main-b"></ul>
+			<ul data-display="postmessages"></ul>
 		</main>
 		<script type="module" src="./app.mjs"></script>
 	</body>

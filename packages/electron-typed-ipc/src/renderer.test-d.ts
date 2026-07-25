@@ -132,9 +132,10 @@ describe("renderer types", () => {
 				.parameters.toEqualTypeOf<[]>;
 			expectTypeOf(tipcRenderer.sendVoidFromMain.subscribe).parameter(0).returns
 				.toExtend<void | Promise<void>>;
-			expectTypeOf(
-				tipcRenderer.sendVoidFromMain.subscribe,
-			).returns.toBeFunction();
+			expectTypeOf(tipcRenderer.sendVoidFromMain.subscribe).returns
+				.toEqualTypeOf<{
+				unsubscribe: () => void;
+			}>;
 		});
 
 		it("should correctly type send from main with payload", () => {
@@ -144,9 +145,10 @@ describe("renderer types", () => {
 				.parameters.toEqualTypeOf<[SendFromMainPayload]>;
 			expectTypeOf(tipcRenderer.sendPayloadFromMain.subscribe).parameter(0)
 				.returns.toEqualTypeOf<void | Promise<void>>;
-			expectTypeOf(
-				tipcRenderer.sendPayloadFromMain.subscribe,
-			).returns.toBeFunction();
+			expectTypeOf(tipcRenderer.sendPayloadFromMain.subscribe).returns
+				.toEqualTypeOf<{
+				unsubscribe: () => void;
+			}>;
 		});
 	});
 

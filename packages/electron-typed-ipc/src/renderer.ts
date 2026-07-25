@@ -18,6 +18,10 @@ interface SendFromRendererOptions {
 	toHost?: boolean | undefined;
 }
 
+interface Subscription {
+	unsubscribe: DisposeFn;
+}
+
 type ElectronTypedIpcRenderer<TDefinition extends Definition> = Readonly<{
 	[TName in keyof TDefinition]: TDefinition[TName] extends Query
 		? {
@@ -54,7 +58,7 @@ type ElectronTypedIpcRenderer<TDefinition extends Definition> = Readonly<{
 										? []
 										: [payload: TDefinition[TName]["payload"]]
 								) => void | Promise<void>,
-							) => DisposeFn;
+							) => Subscription;
 						}
 					: never;
 }>;
@@ -138,7 +142,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 				_,
 				__,
 				[payload, sendOptions]: [unknown, SendFromRendererOptions | undefined],
-			) => {
+			): void => {
 				const serialized = serializer.serialize(payload);
 
 				logger?.debug("send", {
@@ -155,8 +159,12 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 
 	function subscribeProxy(api: IpcPreloadApi, channel: string) {
 		return new Proxy(proxyFn, {
-			apply: (__, ___, [handler]: [(...args: unknown[]) => unknown]) => {
-				return api.subscribe(channel, (payload) => {
+			apply: (
+				__,
+				___,
+				[handler]: [(...args: unknown[]) => unknown],
+			): Subscription => {
+				const unsubscribe = api.subscribe(channel, (payload) => {
 					logger?.debug("subscribe receive", {
 						channel,
 						payload,
@@ -165,6 +173,8 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 
 					void handler(serializer.deserialize(payload));
 				});
+
+				return { unsubscribe };
 			},
 		});
 	}
@@ -213,6 +223,7 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 export type {
 	IpcResult,
 	DisposeFn,
+	Subscription,
 	Query,
 	Mutation,
 	SendFromRenderer,

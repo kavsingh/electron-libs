@@ -5,14 +5,30 @@
 	background-color: oklch(98.5% 0 0);
 }
 
-pre {
+pre,
+ul {
 	text-wrap: wrap;
 	font-size: 0.68rem;
+}
+
+hr {
+	border-color: oklch(67.6% 0 5);
+}
+
+.group {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 0.5em;
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
 		color: oklch(98.5% 0 0);
 		background-color: oklch(14.5% 0 0);
+	}
+
+	hr {
+		border-color: oklch(20% 0 5);
 	}
 }
