@@ -1,5 +1,6 @@
 {
 	"$schema": "./node_modules/lefthook/schema.json",
+	"lefthook": "pnpm lefthook",
 	"pre-commit": {
 		"jobs": [
 			{

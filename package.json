@@ -12,6 +12,7 @@
 	},
 	"type": "module",
 	"scripts": {
+		"prepare": "lefthook install",
 		"test": "nx run-many -t test --outputStyle stream",
 		"test:e2e": "nx test:e2e example",
 		"lint": "nx run-many -t lint --outputStyle stream",
