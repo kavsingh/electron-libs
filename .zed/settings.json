@@ -8,5 +8,9 @@
 	"languages": {
 		"TypeScript": { "language_servers": ["typescript-ls", "oxlint", "oxfmt"] },
 		"JavaScript": { "language_servers": ["typescript-ls", "oxlint", "oxfmt"] }
+	},
+	"file_types": {
+		// no support for composite actions
+		"GitHub Actions": [".github/workflows/*.yml", ".github/workflows/*.yaml"]
 	}
 }

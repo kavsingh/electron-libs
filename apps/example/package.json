@@ -20,8 +20,9 @@
 	},
 	"devDependencies": {
 		"@kavsingh/electron-typed-ipc": "workspace:*",
-		"@playwright/test": "1.62.0",
-		"eslint-plugin-playwright": "2.10.5",
+		"@playwright/test": "1.61.1",
+		"code-config": "workspace:*",
+		"eslint-plugin-playwright": "2.11.0",
 		"tsdown": "catalog:"
 	},
 	"productName": "Example"

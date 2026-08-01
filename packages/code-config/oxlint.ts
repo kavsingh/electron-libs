@@ -124,7 +124,7 @@ const baseConfig: OxlintConfig = defineConfig({
 	},
 	overrides: [
 		{
-			files: ["./*.config.{ts,js}"],
+			files: ["./*.config.{ts,js}", "./.*rc.{ts,js}"],
 			plugins: ["import"],
 			rules: { "import/no-default-export": "off" },
 		},
