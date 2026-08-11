@@ -11,9 +11,9 @@ packages:
 
 catalog:
   '@types/node24': npm:@types/node@24.13.2
-  electron: 43.2.0
-  oxfmt: 0.61.0
-  oxlint: 1.76.0
+  electron: 43.3.0
+  oxfmt: 0.62.0
+  oxlint: 1.77.0
   oxlint-tsgolint: 7.0.2001
   tsdown: 0.22.14
 
