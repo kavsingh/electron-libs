@@ -46,11 +46,11 @@
 		"build": "tsdown"
 	},
 	"devDependencies": {
-		"@vitest/coverage-v8": "4.1.10",
+		"@vitest/coverage-v8": "4.1.11",
 		"code-config": "workspace:*",
 		"electron": "catalog:",
 		"tsdown": "catalog:",
-		"vitest": "4.1.10"
+		"vitest": "4.1.11"
 	},
 	"peerDependencies": {
 		"electron": ">=40"
