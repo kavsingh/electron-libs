@@ -4,6 +4,9 @@ import type { Page } from "@playwright/test";
 
 function eventsModel(page: Page) {
 	return {
+		sendEvent: () => {
+			return page.getByRole("button", { name: "send event" }).click();
+		},
 		subscribe: (label: string) => {
 			return page
 				.getByRole("button", { name: new RegExp(`^subscribe ${label}$`) })
@@ -13,9 +16,6 @@ function eventsModel(page: Page) {
 			return page
 				.getByRole("button", { name: new RegExp(`^unsubscribe ${label}$`) })
 				.click();
-		},
-		sendEvent: () => {
-			return page.getByRole("button", { name: "send event" }).click();
 		},
 		locateMessages: (label: string) => {
 			return page.getByText(`[${label}] event acknowledged (ping)`);
