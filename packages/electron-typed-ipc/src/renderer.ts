@@ -70,9 +70,9 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 	let preloadApi: IpcPreloadApi | undefined = undefined;
 
 	if (ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE in globalThis.window) {
-		// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		preloadApi = globalThis.window[
 			ELECTRON_TYPED_IPC_GLOBAL_NAMESPACE
+			// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 		] as IpcPreloadApi;
 	}
 
@@ -94,10 +94,10 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 			apply: async (_, __, [arg]: [unknown]) => {
 				logger?.debug("query", { channel, arg });
 
-				// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 				const response = (await api.query(
 					channel,
 					arg ? serializer.serialize(arg) : undefined,
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 				)) as IpcResult;
 
 				logger?.debug("query result", {
@@ -119,10 +119,10 @@ export function createIpcRenderer<TDefinition extends Definition>(options?: {
 			apply: async (_, __, [arg]: [unknown]) => {
 				logger?.debug("mutation", { channel, arg });
 
-				// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 				const response = (await api.mutate(
 					channel,
 					arg ? serializer.serialize(arg) : undefined,
+					// oxlint-disable-next-line typescript/no-unsafe-type-assertion
 				)) as IpcResult;
 
 				logger?.debug("mutation result", { channel, response });
